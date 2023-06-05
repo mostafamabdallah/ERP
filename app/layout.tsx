@@ -1,6 +1,7 @@
 import SideNav from "@/components/layout/SideNav";
 import "./globals.css";
 import { Ubuntu } from "next/font/google";
+import TopNav from "@/components/layout/TopNav";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -22,6 +23,10 @@ export default function RootLayout({
       <body className={`${ubuntu.className} bg-background`}>
         <div className="flex flex-row">
           <SideNav></SideNav>
+          <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background lg:px-10">
+            <TopNav></TopNav>
+            <div className="flex flex-1">{children}</div>
+          </div>
         </div>
       </body>
     </html>
