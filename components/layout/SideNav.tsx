@@ -39,7 +39,7 @@ type Props = {};
 const SideNav = (props: Props) => {
   const pathname = usePathname();
   return (
-    <div className=" flex-col hidden lg:flex lg:w-3/12 xl:w-2/12 border-2 border-border h-screen bg-white lg:px-6 pt-8">
+    <div className=" flex-col hidden lg:flex lg:w-3/12 xl:w-2/12 border-r-2 border-border h-screen bg-white lg:px-6 pt-8">
       <div className="flex flex-row mb-10">
         <img src={logo.src} className="w-full lg:w-8/12"></img>
       </div>

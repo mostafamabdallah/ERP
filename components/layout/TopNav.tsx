@@ -12,7 +12,7 @@ const TopNav = (props: Props) => {
   const pageName = pathname.split("/")[1].split("-").join(" ");
 
   return (
-    <div className="flex flex-row w-full items-center justify-between py-6 ">
+    <div className="flex flex-row w-full items-center justify-between py-3 border-b-2 border-border lg:px-10">
       <span className="text-3xl text-tittle capitalize">
         {pageName ? pageName : "Dashboard"}
       </span>

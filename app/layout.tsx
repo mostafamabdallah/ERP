@@ -23,9 +23,9 @@ export default function RootLayout({
       <body className={`${ubuntu.className} bg-background`}>
         <div className="flex flex-row">
           <SideNav></SideNav>
-          <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background lg:px-10">
+          <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background ">
             <TopNav></TopNav>
-            <div className="flex flex-1">{children}</div>
+            <div className="flex flex-1 py-10 lg:px-10">{children}</div>
           </div>
         </div>
       </body>
