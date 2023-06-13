@@ -9,7 +9,7 @@ type Props = {
 
 const InfoCard = ({ data }: Props) => {
   return (
-    <div className="w-full flex flex-col gap-3 px-6 py-4 bg-white rounded-lg shadow">
+    <div className="w-full flex flex-col gap-3 px-6 py-4 bg-white rounded-lg ">
       <div className="flex justify-start gap-3 items-center">
         <div
           className={`flex justify-center items-center ${data.iconBgColor} rounded-full w-9 h-9`}

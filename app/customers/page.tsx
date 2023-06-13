@@ -11,6 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Customer } from "../../types/global";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 type Props = {};
 
@@ -77,13 +78,16 @@ const Page = (props: Props) => {
   return (
     <div className="flex flex-col w-full gap-6">
       <div className="flex items-center justify-end">
-        <button className="rounded-md px-5 py-2 flex gap-1 text-sm items-center justify-between text-white bg-primary hover:bg-[#0f62fe95]">
+        <Link
+          href="/customers/new"
+          className="rounded-md px-5 py-2 flex gap-1 text-sm items-center justify-between text-white bg-primary hover:bg-[#0f62fe95]"
+        >
           <FontAwesomeIcon
             className="font-bold"
             icon={faPlus}
           ></FontAwesomeIcon>
           Add New
-        </button>
+        </Link>
       </div>
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 ">
         {data.map((el, i) => {
@@ -92,7 +96,7 @@ const Page = (props: Props) => {
       </div>
       <div className="flex flex-row flex-wrap gap-6 ">
         <div className="w-full lg:flex-[3]">
-          <table className="w-full text-sm text-left text-gray-500 border border-border rounded-md shadow ">
+          <table className="w-full text-sm text-left text-gray-500  rounded-md  ">
             <thead className="text-xs text-gray-700    ">
               <tr>
                 {headNeams.map((el, i) => {
@@ -113,7 +117,7 @@ const Page = (props: Props) => {
                 return (
                   <tr
                     key={i}
-                    className="bg-white border-b  font-bold text-sm border border-border"
+                    className="bg-white border-b  font-bold text-sm border-border"
                   >
                     <td
                       scope="row"
@@ -163,7 +167,7 @@ const Page = (props: Props) => {
             </tbody>
           </table>
         </div>
-        <div className="w-full lg:w-4/12 bg-white rounded-md border border-border flex-1"></div>
+        <div className="w-full lg:w-4/12 bg-white rounded-md  flex-1"></div>
       </div>
     </div>
   );

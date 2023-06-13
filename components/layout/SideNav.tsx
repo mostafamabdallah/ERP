@@ -28,9 +28,9 @@ const pages = [
     url: "/orders",
   },
   {
-    name: "Products",
+    name: "Items",
     icon: faBagShopping,
-    url: "/products",
+    url: "/items",
   },
 ];
 

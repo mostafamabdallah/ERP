@@ -7,7 +7,11 @@ const prisma = new PrismaClient();
 export async function GET(request: Request) {
   const customers = await prisma.customer.findMany({
     include: {
-      orders: true,
+      orders: {
+        include: {
+          OrdersItesm: true,
+        },
+      },
     },
   });
   return NextResponse.json({ customers: customers });
@@ -20,15 +24,12 @@ export async function POST(request: Request) {
       data: {
         name: "mostafa mahmoud abdallah",
         adress: "13 street salah salem",
-        phone: "01146384940",
-        status: "vallid",
+        phone: "0114638440044",
+        status: "verfiy",
         orders: {
           create: {
             items: {
-              create: {
-                name: "rice",
-                price: 50,
-              },
+              connect: {},
             },
           },
         },
