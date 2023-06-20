@@ -9,12 +9,22 @@ type Props = {};
 
 const TopNav = (props: Props) => {
   const pathname = usePathname();
-  const pageName = pathname.split("/")[1].split("-").join(" ");
+  const pageName = pathname.split("/");
 
   return (
     <div className="flex flex-row w-full items-center justify-between py-3 border-b-2 border-border lg:px-10">
-      <span className="text-3xl text-tittle capitalize">
-        {pageName ? pageName : "Dashboard"}
+      <span className="text-lg text-gray-600 capitalize">
+        {pageName[1]
+          ? pageName.map((el, i) => {
+              if (i == 0) {
+                return el;
+              } else {
+                return " / " +el  ;
+              }
+            })
+          : "Dashboard"}
+
+        {/* {pageName ? pageName : "Dashboard"} */}
       </span>
       <span className="flex gap-4 items-center justify-center">
         <div className="flex relative rounded-full text-xl w-12 h-12  items-center justify-center bg-white border border-border cursor-pointer">

@@ -25,7 +25,10 @@ const Page = (props: Props) => {
         onSubmit={handleSubmit((data) => {
           addNewItem({
             name: data.name,
-            price: data.price == "" ? null : Number(data.price),
+            price: Number(data.price),
+            category: data.category,
+            status: data.status,
+            unit: data.unit,
           });
         })}
       >
@@ -69,13 +72,104 @@ const Page = (props: Props) => {
                 </label>
                 <div className="mt-2">
                   <input
-                    {...register("price")}
+                    {...register("price", { required: true })}
                     id="price"
                     name="price"
                     type="number"
                     autoComplete="price"
                     className="block w-full rounded-md border-0 py-1.5 px-2 text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                   />
+                  {errors.category && (
+                    <p className="text-red-500">Item price is required.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="itemcategory"
+                  className="block text-sm font-medium leading-6 text-tittle"
+                >
+                  Category
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("category", { required: true })}
+                    id="category"
+                    name="category"
+                    className="block w-full rounded-md border-0 py-2.5 px-2 text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                  >
+                    <option value="" selected hidden disabled>
+                      category
+                    </option>
+                    <option value="خضروات">خضروات</option>
+                    <option value="فاكة">فاكة</option>
+                    <option value="منظفات">منظفات</option>
+                    <option value="عطارة">عطارة</option>
+                    <option value="بقالة">بقالة</option>
+                    <option value="مستلزمات صحية">مستلزمات صحية</option>
+                    <option value="مستلزمات صحية"> مجمدات</option>
+                  </select>
+                  {errors.category && (
+                    <p className="text-red-500">Item category is required.</p>
+                  )}
+                </div>
+              </div>
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium leading-6 text-tittle"
+                >
+                  Status
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("status", { required: true })}
+                    id="status"
+                    name="status"
+                    className="block w-full rounded-md border-0 py-2.5 px-2 text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                  >
+                    <option value="" selected hidden disabled>
+                      status
+                    </option>
+                    <option value="اساسي">اساسي</option>
+                    <option value="تعاقد">تعاقد</option>
+                    <option value="مستبعد">مستبعد</option>
+                    <option value="مطلوب">مطلوب</option>
+                  </select>
+                  {errors.status && (
+                    <p className="text-red-500">Item status is required.</p>
+                  )}
+                </div>
+              </div>
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium leading-6 text-tittle"
+                >
+                  unit
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("unit", { required: true })}
+                    id="unit"
+                    name="unit"
+                    className="block w-full rounded-md border-0 py-2.5 px-2 text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                  >
+                    <option value="" selected hidden disabled>
+                      unit
+                    </option>
+                    <option value="اساسي">كيلو</option>
+                    <option value="علبة">علبة</option>
+                    <option value="كرتونة">كرتونة</option>
+                    <option value="زجاجة">زجاجة</option>
+                    <option value="كيس">كيس</option>
+                    <option value="وحدة">وحدة</option>
+                  </select>
+                  {errors.unit && (
+                    <p className="text-red-500">Item status is required.</p>
+                  )}
                 </div>
               </div>
             </div>

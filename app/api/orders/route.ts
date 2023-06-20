@@ -21,7 +21,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const data = await request.json();
   try {
-    const customer = await prisma.customer.create({
+    const customers = await prisma.customer.create({
       data: {
         name: data.name,
         adress: data.adress,
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ customer: customer });
+    return NextResponse.json({ customer: customers });
   } catch (error: any) {
     console.log(error);
     const { code, meta } = error;

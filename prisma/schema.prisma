@@ -11,14 +11,14 @@ datasource db {
 }
 
 model Customer {
-  id          Int           @id @default(autoincrement())
-  name        String        @db.VarChar(255)
-  adress      String        @db.VarChar(255)
-  phone       String        @unique @db.VarChar(255)
-  status      String        @db.VarChar(20)
-  type        String?       @db.VarChar(20)
-  orders      Order[]
-  createdAt   DateTime      @default(now()) @map("create_at") @db.DateTime()
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  adress    String   @db.VarChar(255)
+  phone     String   @unique @db.VarChar(255)
+  status    String   @db.VarChar(20)
+  type      String?  @db.VarChar(20)
+  orders    Order[]
+  createdAt DateTime @default(now()) @map("create_at") @db.DateTime()
 }
 
 model Order {
@@ -33,6 +33,9 @@ model Item {
   id          Int           @id @default(autoincrement())
   name        String        @unique @db.VarChar(255)
   price       Int?
+  category    String?
+  status      String?
+  unit        String?
   Order       Order?        @relation(fields: [orderId], references: [id])
   orderId     Int?
   OrdersItesm OrdersItems[]
@@ -41,9 +44,10 @@ model Item {
 model OrdersItems {
   orderId    Int
   itemId     Int
-  order      Order     @relation(fields: [orderId], references: [id])
-  item       Item      @relation(fields: [itemId], references: [id])
+  order      Order  @relation(fields: [orderId], references: [id])
+  item       Item   @relation(fields: [itemId], references: [id])
   customerId Int?
+  quantity   String
 
   @@id([orderId, itemId])
 }

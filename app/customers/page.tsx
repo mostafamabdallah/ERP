@@ -15,7 +15,15 @@ import Link from "next/link";
 
 type Props = {};
 
-const headNeams = ["ID", "name", "location", "orders", "phone", "status"];
+const headNeams = [
+  "ID",
+  "name",
+  "location",
+  "orders",
+  "phone",
+  "status",
+  "add order",
+];
 
 const Page = (props: Props) => {
   const [customers, setCustomer] = useState<Customer[]>([]);
@@ -95,7 +103,7 @@ const Page = (props: Props) => {
         })}
       </div>
       <div className="flex flex-row flex-wrap gap-6 ">
-        <div className="w-full lg:flex-[3]">
+        <div className="w-full ">
           <table className="w-full text-sm text-left text-gray-500  rounded-md  ">
             <thead className="text-xs text-gray-700    ">
               <tr>
@@ -160,6 +168,12 @@ const Page = (props: Props) => {
                           {el.status}
                         </span>
                       </div>
+                    </td>
+                    <td className="flex items-center justify-center">
+                      <FontAwesomeIcon
+                        className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
+                        icon={faPlus}
+                      ></FontAwesomeIcon>
                     </td>
                   </tr>
                 );

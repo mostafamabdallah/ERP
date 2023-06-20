@@ -9,7 +9,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
-  console.log(id);
   const customers = await prisma.customer.findMany();
 
   return NextResponse.json({ customer: customers });

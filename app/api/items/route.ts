@@ -4,13 +4,22 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 // Get all users
 
-export async function GET(request: Request) {
-  const items = await prisma.item.findMany({
-    include: {
-      OrdersItesm: true,
-    },
-  });
-  return NextResponse.json({ items: items });
+export async function GET(request: Request, { query }: any) {
+  const { searchParams } = new URL(request.url);
+  const name = searchParams.get("name");
+  if (name == null) {
+    const items = await prisma.item.findMany({});
+    return NextResponse.json({ items: items });
+  } else {
+    const items = await prisma.item.findMany({
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+    });
+    return NextResponse.json({ items: items });
+  }
 }
 // Create new users
 
@@ -22,6 +31,8 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ item: item });
   } catch (error: any) {
+    console.log(error);
+
     const { code, meta } = error;
     const message = meta?.cause?.message || "Internal server error";
     return NextResponse.json({ code, message }, { status: 500 });

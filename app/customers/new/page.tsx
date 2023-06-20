@@ -2,17 +2,20 @@
 import { customFetch } from "@/utilities/fetch";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const Page = (props: Props) => {
-  const [orders, setOrders] = useState([]);
+  const { push } = useRouter();
   const addNewCustomer = (data: any) => {
     customFetch
-      .post("items", data)
-      .then((res) => {})
+      .post("customers", data)
+      .then((res) => {
+        push(`/orders/customer/${res.data.customer.id}`);
+      })
       .catch((err) => {
-        alert("item already exict");
+        alert("Customer already exict");
       });
   };
   const {
@@ -28,7 +31,10 @@ const Page = (props: Props) => {
             onSubmit={handleSubmit((data) => {
               addNewCustomer({
                 name: data.name,
-                price: data.price == "" ? null : Number(data.price),
+                adress: data.adress,
+                phone: data.phone,
+                status: "verfied",
+                type: data.type,
               });
             })}
           >
@@ -44,21 +50,21 @@ const Page = (props: Props) => {
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-full">
                     <label
-                      htmlFor="customerName"
+                      htmlFor="name"
                       className="block text-sm font-medium leading-6 text-tittle"
                     >
                       Full Name
                     </label>
                     <div className="mt-2">
                       <input
-                        {...register("customerName", { required: true })}
+                        {...register("name", { required: true })}
                         type="text"
-                        name="customerName"
-                        id="customerName"
+                        name="name"
+                        id="name"
                         autoComplete="given-name"
                         className="block w-full rounded-md border-0 py-1.5 px-2  text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                       />
-                      {errors.customerName && (
+                      {errors.name && (
                         <p className="text-red-500">
                           Customer name is required.
                         </p>
@@ -67,21 +73,21 @@ const Page = (props: Props) => {
                   </div>
                   <div className="sm:col-span-3">
                     <label
-                      htmlFor="customerPhone"
+                      htmlFor="phone"
                       className="block text-sm font-medium leading-6 text-tittle"
                     >
                       Phone Number
                     </label>
                     <div className="mt-2">
                       <input
-                        {...register("customerPhone", { required: true })}
-                        id="customerPhone"
-                        name="customerPhone"
+                        {...register("phone", { required: true })}
+                        id="phone"
+                        name="phone"
                         type="text"
-                        autoComplete="email"
+                        autoComplete="phone"
                         className="block w-full rounded-md border-0 py-1.5 px-2 text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                       />
-                      {errors.customerPhone && (
+                      {errors.phone && (
                         <p className="text-red-500">
                           Phone number is required.
                         </p>
@@ -98,16 +104,16 @@ const Page = (props: Props) => {
                     </label>
                     <div className="mt-2">
                       <select
-                        {...register("customerKind", { required: true })}
-                        id="customerKind"
-                        name="customerKind"
-                        autoComplete="customerKind"
+                        {...register("type", { required: true })}
+                        id="type"
+                        name="type"
+                        autoComplete="type"
                         className="block w-full rounded-md border-0 py-2.5 px-2 text-tittle shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary  sm:text-sm "
                       >
                         <option>Male</option>
                         <option>Female</option>
                       </select>
-                      {errors.customerKind && (
+                      {errors.type && (
                         <p className="text-red-500">
                           Customer kind is required.
                         </p>
@@ -116,21 +122,21 @@ const Page = (props: Props) => {
                   </div>
                   <div className="col-span-full">
                     <label
-                      htmlFor="customerAdress"
+                      htmlFor="adress"
                       className="block text-sm font-medium leading-6 text-tittle"
                     >
                       Full Address
                     </label>
                     <div className="mt-2">
                       <input
-                        {...register("customerAdress", { required: true })}
+                        {...register("adress", { required: true })}
                         type="text"
-                        name="customerAdress"
-                        id="customerAdress"
-                        autoComplete="customerAdress"
+                        name="adress"
+                        id="adress"
+                        autoComplete="adress"
                         className="block w-full rounded-md border-0 py-1.5 px-2 text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                       />
-                      {errors.customerAdress && (
+                      {errors.adress && (
                         <p className="text-red-500">
                           Customer adress kind is required.
                         </p>
@@ -140,7 +146,7 @@ const Page = (props: Props) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col w-full bg-white pt-5">
+            {/* <div className="flex flex-col w-full bg-white pt-5">
               <div className="border-b border-border/10 pb-12">
                 <h2 className="text-base font-semibold leading-7 text-tittle">
                   Orders
@@ -198,9 +204,7 @@ const Page = (props: Props) => {
                   </div>
                   <div className="sm:col-span-2">
                     <button
-                      onClick={() => {
-                        
-                      }}
+                      onClick={() => {}}
                       className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                     >
                       Add
@@ -208,14 +212,8 @@ const Page = (props: Props) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="mt-6 flex items-center justify-end gap-x-6 w-full">
-              <button
-                type="submit"
-                className="text-sm font-semibold leading-6 text-tittle"
-              >
-                Cancel
-              </button>
               <button
                 type="submit"
                 className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
