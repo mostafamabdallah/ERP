@@ -160,7 +160,7 @@ const Page = (props: Props) => {
                     <option value="" selected hidden disabled>
                       unit
                     </option>
-                    <option value="اساسي">كيلو</option>
+                    <option value="كيلو">كيلو</option>
                     <option value="علبة">علبة</option>
                     <option value="كرتونة">كرتونة</option>
                     <option value="زجاجة">زجاجة</option>

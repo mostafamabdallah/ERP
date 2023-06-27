@@ -17,37 +17,25 @@ model Customer {
   phone     String   @unique @db.VarChar(255)
   status    String   @db.VarChar(20)
   type      String?  @db.VarChar(20)
-  orders    Order[]
   createdAt DateTime @default(now()) @map("create_at") @db.DateTime()
+  orders    Order[]  @relation("customer_orders")
 }
 
 model Order {
-  id          Int           @id @default(autoincrement())
-  items       Item[]
-  author      Customer?     @relation(fields: [authorId], references: [id])
-  authorId    Int?
-  OrdersItesm OrdersItems[]
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  delivary   Float
+  customer   Customer @relation("customer_orders", fields: [customerId], references: [id])
+  customerId Int
+  items      Item[]   @relation("order_items")
 }
 
 model Item {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique @db.VarChar(255)
-  price       Int?
-  category    String?
-  status      String?
-  unit        String?
-  Order       Order?        @relation(fields: [orderId], references: [id])
-  orderId     Int?
-  OrdersItesm OrdersItems[]
-}
-
-model OrdersItems {
-  orderId    Int
-  itemId     Int
-  order      Order  @relation(fields: [orderId], references: [id])
-  item       Item   @relation(fields: [itemId], references: [id])
-  customerId Int?
-  quantity   String
-
-  @@id([orderId, itemId])
+  id       Int     @id @default(autoincrement())
+  name     String
+  price    Float
+  category String?
+  status   String?
+  unit     String?
+  orders   Order[] @relation("order_items")
 }

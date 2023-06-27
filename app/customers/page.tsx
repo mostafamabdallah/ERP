@@ -12,20 +12,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Customer } from "../../types/global";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
-const headNeams = [
-  "ID",
-  "name",
-  "location",
-  "orders",
-  "phone",
-  "status",
-  "add order",
-];
+const headNeams = ["ID", "name", "location", "phone", "status", "add order"];
 
 const Page = (props: Props) => {
+  const { push } = useRouter();
+
   const [customers, setCustomer] = useState<Customer[]>([]);
   const data = [
     {
@@ -140,9 +135,6 @@ const Page = (props: Props) => {
                       {el.adress}
                     </td>
                     <td className="px-2  py-2 lg:px-4  lg:py-3 truncate">
-                      {el.orders.length}
-                    </td>
-                    <td className="px-2  py-2 lg:px-4  lg:py-3 truncate">
                       {el.phone}
                     </td>
                     <td className="px-2  py-2 lg:px-4  lg:py-3 truncate">
@@ -171,6 +163,9 @@ const Page = (props: Props) => {
                     </td>
                     <td className="flex items-center justify-center">
                       <FontAwesomeIcon
+                        onClick={() => {
+                          push(`/orders/customer/${el.id}`);
+                        }}
                         className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
                         icon={faPlus}
                       ></FontAwesomeIcon>

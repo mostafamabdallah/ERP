@@ -5,15 +5,7 @@ const prisma = new PrismaClient();
 // Get all users
 
 export async function GET(request: Request) {
-  const customers = await prisma.customer.findMany({
-    include: {
-      orders: {
-        include: {
-          items: {},
-        },
-      },
-    },
-  });
+  const customers = await prisma.customer.findMany({});
   return NextResponse.json({ customers: customers });
 }
 // Create new users

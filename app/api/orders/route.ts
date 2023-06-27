@@ -5,33 +5,38 @@ const prisma = new PrismaClient();
 // Get all users
 
 export async function GET(request: Request) {
-  const customers = await prisma.customer.findMany({
+  const customerWithOrders = await prisma.customer.findMany({
     include: {
       orders: {
         include: {
-          items: {},
+          items: true,
         },
       },
     },
   });
-  return NextResponse.json({ customers: customers });
+  return NextResponse.json({ customerWithOrders: customerWithOrders });
 }
 // Create new users
 
 export async function POST(request: Request) {
   const data = await request.json();
+
   try {
-    const customers = await prisma.customer.create({
+    const newOrder = await prisma.order.create({
       data: {
-        name: data.name,
-        adress: data.adress,
-        phone: data.phone,
-        status: "verfied",
-        type: data.type,
+        customerId: Number(data.customerID),
+        items: {
+          connect: data.item.map((el: any, i: number) => {
+            return { id: el.id };
+          }),
+        },
+        delivary: Number(data.delivaryCost),
+      },
+      include: {
+        items: true,
       },
     });
-
-    return NextResponse.json({ customer: customers });
+    return NextResponse.json({ newOrder: newOrder });
   } catch (error: any) {
     console.log(error);
     const { code, meta } = error;
