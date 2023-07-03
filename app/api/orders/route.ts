@@ -5,7 +5,10 @@ const prisma = new PrismaClient();
 // Get all users
 
 export async function GET(request: Request) {
-  const customerWithOrders = await prisma.customer.findMany({
+  const orders = await prisma.customer.findUnique({
+    where: {
+      id: 1,
+    },
     include: {
       orders: {
         include: {
@@ -14,13 +17,12 @@ export async function GET(request: Request) {
       },
     },
   });
-  return NextResponse.json({ customerWithOrders: customerWithOrders });
+  return NextResponse.json({ orders: orders });
 }
 // Create new users
 
 export async function POST(request: Request) {
   const data = await request.json();
-
   try {
     const newOrder = await prisma.order.create({
       data: {

@@ -4,6 +4,7 @@ import { customFetch } from "@/utilities/fetch";
 import {
   faCheckCircle,
   faExclamationCircle,
+  faEye,
   faLock,
   faPlus,
   faUsers,
@@ -16,7 +17,7 @@ import { useRouter } from "next/navigation";
 
 type Props = {};
 
-const headNeams = ["ID", "name", "location", "phone", "status", "add order"];
+const headNeams = ["ID", "name", "location", "phone", "status", "orders"];
 
 const Page = (props: Props) => {
   const { push } = useRouter();
@@ -161,13 +162,20 @@ const Page = (props: Props) => {
                         </span>
                       </div>
                     </td>
-                    <td className="flex items-center justify-center">
+                    <td className="flex items-center justify-start gap-2 px-2  py-2 lg:px-4  lg:py-3">
                       <FontAwesomeIcon
                         onClick={() => {
                           push(`/orders/customer/${el.id}`);
                         }}
                         className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
                         icon={faPlus}
+                      ></FontAwesomeIcon>
+                      <FontAwesomeIcon
+                        onClick={() => {
+                          push(`/customers/${el.id}/orders`);
+                        }}
+                        className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
+                        icon={faEye}
                       ></FontAwesomeIcon>
                     </td>
                   </tr>

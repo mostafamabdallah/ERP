@@ -8,7 +8,6 @@ import React, { useEffect, useState } from "react";
 
 type Props = {};
 const headNeams = ["ID", "name", "price", "category", "status"];
-
 const Page = (props: Props) => {
   const [orders, setOrdes] = useState<Order[]>([]);
   useEffect(() => {
