@@ -18,24 +18,33 @@ model Customer {
   status    String   @db.VarChar(20)
   type      String?  @db.VarChar(20)
   createdAt DateTime @default(now()) @map("create_at") @db.DateTime()
-  orders    Order[]  @relation("customer_orders")
+  orders    Order[]
 }
 
 model Order {
-  id         Int      @id @default(autoincrement())
-  date       DateTime @default(now())
+  id         Int         @id @default(autoincrement())
+  date       DateTime    @default(now())
   delivary   Float
-  customer   Customer @relation("customer_orders", fields: [customerId], references: [id])
+  customer   Customer    @relation(fields: [customerId], references: [id])
   customerId Int
-  items      Item[]   @relation("order_items")
+  items      OrderItem[]
 }
 
 model Item {
-  id       Int     @id @default(autoincrement())
+  id       Int         @id @default(autoincrement())
   name     String
   price    Float
   category String?
   status   String?
   unit     String?
-  orders   Order[] @relation("order_items")
+  orders   OrderItem[]
+}
+
+model OrderItem {
+  id       Int   @id @default(autoincrement())
+  order    Order @relation(fields: [orderId], references: [id])
+  orderId  Int
+  item     Item  @relation(fields: [itemId], references: [id])
+  itemId   Int
+  quantity Int
 }

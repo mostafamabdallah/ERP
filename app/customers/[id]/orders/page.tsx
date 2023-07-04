@@ -24,19 +24,26 @@ type Item = {
   unit?: string;
 };
 
+type Items = {
+  item: Item;
+  quantity: number;
+};
+
 type Order = {
   id: number;
   date?: string;
   delivary?: number;
   customerId?: number;
-  items?: Item[] | undefined;
+  items?: Items[] | undefined;
 };
 
 const page = ({ params }: any) => {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [items, setItems] = useState<Item[] | undefined>([]);
-  const headNeams = ["ID", "date", "delivary"];
-  const headNeams2 = ["Name", "price", "status"];
+  const [items, setItems] = useState<Items[] | undefined>([]);
+  const headNeams = ["ID", "date", , "order price", "delivary"];
+  const headNeams2 = ["Name", "price", , "quantity", "status"];
+
+  
 
   const data = [
     {
@@ -54,7 +61,7 @@ const page = ({ params }: any) => {
       icon: faCheckCircle,
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
-      value: orders.length,
+      value: 0,
       delta: 5,
       curancy: "users",
       period: "week",
@@ -88,8 +95,8 @@ const page = ({ params }: any) => {
           return <InfoCard key={i} data={el}></InfoCard>;
         })}
       </div>
-      <div className="flex flex-row flex-wrap gap-6 ">
-        <div className="w-full lg:w-9/12">
+      <div className="flex flex-row flex-wrap lg:flex-nowrap gap-6 ">
+        <div className="w-full lg:w-8/12">
           <table className="w-full text-sm text-left text-gray-500  rounded-md  ">
             <thead className="text-xs text-gray-700    ">
               <tr>
@@ -108,6 +115,13 @@ const page = ({ params }: any) => {
             </thead>
             <tbody>
               {orders.map((el, i) => {
+                let orderPrice = 0;
+                el.items?.forEach((el, j) => {
+                  let quantity = typeof el != "undefined" && el.quantity;
+                  let price = typeof el != "undefined" && el.item.price;
+                  let itemPrice = Number(quantity) * Number(price);
+                  orderPrice += itemPrice;
+                });
                 return (
                   <tr
                     onClick={(e) => {
@@ -127,8 +141,11 @@ const page = ({ params }: any) => {
                         {moment(el.date).format("dddd, MMMM D, YYYY h:mm A")}
                       </span>
                     </td>
+                    <td className="px-2  py-2 lg:px-4  lg:py-3 ">
+                      <span className="truncate">{orderPrice} EG</span>
+                    </td>
                     <td className="px-2  py-2 lg:px-4  lg:py-3 truncate">
-                      {el.delivary}
+                      {el.delivary} EG
                     </td>
                   </tr>
                 );
@@ -138,7 +155,8 @@ const page = ({ params }: any) => {
         </div>
         <div className="w-full  bg-white rounded-md  lg:flex-1  px-6 py-4">
           <table className="w-full text-sm text-left text-gray-500  rounded-md  ">
-          <tr>
+            <thead className="text-xs text-gray-700    ">
+              <tr>
                 {headNeams2.map((el, i) => {
                   return (
                     <th
@@ -151,6 +169,7 @@ const page = ({ params }: any) => {
                   );
                 })}
               </tr>
+            </thead>
             <tbody>
               {items?.map((el, i) => {
                 return (
@@ -162,14 +181,17 @@ const page = ({ params }: any) => {
                       scope="row"
                       className="px-2  py-2 lg:px-4  lg:py-3 font-medium text-gray-900 "
                     >
-                      {el.name}
+                      {el.item.name}
                     </td>
 
                     <td className="px-2  py-2 lg:px-4  lg:py-3 ">
-                      <span className="truncate">{el.price}</span>
+                      <span className="truncate">{el.item.price} EG</span>
+                    </td>
+                    <td className="px-2  py-2 lg:px-4  lg:py-3 ">
+                      <span className="truncate">{el.quantity}</span>
                     </td>
                     <td className="px-2  py-2 lg:px-4  lg:py-3 truncate">
-                      {el.status}
+                      {el.item.status}
                     </td>
                   </tr>
                 );

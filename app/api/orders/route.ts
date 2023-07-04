@@ -5,14 +5,18 @@ const prisma = new PrismaClient();
 // Get all users
 
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
   const orders = await prisma.customer.findUnique({
     where: {
-      id: 1,
+      id: Number(id),
     },
     include: {
       orders: {
         include: {
-          items: true,
+          items: {
+            include: { item: true },
+          },
         },
       },
     },
@@ -28,14 +32,19 @@ export async function POST(request: Request) {
       data: {
         customerId: Number(data.customerID),
         items: {
-          connect: data.item.map((el: any, i: number) => {
-            return { id: el.id };
-          }),
+          create: data.items.map((item: any) => ({
+            item: { connect: { id: item.id } },
+            quantity: item.quantity,
+          })),
         },
         delivary: Number(data.delivaryCost),
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            item: true,
+          },
+        },
       },
     });
     return NextResponse.json({ newOrder: newOrder });

@@ -42,21 +42,14 @@ const Page = ({ params }: { params: { id: string } }) => {
     getItemByName(searchName);
   }, [selectedItems]);
 
-  const addNewOrder = (data: any) => {
-    customFetch
-      .post("items", data)
-      .then((res) => {})
-      .catch((err) => {
-        alert("item already exict");
-      });
-  };
+
   let toatalPrice = 0;
 
   const createOrder = () => {
     customFetch
       .post("orders", {
         customerID: params.id,
-        item: selectedItems,
+        items: selectedItems,
         delivaryCost: delivaryCost,
       })
       .then((res) => {})

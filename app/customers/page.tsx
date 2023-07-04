@@ -76,6 +76,8 @@ const Page = (props: Props) => {
       .get("customers")
       .then((res) => {
         setCustomer(res.data.customers);
+        console.log(res.data.customers);
+        
       })
       .catch((err) => {});
   }, []);
