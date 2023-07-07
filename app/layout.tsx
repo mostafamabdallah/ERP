@@ -1,7 +1,9 @@
+"use client";
 import SideNav from "@/components/layout/SideNav";
 import "./globals.css";
 import { Ubuntu } from "next/font/google";
 import TopNav from "@/components/layout/TopNav";
+import { ConfigProvider } from "antd";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -20,15 +22,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${ubuntu.className} bg-background`}>
-        <div className="flex flex-row">
-          <SideNav></SideNav>
-          <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background ">
-            <TopNav></TopNav>
-            <div className="flex flex-1 py-10 lg:px-10">{children}</div>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#0f62fe",
+          },
+        }}
+      >
+        <body className={`${ubuntu.className} bg-background`}>
+          <div className="flex flex-row">
+            <SideNav></SideNav>
+            <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background ">
+              <TopNav></TopNav>
+              <div className="flex flex-1 py-10 lg:px-10">{children}</div>
+            </div>
           </div>
-        </div>
-      </body>
+        </body>
+      </ConfigProvider>
     </html>
   );
 }

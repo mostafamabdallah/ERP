@@ -1,8 +1,8 @@
 "use client"
 import React from "react";
 
-const page = ({ params }: any) => {
+const Page = ({ params }: any) => {
   return <div>page</div>;
 };
 
-export default page;
+export default Page;

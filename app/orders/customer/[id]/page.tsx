@@ -3,10 +3,12 @@ import { customFetch } from "@/utilities/fetch";
 import { faBoxOpen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import { AutoComplete, Input } from "antd";
+import React, { useEffect, useReducer, useState } from "react";
+import SelectedItemsCard from "./components/SelectedItemsCard";
 
 type Props = {};
-type item = {
+export type SelectedItem = {
   id?: number;
   name?: string;
   quantity?: number;
@@ -15,12 +17,46 @@ type item = {
   price?: any;
 };
 
+type ActionType =
+  | { type: "ADDITEM"; payload: any }
+  | { type: "REMOVEITEM"; payload: any };
+const reducer = (state: SelectedItem[], action: ActionType) => {
+  switch (action.type) {
+    case "ADDITEM":
+      return [...state, action.payload.item];
+    case "REMOVEITEM":
+      return action.payload.selectedItems.filter(
+        (item: SelectedItem, index: number) => index !== action.payload.id
+      );
+    default:
+      throw new Error();
+  }
+};
+
 const Page = ({ params }: { params: { id: string } }) => {
   const [items, setItems] = useState<Item[]>([]);
-  const [item, setItem] = useState<item>();
+  const [item, setItem] = useState<SelectedItem>();
   const [searchName, setSearchName] = useState("");
-  const [delivaryCost, setDelivaryCost] = useState('5');
-  const [selectedItems, setSelectedItems] = useState<item[]>([]);
+  const [delivaryCost, setDelivaryCost] = useState("5");
+  const [value, setValue] = useState("");
+
+  const onSelect = (value: any, option: Item) => {
+    setSearchName(option.name);
+    setItem({
+      ...item,
+      id: option.id,
+      name: option.name,
+      category: option.category,
+      unit: option.unit,
+      price: option.price,
+    });
+  };
+
+  const onChange = (data: string) => {
+    setValue(data);
+  };
+  const initialState: SelectedItem[] = [];
+  const [selectedItems, dispatch] = useReducer(reducer, initialState);
 
   const getItemByName = (itemName: string) => {
     if (itemName != "") {
@@ -41,7 +77,6 @@ const Page = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     getItemByName(searchName);
   }, [selectedItems]);
-
 
   let toatalPrice = 0;
 
@@ -70,50 +105,9 @@ const Page = ({ params }: { params: { id: string } }) => {
           </p>
           <div className="flex flex-col">
             <ul className="flex flex-row p-2 w-full rounded-md gap-3 flex-wrap">
-              {selectedItems.map((el, i) => {
+              {selectedItems.map((el: SelectedItem, i: number) => {
                 toatalPrice += Number(el.price) * Number(el.quantity);
-                return (
-                  <li
-                    key={i}
-                    className="  bg-white px-4 py-3 rounded-lg shadow "
-                  >
-                    <div className="flex items-center gap-5">
-                      <div className="flex-shrink-0 text-primary bg-[#0f62fe20]  flex items-center justify-center p-3 rounded-full">
-                        <FontAwesomeIcon
-                          className="text-2xl"
-                          icon={faBoxOpen}
-                        ></FontAwesomeIcon>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className=" font-medium text-gray-900 truncate text-3xl">
-                          {el.name}
-                        </p>
-                        <p className=" text-gray-500 truncate dark:text-gray-400 text-base">
-                          {el.category}
-                        </p>
-                      </div>
-                      <div className="inline-flex items-center font-semibold   text-base px-2 py-0.5 rounded-sm bg-[#0f62fe20] text-primary">
-                        {el.quantity} <span className="ml-1">{el.unit}</span>
-                      </div>
-                      <div className="inline-flex items-center font-semibold   text-base px-2 py-0.5 rounded-sm bg-[#27783f20] text-[#27783f]">
-                        <span className="ml-1">
-                          {Number(el.price) * Number(el.quantity)} EG
-                        </span>
-                      </div>
-                      <div
-                        onClick={() => {
-                          const newSelectedItems = selectedItems.filter(
-                            (item, index) => index !== i
-                          );
-                          setSelectedItems(newSelectedItems);
-                        }}
-                        className="inline-flex items-center font-semibold cursor-pointer   text-base    text-[#da1e27]"
-                      >
-                        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                      </div>
-                    </div>
-                  </li>
-                );
+                return <SelectedItemsCard key={i} data={el}></SelectedItemsCard>;
               })}
             </ul>
 
@@ -160,7 +154,8 @@ const Page = ({ params }: { params: { id: string } }) => {
           <form
             onSubmit={(e) => {
               setSearchName("");
-              setSelectedItems([{ ...item }, ...selectedItems]);
+              //@ts-ignore
+              dispatch({ type: "ADDITEM", payload: { item } });
               setItem({
                 ...item,
                 quantity: Number(0),
@@ -170,6 +165,18 @@ const Page = ({ params }: { params: { id: string } }) => {
           >
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 items-end">
               <div className="sm:col-span-2">
+                <AutoComplete
+                  popupClassName="certain-category-search-dropdown"
+                  options={items.map((el, i) => {
+                    return { value: el.name, ...el };
+                  })}
+                  onSelect={onSelect}
+                  onSearch={(text) => setSearchName(text)}
+                >
+                  <Input.Search size="large" placeholder="input here" />
+                </AutoComplete>
+              </div>
+              {/* <div className="sm:col-span-2">
                 <label
                   htmlFor="itemname"
                   className="block text-sm font-medium leading-6 text-tittle"
@@ -203,7 +210,6 @@ const Page = ({ params }: { params: { id: string } }) => {
 
                       <input
                         type="text"
-                        // name="itemName"
                         value={searchName}
                         onChange={(e) => {
                           setSearchName(e.target.value);
@@ -250,7 +256,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                     </ul>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="sm:col-span-1">
                 <label
                   htmlFor="itemname"

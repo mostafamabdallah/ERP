@@ -37,7 +37,7 @@ type Order = {
   items?: Items[] | undefined;
 };
 
-const page = ({ params }: any) => {
+const Page = ({ params }: any) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [items, setItems] = useState<Items[] | undefined>([]);
   const headNeams = ["ID", "date", , "order price", "delivary"];
@@ -204,4 +204,4 @@ const page = ({ params }: any) => {
   );
 };
 
-export default page;
+export default Page;

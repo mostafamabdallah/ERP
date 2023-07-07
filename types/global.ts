@@ -15,7 +15,7 @@ export type CardData = {
 export type Customer = {
   id: number;
   name: string;
-  adress: string;
+  address: string;
   phone: string;
   status: string;
   orders: Order[];
