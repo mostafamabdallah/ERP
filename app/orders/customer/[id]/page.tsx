@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "@prisma/client";
 import { AutoComplete, Input } from "antd";
 import React, { useEffect, useReducer, useState } from "react";
-import SelectedItemsCard from "./components/SelectedItemsCard";
-
+import { DeleteFilled } from "@ant-design/icons";
+import { Avatar, Card, Switch } from "antd";
+import Meta from "antd/es/card/Meta";
 type Props = {};
 export type SelectedItem = {
   id?: number;
@@ -49,6 +50,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       category: option.category,
       unit: option.unit,
       price: option.price,
+      quantity: 1,
     });
   };
 
@@ -107,7 +109,41 @@ const Page = ({ params }: { params: { id: string } }) => {
             <ul className="flex flex-row p-2 w-full rounded-md gap-3 flex-wrap">
               {selectedItems.map((el: SelectedItem, i: number) => {
                 toatalPrice += Number(el.price) * Number(el.quantity);
-                return <SelectedItemsCard key={i} data={el}></SelectedItemsCard>;
+                return (
+                  <Card
+                    style={{ width: 300, marginTop: 16 }}
+                    actions={[
+                      <div className="inline-flex items-center font-semibold   text-base px-2 py-0.5 rounded-sm bg-[#0f62fe20] text-primary">
+                        {el.quantity} <span className="ml-1">{el.unit}</span>
+                      </div>,
+                      <div className="inline-flex items-center font-semibold   text-base px-2 py-0.5 rounded-sm bg-[#27783f20] text-[#27783f]">
+                        <span className="ml-1">
+                          {Number(el.price) * Number(el.quantity)} EG
+                        </span>
+                      </div>,
+                      <DeleteFilled
+                        onClick={() => {
+                          dispatch({
+                            type: "REMOVEITEM",
+                            payload: { id: i, selectedItems },
+                          });
+                        }}
+                        style={{
+                          color: "#da1e27",
+                        }}
+                        key="ellipsis"
+                      />,
+                    ]}
+                  >
+                    <Meta
+                      avatar={
+                        <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1" />
+                      }
+                      title={el.name}
+                      description={el.category}
+                    />
+                  </Card>
+                );
               })}
             </ul>
 
@@ -158,7 +194,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               dispatch({ type: "ADDITEM", payload: { item } });
               setItem({
                 ...item,
-                quantity: Number(0),
+                quantity: Number(1),
               });
               e.preventDefault();
             }}
@@ -176,87 +212,6 @@ const Page = ({ params }: { params: { id: string } }) => {
                   <Input.Search size="large" placeholder="input here" />
                 </AutoComplete>
               </div>
-              {/* <div className="sm:col-span-2">
-                <label
-                  htmlFor="itemname"
-                  className="block text-sm font-medium leading-6 text-tittle"
-                >
-                  Item
-                </label>
-                <div className="mt-2 w-full">
-                  <div
-                    id="dropdownSearch"
-                    className={` z-10  bg-white rounded-lg shadow  dark:bg-gray-700 w-full`}
-                  >
-                    <label htmlFor="input-group-search" className="sr-only">
-                      Search
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg
-                          className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg>
-                      </div>
-
-                      <input
-                        type="text"
-                        value={searchName}
-                        onChange={(e) => {
-                          setSearchName(e.target.value);
-                        }}
-                        className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 "
-                        placeholder="Search item"
-                      />
-                    </div>
-                    <ul
-                      className="max-h-48  overflow-y-auto text-sm text-gray-700 dark:text-gray-200 "
-                      aria-labelledby="dropdownSearchButton"
-                    >
-                      {items.map((el, i) => {
-                        return (
-                          <li
-                            className="hover:bg-gray-100 dark:hover:bg-gray-600 px-3 cursor-pointer"
-                            key={i}
-                            onClick={() => {
-                              setSearchName(el.name);
-                              setItem({
-                                ...item,
-                                id: el.id,
-                                name: el.name,
-                                category: el.category,
-                                unit: el.unit,
-                                price: el.price,
-                              });
-                            }}
-                          >
-                            <div className="flex items-center  cursor-pointer">
-                              <label className="w-8/12 py-2 ml-2 text-sm font-medium text-gray-900 rounded cursor-pointer">
-                                {el.name}
-                              </label>
-                              <label
-                                htmlFor=""
-                                className="w-4/12 text-end py-2 ml-2 text-sm font-medium text-gray-900 rounded cursor-pointer"
-                              >
-                                {"(" + el.price + ")"} EG
-                              </label>
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                </div>
-              </div> */}
               <div className="sm:col-span-1">
                 <label
                   htmlFor="itemname"
@@ -265,25 +220,21 @@ const Page = ({ params }: { params: { id: string } }) => {
                   Quantity
                 </label>
                 <div className="mt-2">
-                  <input
+                  <Input
                     value={item?.quantity}
+                    defaultValue={1}
                     onChange={(e) => {
                       setItem({
                         ...item,
                         quantity: Number(e.target.value),
                       });
                     }}
-                    step=".01"
-                    type="number"
-                    name="quantity"
-                    id="quantity"
-                    autoComplete="given-name"
-                    className="block w-full rounded-md border-0 py-1.5 px-2  text-tittle shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "
+                    placeholder="Quantity"
                   />
                 </div>
               </div>
-              <div className="sm:col-span-1 flex items-end">
-                <button type="submit">
+              <div className="sm:col-span-1 flex items-end ">
+                <button type="submit" className="flex items-end">
                   <FontAwesomeIcon
                     className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
                     icon={faPlus}

@@ -9,10 +9,9 @@ export async function GET(request: Request) {
   return NextResponse.json({
     customers: customers});
 }
-// Create new users
-
 export async function POST(request: Request) {
   const data = await request.json();
+  
   try {
     const customer = await prisma.customer.create({
       data: {
