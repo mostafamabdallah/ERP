@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { memo } from "react";
 import logo from "../../public/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -73,4 +73,4 @@ const SideNav = (props: Props) => {
   );
 };
 
-export default SideNav;
+export default memo(SideNav);

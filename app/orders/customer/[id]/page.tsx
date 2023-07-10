@@ -5,9 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "@prisma/client";
 import { AutoComplete, Input } from "antd";
 import React, { useEffect, useReducer, useState } from "react";
-import { DeleteFilled } from "@ant-design/icons";
-import { Avatar, Card, Switch } from "antd";
-import Meta from "antd/es/card/Meta";
+import ProductsCards from "../../components/ProductsCards";
+
+import { useCallback } from "react";
+import SideNav from "@/components/layout/SideNav";
 type Props = {};
 export type SelectedItem = {
   id?: number;
@@ -27,7 +28,8 @@ const reducer = (state: SelectedItem[], action: ActionType) => {
       return [...state, action.payload.item];
     case "REMOVEITEM":
       return action.payload.selectedItems.filter(
-        (item: SelectedItem, index: number) => index !== action.payload.id
+        (item: SelectedItem, index: number) =>
+          index !== Number(action.payload.id - 1)
       );
     default:
       throw new Error();
@@ -40,6 +42,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [searchName, setSearchName] = useState("");
   const [delivaryCost, setDelivaryCost] = useState("5");
   const [value, setValue] = useState("");
+  const [activeDeleteID, setActiveDeleteID] = useState(0);
 
   const onSelect = (value: any, option: Item) => {
     setSearchName(option.name);
@@ -80,6 +83,10 @@ const Page = ({ params }: { params: { id: string } }) => {
     getItemByName(searchName);
   }, [selectedItems]);
 
+  const deleteCallBack = (id: number) => {
+    dispatch({ type: "REMOVEITEM", payload: { id: id, selectedItems } });
+  };
+
   let toatalPrice = 0;
 
   const createOrder = () => {
@@ -110,39 +117,10 @@ const Page = ({ params }: { params: { id: string } }) => {
               {selectedItems.map((el: SelectedItem, i: number) => {
                 toatalPrice += Number(el.price) * Number(el.quantity);
                 return (
-                  <Card
-                    style={{ width: 300, marginTop: 16 }}
-                    actions={[
-                      <div className="inline-flex items-center font-semibold   text-base px-2 py-0.5 rounded-sm bg-[#0f62fe20] text-primary">
-                        {el.quantity} <span className="ml-1">{el.unit}</span>
-                      </div>,
-                      <div className="inline-flex items-center font-semibold   text-base px-2 py-0.5 rounded-sm bg-[#27783f20] text-[#27783f]">
-                        <span className="ml-1">
-                          {Number(el.price) * Number(el.quantity)} EG
-                        </span>
-                      </div>,
-                      <DeleteFilled
-                        onClick={() => {
-                          dispatch({
-                            type: "REMOVEITEM",
-                            payload: { id: i, selectedItems },
-                          });
-                        }}
-                        style={{
-                          color: "#da1e27",
-                        }}
-                        key="ellipsis"
-                      />,
-                    ]}
-                  >
-                    <Meta
-                      avatar={
-                        <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1" />
-                      }
-                      title={el.name}
-                      description={el.category}
-                    />
-                  </Card>
+                  <ProductsCards
+                    data={el}
+                    deleteProduct={deleteCallBack}
+                  ></ProductsCards>
                 );
               })}
             </ul>
