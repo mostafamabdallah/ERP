@@ -25,7 +25,30 @@ type ActionType =
 const reducer = (state: SelectedItem[], action: ActionType) => {
   switch (action.type) {
     case "ADDITEM":
-      return [...state, action.payload.item];
+      let exictItem = {} as SelectedItem;
+      state.forEach((el, i) => {
+        if (el.id === action.payload.item.id) {
+          exictItem = el;
+        } else {
+          return false;
+        }
+      });
+      if (!exictItem.id) {
+        return [...state, action.payload.item];
+      } else {
+        return [
+          ...state.map((el, i) => {
+            if (el.id === exictItem.id) {
+              return {
+                ...el,
+                quantity: Number(el.quantity + action.payload.newQuantity),
+              };
+            } else {
+              return el;
+            }
+          }),
+        ];
+      }
     case "REMOVEITEM":
       return action.payload.selectedItems.filter(
         (item: SelectedItem, index: number) =>
@@ -42,7 +65,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [searchName, setSearchName] = useState("");
   const [delivaryCost, setDelivaryCost] = useState("5");
   const [value, setValue] = useState("");
-  const [activeDeleteID, setActiveDeleteID] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const onSelect = (value: any, option: Item) => {
     setSearchName(option.name);
@@ -118,6 +141,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 toatalPrice += Number(el.price) * Number(el.quantity);
                 return (
                   <ProductsCards
+                    key={i}
                     data={el}
                     deleteProduct={deleteCallBack}
                   ></ProductsCards>
@@ -167,14 +191,19 @@ const Page = ({ params }: { params: { id: string } }) => {
 
           <form
             onSubmit={(e) => {
+              e.preventDefault();
               setSearchName("");
               //@ts-ignore
-              dispatch({ type: "ADDITEM", payload: { item } });
+              dispatch({
+                type: "ADDITEM",
+                payload: { item, newQuantity: quantity },
+              });
               setItem({
                 ...item,
-                quantity: Number(1),
+                quantity: Number(quantity),
               });
-              e.preventDefault();
+
+              setQuantity(1);
             }}
           >
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 items-end">
@@ -199,9 +228,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </label>
                 <div className="mt-2">
                   <Input
-                    value={item?.quantity}
+                    value={quantity}
                     defaultValue={1}
                     onChange={(e) => {
+                      setQuantity(Number(e.target.value));
                       setItem({
                         ...item,
                         quantity: Number(e.target.value),
