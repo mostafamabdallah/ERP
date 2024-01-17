@@ -4,7 +4,7 @@ import type { InputRef } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
@@ -14,8 +14,6 @@ type Props = {
 };
 
 type DataIndex = keyof Customer;
-
-const headNeams = ["ID", "name", "location", "phone", "status", "orders"];
 
 const CustomerTable = ({ customers }: Props) => {
   const { push } = useRouter();
@@ -92,8 +90,8 @@ const CustomerTable = ({ customers }: Props) => {
     },
     {
       title: "Address",
-      dataIndex: "adress",
-      key: "adress",
+      dataIndex: "address",
+      key: "address",
       ...getColumnSearchProps("address"),
     },
     {
@@ -111,7 +109,7 @@ const CustomerTable = ({ customers }: Props) => {
         return (
           <div
             className={` ${
-              status == "verfied"
+              status == "verified"
                 ? "bg-[#8cbfad20]"
                 : status == "warned"
                 ? "bg-[#a3965f20]"
@@ -120,7 +118,7 @@ const CustomerTable = ({ customers }: Props) => {
           >
             <span
               className={`${
-                status == "verfied"
+                status == "verified"
                   ? "text-[#8cbfad]"
                   : status == "warned"
                   ? "text-[#a3965f]"
@@ -150,7 +148,7 @@ const CustomerTable = ({ customers }: Props) => {
             ></FontAwesomeIcon>
             <FontAwesomeIcon
               onClick={() => {
-                push(`/customers/${record.id}/orders`);
+                push(`/customers/${record.id}`);
               }}
               className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
               icon={faEye}

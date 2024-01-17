@@ -1,14 +1,10 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
-import { faBoxOpen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "@prisma/client";
 import { AutoComplete, Input } from "antd";
 import React, { useEffect, useReducer, useState } from "react";
 import ProductsCards from "../../components/ProductsCards";
 
-import { useCallback } from "react";
-import SideNav from "@/components/layout/SideNav";
 type Props = {};
 export type SelectedItem = {
   id?: number;
@@ -21,7 +17,8 @@ export type SelectedItem = {
 
 type ActionType =
   | { type: "ADDITEM"; payload: any }
-  | { type: "REMOVEITEM"; payload: any };
+  | { type: "REMOVEITEM"; payload: any }
+  | { type: "changeQuntaty"; payload: any };
 const reducer = (state: SelectedItem[], action: ActionType) => {
   switch (action.type) {
     case "ADDITEM":
@@ -54,6 +51,12 @@ const reducer = (state: SelectedItem[], action: ActionType) => {
         (item: SelectedItem, index: number) =>
           index !== Number(action.payload.id - 1)
       );
+    case "changeQuntaty":
+      console.log(action.payload.id);
+      return action.payload.selectedItems.filter(
+        (item: SelectedItem, index: number) =>
+          index !== Number(action.payload.id - 1)
+      );
     default:
       throw new Error();
   }
@@ -63,22 +66,21 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [items, setItems] = useState<Item[]>([]);
   const [item, setItem] = useState<SelectedItem>();
   const [searchName, setSearchName] = useState("");
-  const [delivaryCost, setDelivaryCost] = useState("5");
+  const [deliveryCost, setDeliveryCost] = useState("5");
   const [value, setValue] = useState("");
-  const [quantity, setQuantity] = useState(1);
 
-  const onSelect = (value: any, option: Item) => {
-    setSearchName(option.name);
-    setItem({
-      ...item,
-      id: option.id,
-      name: option.name,
-      category: option.category,
-      unit: option.unit,
-      price: option.price,
-      quantity: 1,
-    });
-  };
+  // const onSelect = (value: any, option: Item) => {
+  //   setSearchName(option.name);
+  //   setItem({
+  //     ...item,
+  //     id: option.id,
+  //     name: option.name,
+  //     category: option.category,
+  //     unit: option.unit,
+  //     price: option.price,
+  //     quantity: 1,
+  //   });
+  // };
 
   const onChange = (data: string) => {
     setValue(data);
@@ -112,18 +114,18 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   let toatalPrice = 0;
 
-  const createOrder = () => {
-    customFetch
-      .post("orders", {
-        customerID: params.id,
-        items: selectedItems,
-        delivaryCost: delivaryCost,
-      })
-      .then((res) => {})
-      .catch((err) => {
-        alert("Customer already exict");
-      });
-  };
+  // const createOrder = () => {
+  //   customFetch
+  //     .post("orders", {
+  //       customerID: params.id,
+  //       items: selectedItems,
+  //       delivaryCost: delivaryCost,
+  //     })
+  //     .then((res) => {})
+  //     .catch((err) => {
+  //       alert("Customer already exict");
+  //     });
+  // };
 
   return (
     <div className="flex flex-col w-full gap-6">
@@ -139,13 +141,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             <ul className="flex flex-row p-2 w-full rounded-md gap-3 flex-wrap">
               {selectedItems.map((el: SelectedItem, i: number) => {
                 toatalPrice += Number(el.price) * Number(el.quantity);
-                return (
-                  <ProductsCards
-                    key={i}
-                    data={el}
-                    deleteProduct={deleteCallBack}
-                  ></ProductsCards>
-                );
+                return <ProductsCards key={i} data={el}></ProductsCards>;
               })}
             </ul>
 
@@ -160,7 +156,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                   </label>{" "}
                   <input
                     onChange={(e) => {
-                      setDelivaryCost(e.target.value);
+                      setDeliveryCost(e.target.value);
                     }}
                     type="text"
                     defaultValue={5}
@@ -170,7 +166,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </div>
                 <button
                   onClick={() => {
-                    createOrder();
+                    // createOrder();
                   }}
                   type="button"
                   className="rounded-md px-5 py-2 flex gap-1 text-sm items-center justify-between text-white bg-primary hover:bg-[#0f62fe95]"
@@ -189,23 +185,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             </span>
           </div>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSearchName("");
-              //@ts-ignore
-              dispatch({
-                type: "ADDITEM",
-                payload: { item, newQuantity: quantity },
-              });
-              setItem({
-                ...item,
-                quantity: Number(quantity),
-              });
-
-              setQuantity(1);
-            }}
-          >
+          <form onSubmit={(e) => {}}>
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 items-end">
               <div className="sm:col-span-2">
                 <AutoComplete
@@ -213,41 +193,11 @@ const Page = ({ params }: { params: { id: string } }) => {
                   options={items.map((el, i) => {
                     return { value: el.name, ...el };
                   })}
-                  onSelect={onSelect}
+                  // onSelect={onSelect}
                   onSearch={(text) => setSearchName(text)}
                 >
                   <Input.Search size="large" placeholder="input here" />
                 </AutoComplete>
-              </div>
-              <div className="sm:col-span-1">
-                <label
-                  htmlFor="itemname"
-                  className="block text-sm font-medium leading-6 text-tittle"
-                >
-                  Quantity
-                </label>
-                <div className="mt-2">
-                  <Input
-                    value={quantity}
-                    defaultValue={1}
-                    onChange={(e) => {
-                      setQuantity(Number(e.target.value));
-                      setItem({
-                        ...item,
-                        quantity: Number(e.target.value),
-                      });
-                    }}
-                    placeholder="Quantity"
-                  />
-                </div>
-              </div>
-              <div className="sm:col-span-1 flex items-end ">
-                <button type="submit" className="flex items-end">
-                  <FontAwesomeIcon
-                    className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
-                    icon={faPlus}
-                  ></FontAwesomeIcon>{" "}
-                </button>
               </div>
             </div>
           </form>

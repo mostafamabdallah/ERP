@@ -10,10 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Define the Customer model
 model Customer {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(255)
-  adress    String   @db.VarChar(255)
+  address   String   @db.VarChar(255)
   phone     String   @unique @db.VarChar(255)
   status    String   @db.VarChar(20)
   type      String?  @db.VarChar(20)
@@ -21,30 +22,42 @@ model Customer {
   orders    Order[]
 }
 
+// Define the Order model
 model Order {
-  id         Int         @id @default(autoincrement())
-  date       DateTime    @default(now())
-  delivary   Float
-  customer   Customer    @relation(fields: [customerId], references: [id])
-  customerId Int
-  items      OrderItem[]
+  id           Int         @id @default(autoincrement())
+  orderNumber  String
+  customerId   Int
+  customer     Customer    @relation(fields: [customerId], references: [id])
+  items        ItemOrder[]
+  deliveryCost Float
 }
 
+// Define the Item model
 model Item {
-  id       Int         @id @default(autoincrement())
-  name     String
-  price    Float
-  category String?
-  status   String?
-  unit     String?
-  orders   OrderItem[]
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  quantity   Int
+  price      Float
+  unit       String
+  categories Category[]
+  orders     ItemOrder[]
 }
 
-model OrderItem {
-  id       Int   @id @default(autoincrement())
-  order    Order @relation(fields: [orderId], references: [id])
+// Define the Category model
+model Category {
+  id     Int    @id @default(autoincrement())
+  name   String
+  Item   Item?  @relation(fields: [itemId], references: [id])
+  itemId Int?
+}
+
+// Define the junction table for the many-to-many relationship between Order and Item
+model ItemOrder {
   orderId  Int
-  item     Item  @relation(fields: [itemId], references: [id])
+  order    Order @relation(fields: [orderId], references: [id])
   itemId   Int
+  item     Item  @relation(fields: [itemId], references: [id])
   quantity Int
+
+  @@id([orderId, itemId])
 }

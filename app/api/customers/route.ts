@@ -7,27 +7,62 @@ const prisma = new PrismaClient();
 export async function GET(request: Request) {
   const customers = await prisma.customer.findMany({});
   return NextResponse.json({
-    customers: customers});
+    customers: customers,
+  });
 }
 export async function POST(request: Request) {
   const data = await request.json();
-  
   try {
     const customer = await prisma.customer.create({
       data: {
         name: data.name,
-        adress: data.adress,
+        address: data.address,
         phone: data.phone,
-        status: "verfied",
+        status: "verified",
         type: data.type,
       },
     });
 
     return NextResponse.json({ customer: customer });
   } catch (error: any) {
-    console.log(error);
     const { code, meta } = error;
-    const message = meta?.cause?.message || "Internal server error";
-    return NextResponse.json({ code, message });
+    console.log(code);
+
+    if (code == "P2002") {
+      return new Response(
+        JSON.stringify({ message: "Customer already exist" }),
+        {
+          status: 500,
+        }
+      );
+    }
+  }
+}
+
+export async function PUT(request: Request) {
+  const data = await request.json();
+  try {
+    const customer = await prisma.customer.create({
+      data: {
+        name: data.name,
+        address: data.address,
+        phone: data.phone,
+        status: "verified",
+        type: data.type,
+      },
+    });
+
+    return NextResponse.json({ customer: customer });
+  } catch (error: any) {
+    const { code, meta } = error;
+
+    if (code == "P2002") {
+      return new Response(
+        JSON.stringify({ message: "Customer already exist" }),
+        {
+          status: 500,
+        }
+      );
+    }
   }
 }

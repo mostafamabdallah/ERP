@@ -25,16 +25,36 @@ export async function GET(request: Request, { query }: any) {
 
 export async function POST(request: Request) {
   const data = await request.json();
+
+  console.log({
+    name: data.name,
+    price: data.price,
+    quantity: data.quantity,
+    unit: data.unit,
+  });
+
   try {
     const item = await prisma.item.create({
-      data: { ...data },
+      data: {
+        name: data.name,
+        price: data.price,
+        quantity: data.quantity,
+        unit: data.unit,
+        categories: {
+          create: {
+            name: data.category,
+          },
+        },
+      },
     });
     return NextResponse.json({ item: item });
   } catch (error: any) {
-    console.log(error);
-
     const { code, meta } = error;
-    const message = meta?.cause?.message || "Internal server error";
-    return NextResponse.json({ code, message }, { status: 500 });
+
+    if (code == "P2002") {
+      return new Response(JSON.stringify({ message: "Item already exist" }), {
+        status: 500,
+      });
+    }
   }
 }

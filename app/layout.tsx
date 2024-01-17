@@ -4,7 +4,10 @@ import "./globals.css";
 import { Ubuntu } from "next/font/google";
 import TopNav from "@/components/layout/TopNav";
 import { ConfigProvider } from "antd";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+// Create a new instance of QueryClient
+const queryClient = new QueryClient();
 const ubuntu = Ubuntu({
   subsets: ["latin"],
   weight: "400",
@@ -12,7 +15,7 @@ const ubuntu = Ubuntu({
 
 export const metadata = {
   title: "The 7 ERP",
-  description: "The best user frindely and easy ERP",
+  description: "The best user friendly and easy ERP",
 };
 
 export default function RootLayout({
@@ -29,15 +32,17 @@ export default function RootLayout({
           },
         }}
       >
-        <body className={`${ubuntu.className} bg-background`}>
-          <div className="flex flex-row">
-            <SideNav></SideNav>
-            <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background ">
-              <TopNav></TopNav>
-              <div className="flex flex-1 py-10 lg:px-10">{children}</div>
+        <QueryClientProvider client={queryClient}>
+          <body className={`${ubuntu.className} bg-background`}>
+            <div className="flex flex-row">
+              <SideNav></SideNav>
+              <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background ">
+                <TopNav></TopNav>
+                <div className="flex flex-1 py-10 lg:px-10">{children}</div>
+              </div>
             </div>
-          </div>
-        </body>
+          </body>
+        </QueryClientProvider>
       </ConfigProvider>
     </html>
   );
