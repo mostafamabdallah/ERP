@@ -46,7 +46,7 @@ model Item {
 // Define the Category model
 model Category {
   id     Int    @id @default(autoincrement())
-  name   String
+  name   String @unique
   Item   Item?  @relation(fields: [itemId], references: [id])
   itemId Int?
 }

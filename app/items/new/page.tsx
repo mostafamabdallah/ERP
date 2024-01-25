@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
 import { Button, Form, Input, InputNumber, Select, Space } from "antd";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Category } from "@prisma/client";
 
 type Props = {};
 const SubmitButton = ({ form }: { form: FormInstance }) => {
@@ -35,6 +36,15 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
 };
 
 const Page = (props: Props) => {
+  const categories = useQuery({
+    queryKey: ["categories"],
+    queryFn: (): Promise<Category[]> => {
+      return customFetch
+        .get("categories")
+        .then((response) => response.data.categories);
+    },
+    initialData: [],
+  });
   const [form] = Form.useForm();
   const { push } = useRouter();
   const mutation = useMutation({
@@ -44,9 +54,10 @@ const Page = (props: Props) => {
   });
 
   const onFinish = async (data: any) => {
+    console.log(data);
+
     try {
       await mutation.mutateAsync(data);
-      const x = await mutation;
     } catch (error: any) {
       alert(error.response.data.message);
     }
@@ -115,15 +126,13 @@ const Page = (props: Props) => {
               rules={[{ required: true, message: "Please select category!" }]}
             >
               <Select placeholder="Select item category">
-                <Select.Option value="خضروات">خضروات</Select.Option>
-                <Select.Option value="فاكة">فاكة</Select.Option>
-                <Select.Option value="منظفات">منظفات</Select.Option>
-                <Select.Option value="عطارة">عطارة</Select.Option>
-                <Select.Option value="بقالة">بقالة</Select.Option>
-                <Select.Option value="مستلزمات صحية">
-                  مستلزمات صحية
-                </Select.Option>
-                <Select.Option value="مستلزمات صحية"> مجمدات</Select.Option>
+                {categories.data.map((el, i) => {
+                  return (
+                    <Select.Option key={i} value={el.id}>
+                      {el.name}
+                    </Select.Option>
+                  );
+                })}
               </Select>
             </Form.Item>
           </div>

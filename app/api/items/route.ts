@@ -25,13 +25,7 @@ export async function GET(request: Request, { query }: any) {
 
 export async function POST(request: Request) {
   const data = await request.json();
-
-  console.log({
-    name: data.name,
-    price: data.price,
-    quantity: data.quantity,
-    unit: data.unit,
-  });
+  console.log(data);
 
   try {
     const item = await prisma.item.create({
@@ -41,15 +35,14 @@ export async function POST(request: Request) {
         quantity: data.quantity,
         unit: data.unit,
         categories: {
-          create: {
-            name: data.category,
-          },
+          connect: [{ id: data.category }], // Replace with actual category IDs
         },
       },
     });
     return NextResponse.json({ item: item });
   } catch (error: any) {
     const { code, meta } = error;
+    console.log(error);
 
     if (code == "P2002") {
       return new Response(JSON.stringify({ message: "Item already exist" }), {

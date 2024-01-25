@@ -40,6 +40,7 @@ CREATE TABLE `Category` (
     `name` VARCHAR(191) NOT NULL,
     `itemId` INTEGER NULL,
 
+    UNIQUE INDEX `Category_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

@@ -33,7 +33,12 @@ export type Item = {
   name: string;
   price: number;
   category?: string;
-  status?: string;
+  quantity?: string;
   unit?: string;
   orderId?: number;
+};
+
+export type Category = {
+  id: number;
+  name: string;
 };
