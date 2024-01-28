@@ -3,7 +3,7 @@ import { customFetch } from "@/utilities/fetch";
 import { Order } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import logo from "@/public/logo.png";
+import logo from "@/public/logoo.png";
 
 type Props = {};
 
