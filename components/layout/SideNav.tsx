@@ -1,6 +1,6 @@
 "use client";
 import React, { memo } from "react";
-import logo from "../../public/logo.PNG";
+import logo from "@/public/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGrip,
