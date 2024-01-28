@@ -33,12 +33,14 @@ export default function RootLayout({
         }}
       >
         <QueryClientProvider client={queryClient}>
-          <body className={`${ubuntu.className} bg-background`}>
+          <body className={`${ubuntu.className} bg-background `}>
             <div className="flex flex-row">
               <SideNav></SideNav>
               <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background ">
                 <TopNav></TopNav>
-                <div className="flex flex-1 py-10 lg:px-10">{children}</div>
+                <div className="flex flex-1 py-10 lg:px-10 cairoFont">
+                  {children}
+                </div>
               </div>
             </div>
           </body>

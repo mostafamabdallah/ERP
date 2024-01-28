@@ -1,13 +1,9 @@
 import React, { memo } from "react";
-import { SelectedItem } from "../customer/[id]/page";
 import { DeleteFilled } from "@ant-design/icons";
 import { Avatar, Button, Card, Col, InputNumber, Row } from "antd";
 import Meta from "antd/es/card/Meta";
-type Props = {
-  data: SelectedItem;
-};
 
-const ProductsCards = ({ data }: Props) => {
+const ProductsCards = ({ data }: any) => {
   return (
     <Card
       style={{ width: 300, marginTop: 16 }}

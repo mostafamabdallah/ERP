@@ -54,8 +54,6 @@ const Page = (props: Props) => {
   });
 
   const onFinish = async (data: any) => {
-    console.log(data);
-
     try {
       await mutation.mutateAsync(data);
     } catch (error: any) {

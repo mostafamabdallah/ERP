@@ -1,208 +1,147 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
 import { Item } from "@prisma/client";
-import { AutoComplete, Input } from "antd";
 import React, { useEffect, useReducer, useState } from "react";
 import ProductsCards from "../../components/ProductsCards";
-
-type Props = {};
-export type SelectedItem = {
-  id?: number;
-  name?: string;
-  quantity?: number;
-  category?: any;
-  unit?: any;
-  price?: any;
-};
-
-type ActionType =
-  | { type: "ADDITEM"; payload: any }
-  | { type: "REMOVEITEM"; payload: any }
-  | { type: "changeQuntaty"; payload: any };
-const reducer = (state: SelectedItem[], action: ActionType) => {
-  switch (action.type) {
-    case "ADDITEM":
-      let exictItem = {} as SelectedItem;
-      state.forEach((el, i) => {
-        if (el.id === action.payload.item.id) {
-          exictItem = el;
-        } else {
-          return false;
-        }
-      });
-      if (!exictItem.id) {
-        return [...state, action.payload.item];
-      } else {
-        return [
-          ...state.map((el, i) => {
-            if (el.id === exictItem.id) {
-              return {
-                ...el,
-                quantity: Number(el.quantity + action.payload.newQuantity),
-              };
-            } else {
-              return el;
-            }
-          }),
-        ];
-      }
-    case "REMOVEITEM":
-      return action.payload.selectedItems.filter(
-        (item: SelectedItem, index: number) =>
-          index !== Number(action.payload.id - 1)
-      );
-    case "changeQuntaty":
-      console.log(action.payload.id);
-      return action.payload.selectedItems.filter(
-        (item: SelectedItem, index: number) =>
-          index !== Number(action.payload.id - 1)
-      );
-    default:
-      throw new Error();
-  }
-};
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Form, InputNumber, Space, Select } from "antd";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const Page = ({ params }: { params: { id: string } }) => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [item, setItem] = useState<SelectedItem>();
-  const [searchName, setSearchName] = useState("");
-  const [deliveryCost, setDeliveryCost] = useState("5");
-  const [value, setValue] = useState("");
+  const { push } = useRouter();
 
-  // const onSelect = (value: any, option: Item) => {
-  //   setSearchName(option.name);
-  //   setItem({
-  //     ...item,
-  //     id: option.id,
-  //     name: option.name,
-  //     category: option.category,
-  //     unit: option.unit,
-  //     price: option.price,
-  //     quantity: 1,
-  //   });
-  // };
+  const [item, setItem] = useState<string | null>(null);
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return customFetch.post(`/orders/customers/${params.id}`, data);
+    },
+  });
 
-  const onChange = (data: string) => {
-    setValue(data);
-  };
-  const initialState: SelectedItem[] = [];
-  const [selectedItems, dispatch] = useReducer(reducer, initialState);
+  const filterOption = (
+    input: string,
+    option?: { label: string; value: string }
+  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
-  const getItemByName = (itemName: string) => {
-    if (itemName != "") {
-      customFetch
-        .get(`items/?name=${itemName}`)
-        .then((res) => {
-          setItems(res.data.items);
-        })
-        .catch((err) => {});
-    } else {
-      setItems([]);
+  const onFinish = async (data: any) => {
+    const order = {
+      customerId: params.id,
+      ...data,
+    };
+    try {
+      await mutation.mutateAsync(order).then((data) => {
+        push(`/orders/${data.data.order.id}`);
+      });
+    } catch (error: any) {
+      alert(error.response.data.message);
     }
   };
-
-  useEffect(() => {
-    getItemByName(searchName);
-  }, [searchName]);
-  useEffect(() => {
-    getItemByName(searchName);
-  }, [selectedItems]);
-
-  const deleteCallBack = (id: number) => {
-    dispatch({ type: "REMOVEITEM", payload: { id: id, selectedItems } });
-  };
-
-  let toatalPrice = 0;
-
-  // const createOrder = () => {
-  //   customFetch
-  //     .post("orders", {
-  //       customerID: params.id,
-  //       items: selectedItems,
-  //       delivaryCost: delivaryCost,
-  //     })
-  //     .then((res) => {})
-  //     .catch((err) => {
-  //       alert("Customer already exict");
-  //     });
-  // };
+  const { data, isSuccess } = useQuery({
+    queryKey: ["items", item],
+    queryFn: (): Promise<Item[]> => {
+      return customFetch
+        .get(`items/?name=${item}`)
+        .then((response) => response.data.items);
+    },
+    initialData: [],
+    enabled: Boolean(item),
+  });
 
   return (
-    <div className="flex flex-col w-full gap-6">
-      <div className="space-y-12">
-        <div className="pb-12">
-          <h2 className="text-base font-semibold leading-7 text-tittle">
-            Order Information
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
-            please enter all Order details.
-          </p>
-          <div className="flex flex-col">
-            <ul className="flex flex-row p-2 w-full rounded-md gap-3 flex-wrap">
-              {selectedItems.map((el: SelectedItem, i: number) => {
-                toatalPrice += Number(el.price) * Number(el.quantity);
-                return <ProductsCards key={i} data={el}></ProductsCards>;
-              })}
-            </ul>
-
-            {selectedItems.length ? (
-              <div className="flex flex-row w-full justify-end items-end gap-3">
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="itemname"
-                    className="block text-sm font-medium leading-6 text-tittle"
+    <div className="flex w-full justify-center">
+      <Form
+        name="dynamic_form_nest_item"
+        onFinish={onFinish}
+        autoComplete="off"
+        className="w-6/12"
+      >
+        <Form.List name="items">
+          {(fields, { add, remove }) => {
+            return (
+              <>
+                {fields.map(({ key, name, ...restField }) => {
+                  return (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="start"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "id"]}
+                        rules={[{ required: true, message: "Missing Item" }]}
+                      >
+                        <Select
+                          showSearch
+                          placeholder="Select an item"
+                          optionFilterProp="children"
+                          onSearch={(value) => {
+                            setItem(value);
+                          }}
+                          filterOption={filterOption}
+                          options={data.map((el, i) => {
+                            return {
+                              value: el.id.toString(),
+                              label: el.name,
+                            };
+                          })}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "quantity"]}
+                        rules={[
+                          {
+                            type: "number",
+                            required: true,
+                            message: "Please enter a valid number",
+                            min: 0,
+                            max: 1000,
+                          },
+                        ]}
+                      >
+                        <InputNumber
+                          className="w-full"
+                          placeholder="Quantity "
+                        />
+                      </Form.Item>
+                      <MinusCircleOutlined onClick={() => remove(name)} />
+                    </Space>
+                  );
+                })}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
                   >
-                    Delivery cost
-                  </label>{" "}
-                  <input
-                    onChange={(e) => {
-                      setDeliveryCost(e.target.value);
-                    }}
-                    type="text"
-                    defaultValue={5}
-                    placeholder="delivery "
-                    className="block w-[80px] p-2  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 "
-                  />
-                </div>
-                <button
-                  onClick={() => {
-                    // createOrder();
-                  }}
-                  type="button"
-                  className="rounded-md px-5 py-2 flex gap-1 text-sm items-center justify-between text-white bg-primary hover:bg-[#0f62fe95]"
-                >
-                  Finish order
-                </button>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="flex flex-row items-center gap-5 border-t border-border py-3 mt-5 justify-end">
-            <span>Total price:</span>{" "}
-            <span className="text-4xl text-danger font-bold bg-[#da1e2720] py-2 px-4 rounded-lg">
-              {toatalPrice} EG
-            </span>
-          </div>
-
-          <form onSubmit={(e) => {}}>
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 items-end">
-              <div className="sm:col-span-2">
-                <AutoComplete
-                  popupClassName="certain-category-search-dropdown"
-                  options={items.map((el, i) => {
-                    return { value: el.name, ...el };
-                  })}
-                  // onSelect={onSelect}
-                  onSearch={(text) => setSearchName(text)}
-                >
-                  <Input.Search size="large" placeholder="input here" />
-                </AutoComplete>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+                    Add item
+                  </Button>
+                </Form.Item>
+              </>
+            );
+          }}
+        </Form.List>
+        <Form.Item
+          className="w-full"
+          name="deliveryCost"
+          rules={[
+            {
+              type: "number",
+              required: true,
+              message: "Please enter a valid number",
+              min: 5,
+              max: 1000,
+            },
+          ]}
+        >
+          <InputNumber className="w-6/12" placeholder="Delivery Cost" />
+        </Form.Item>
+        <Form.Item>
+          <Button htmlType="submit">Submit</Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

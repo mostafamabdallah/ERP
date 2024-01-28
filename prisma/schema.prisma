@@ -30,6 +30,8 @@ model Order {
   customer     Customer    @relation(fields: [customerId], references: [id])
   items        ItemOrder[]
   deliveryCost Float
+  status       String
+  createdAt    DateTime    @default(now()) @map("create_at") @db.DateTime()
 }
 
 // Define the Item model
@@ -47,7 +49,7 @@ model Item {
 model Category {
   id     Int    @id @default(autoincrement())
   name   String @unique
-  Item   Item?  @relation(fields: [itemId], references: [id])
+  Items  Item[]
   itemId Int?
 }
 

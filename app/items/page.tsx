@@ -53,6 +53,8 @@ const Page = (props: Props) => {
             </thead>
             <tbody>
               {items.data.map((el, i) => {
+                console.log(el);
+
                 return (
                   <tr
                     key={i}
@@ -71,7 +73,9 @@ const Page = (props: Props) => {
                       {el.price} {"EG"}
                     </td>
                     <td className="px-2  py-2 lg:px-4  lg:py-3 truncate">
-                      {el.category}
+                      {el.categories?.map((el, i) => {
+                        return <span key={i}>{el.name}</span>;
+                      })}
                     </td>
                     <td className="px-2  py-2 lg:px-4  lg:py-3 truncate">
                       {el.quantity}

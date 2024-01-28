@@ -10,22 +10,38 @@ function generateOrderNumber() {
   return `ORD-${timestamp}-${randomSuffix}`;
 }
 const prisma = new PrismaClient();
-export async function GET(request: Request) {
-  const orders = await prisma.order.findMany({
+
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const customer = await prisma.customer.findUnique({
+    where: {
+      id: Number(params.id),
+    },
     include: {
-      customer: {},
+      orders: {
+        include: {
+          items: {
+            include: { item: true },
+          },
+        },
+      },
     },
   });
-  return NextResponse.json({ orders: orders });
+  return NextResponse.json({ customer: customer });
 }
 // Create New Order
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   const data = await request.json();
   try {
     const order = await prisma.order.create({
       data: {
         orderNumber: generateOrderNumber(),
-        customerId: Number(data.customerId),
+        customerId: Number(params.id),
         deliveryCost: data.deliveryCost,
         status: "pending",
         items: {

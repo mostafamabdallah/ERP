@@ -8,7 +8,15 @@ export async function GET(request: Request, { query }: any) {
   const { searchParams } = new URL(request.url);
   const name = searchParams.get("name");
   if (name == null) {
-    const items = await prisma.item.findMany({});
+    const items = await prisma.item.findMany({
+      include: {
+        categories: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
     return NextResponse.json({ items: items });
   } else {
     const items = await prisma.item.findMany({

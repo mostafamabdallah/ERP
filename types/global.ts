@@ -26,19 +26,25 @@ export type Order = {
   id: number;
   items: Item[];
   authorId: number;
+  status: string;
+  customerName: string;
+  address: string;
+  customerPhone: string;
+  customer: Customer;
+  deliveryCost: string;
 };
 
 export type Item = {
   id: number;
   name: string;
   price: number;
-  category?: string;
+  categories?: Category[];
   quantity?: string;
   unit?: string;
   orderId?: number;
 };
 
 export type Category = {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
 };
