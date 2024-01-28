@@ -13,11 +13,6 @@ const ubuntu = Ubuntu({
   weight: "400",
 });
 
-export const metadata = {
-  title: "The 7 ERP",
-  description: "The best user friendly and easy ERP",
-};
-
 export default function RootLayout({
   children,
 }: {
