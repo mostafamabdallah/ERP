@@ -4,10 +4,11 @@ import type { InputRef } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
+import CustomerStatus from "./CustomerStatus";
 
 type Props = {
   customers: Customer[];
@@ -17,6 +18,7 @@ type DataIndex = keyof Customer;
 
 const CustomerTable = ({ customers }: Props) => {
   const { push } = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   const searchInput = useRef<InputRef>(null);
 
@@ -25,13 +27,22 @@ const CustomerTable = ({ customers }: Props) => {
     confirm: (param?: FilterConfirmProps) => void,
     dataIndex: DataIndex
   ) => {
-    confirm();
+    confirm({ closeDropdown: false });
+  };
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
   };
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): ColumnType<Customer> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
@@ -40,6 +51,9 @@ const CustomerTable = ({ customers }: Props) => {
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
+          onKeyDown={() => {
+            handleSearch(selectedKeys as string[], confirm, dataIndex);
+          }}
           onPressEnter={() =>
             handleSearch(selectedKeys as string[], confirm, dataIndex)
           }
@@ -47,7 +61,7 @@ const CustomerTable = ({ customers }: Props) => {
         />
         <Space>
           <Button
-            type="primary"
+            className="bg-primary text-white"
             onClick={() =>
               handleSearch(selectedKeys as string[], confirm, dataIndex)
             }
@@ -56,6 +70,13 @@ const CustomerTable = ({ customers }: Props) => {
             style={{ width: 90 }}
           >
             Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
           </Button>
         </Space>
       </div>
@@ -107,28 +128,8 @@ const CustomerTable = ({ customers }: Props) => {
       ...getColumnSearchProps("status"),
       render: (status, record) => {
         return (
-          <div
-            className={` ${
-              status == "verified"
-                ? "bg-[#8cbfad20]"
-                : status == "warned"
-                ? "bg-[#a3965f20]"
-                : "bg-[#ff939820]"
-            } flex justify-center items-center  w-full px-3 py-1 rounded-sm font-bold`}
-          >
-            <span
-              className={`${
-                status == "verified"
-                  ? "text-[#8cbfad]"
-                  : status == "warned"
-                  ? "text-[#a3965f]"
-                  : "text-[#ff9398]"
-              } `}
-            >
-              {status}
-            </span>
-          </div>
-        );
+           <CustomerStatus status={status} id={record.id}></CustomerStatus>)
+
       },
     },
     {

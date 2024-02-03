@@ -1,11 +1,15 @@
 "use client";
 import { CardData } from "@/types/global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Statistic } from "antd";
 import React from "react";
+import CountUp from "react-countup";
 
 type Props = {
   data: CardData;
 };
+
+const formatter = (value: any) => <CountUp end={value} separator="," />;
 
 const InfoCard = ({ data }: Props) => {
   return (
@@ -22,7 +26,10 @@ const InfoCard = ({ data }: Props) => {
         <span className="text-gray-500 font-bold text-lg">{data.title}</span>
       </div>
       <div className="flex justify-between items-center gap-3">
-        <span className="text-tittle  text-3xl font-bold">{data.value}</span>
+        <span className="text-tittle  text-3xl font-bold">
+          <Statistic value={data.value} formatter={formatter} />
+        </span>
+
         <div className="flex flex-col">
           <span className="text-green-500">{data.delta}%</span>
           <span className="text-gray-300">vs last {data.period}</span>

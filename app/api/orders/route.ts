@@ -15,6 +15,9 @@ export async function GET(request: Request) {
     include: {
       customer: {},
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return NextResponse.json({ orders: orders });
 }

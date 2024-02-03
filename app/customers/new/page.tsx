@@ -3,7 +3,7 @@ import { customFetch } from "@/utilities/fetch";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
-import { Button, Form, Input, Select, Space } from "antd";
+import { Button, Form, Input, Select, Space, message } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {};
@@ -51,12 +51,16 @@ const Page = (props: Props) => {
     mutationFn: (data) => {
       return customFetch.post("/customers", data);
     },
+    onSuccess: (res) => {
+      message.success("customer added successfully").then(() => {
+        push(`/orders/customer/${res.data.customer.id}`);
+      });
+    },
   });
 
   const onFinish = async (data: any) => {
     try {
       await mutation.mutateAsync(data);
-      const x = await mutation;
     } catch (error: any) {
       alert(error.response.data.message);
     }

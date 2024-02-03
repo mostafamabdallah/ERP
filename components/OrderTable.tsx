@@ -3,7 +3,7 @@ import type { InputRef, MenuProps } from "antd";
 import { Button, Dropdown, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
@@ -17,6 +17,8 @@ type Props = {
 type DataIndex = keyof Order;
 
 const OrderTable = ({ orders }: Props) => {
+  const [searchText, setSearchText] = useState("");
+
   const data = orders.map((el, i) => {
     return {
       id: el.id,
@@ -37,11 +39,20 @@ const OrderTable = ({ orders }: Props) => {
     confirm: (param?: FilterConfirmProps) => void,
     dataIndex: DataIndex
   ) => {
-    confirm();
+    confirm({ closeDropdown: false });
+  };
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Order> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
@@ -50,6 +61,9 @@ const OrderTable = ({ orders }: Props) => {
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
+          onKeyDown={() => {
+            handleSearch(selectedKeys as string[], confirm, dataIndex);
+          }}
           onPressEnter={() =>
             handleSearch(selectedKeys as string[], confirm, dataIndex)
           }
@@ -57,15 +71,22 @@ const OrderTable = ({ orders }: Props) => {
         />
         <Space>
           <Button
-            type="primary"
+            className="bg-primary text-white"
             onClick={() =>
               handleSearch(selectedKeys as string[], confirm, dataIndex)
             }
             icon={<SearchOutlined />}
-            size="small"
+            size="middle"
             style={{ width: 90 }}
           >
             Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
           </Button>
         </Space>
       </div>

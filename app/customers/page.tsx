@@ -44,7 +44,7 @@ const Page = (props: Props) => {
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
       value: customers.data.filter((el) => {
-        return el.status == "Verified";
+        return el.status == "verified";
       }).length,
       delta: 5,
       currency: "users",
@@ -104,5 +104,6 @@ const Page = (props: Props) => {
     </div>
   );
 };
+
 
 export default Page;
