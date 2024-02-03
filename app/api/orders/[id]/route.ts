@@ -21,3 +21,20 @@ export async function GET(
   });
   return NextResponse.json({ order: order });
 }
+
+export async function POST(request: Request) {
+  const data = await request.json();
+  try {
+    const updatedOrder = await prisma.order.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        status: data.status,
+      },
+    });
+    return NextResponse.json({ order: updatedOrder });
+  } catch (error) {
+    console.log(error);
+  }
+}

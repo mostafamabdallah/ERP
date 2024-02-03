@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
-import type { InputRef } from "antd";
-import { Button, Input, Space, Table } from "antd";
+import type { InputRef, MenuProps } from "antd";
+import { Button, Dropdown, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef } from "react";
@@ -8,6 +8,7 @@ import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { Order } from "@/types/global";
+import OrderStatus from "@/app/orders/components/OrderStatus";
 
 type Props = {
   orders: Order[];
@@ -121,29 +122,7 @@ const OrderTable = ({ orders }: Props) => {
       key: "status",
       ...getColumnSearchProps("status"),
       render: (status, record) => {
-        return (
-          <div
-            className={` ${
-              status == "success"
-                ? "bg-[#8cbfad20]"
-                : status == "pending"
-                ? "bg-[#a3965f20]"
-                : "bg-[#ff939820]"
-            } flex justify-center items-center  w-full px-3 py-1 rounded-sm font-bold`}
-          >
-            <span
-              className={`${
-                status == "success"
-                  ? "text-[#8cbfad]"
-                  : status == "pending"
-                  ? "text-[#a3965f]"
-                  : "text-[#ff9398]"
-              } `}
-            >
-              {status}
-            </span>
-          </div>
-        );
+        return <OrderStatus status={status} id={record.id}></OrderStatus>;
       },
     },
     {

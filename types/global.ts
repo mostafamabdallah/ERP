@@ -7,7 +7,7 @@ export type CardData = {
   iconColor: string;
   iconBgColor: string;
   value: number;
-  delta?: number;
+  delta?: any;
   currency?: string;
   period?: string;
 };

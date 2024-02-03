@@ -33,7 +33,7 @@ const Page = (props: Props) => {
       iconColor: "text-[#0f62fe]",
       iconBgColor: "bg-[#0f62fe20]",
       value: data.length,
-      delta: 15,
+      delta: 100,
       currency: "users",
       period: "week",
     },
@@ -43,7 +43,7 @@ const Page = (props: Props) => {
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
       value: data.filter((el) => {
-        return el.status == "succeeded";
+        return el.status == "success";
       }).length,
       delta: 5,
       currency: "users",

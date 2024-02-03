@@ -7,7 +7,7 @@ import { ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Create a new instance of QueryClient
-const queryClient = new QueryClient();
+ const queryClient = new QueryClient();
 const ubuntu = Ubuntu({
   subsets: ["latin"],
   weight: "400",
