@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,7 +18,7 @@ model Customer {
   phone     String   @unique @db.VarChar(255)
   status    String   @db.VarChar(20)
   type      String?  @db.VarChar(20)
-  createdAt DateTime @default(now()) @map("create_at") @db.DateTime()
+  createdAt DateTime @default(now()) @map("create_at")
   orders    Order[]
 }
 
@@ -31,7 +31,7 @@ model Order {
   items        ItemOrder[]
   deliveryCost Float
   status       String
-  createdAt    DateTime    @default(now()) @map("create_at") @db.DateTime()
+  createdAt    DateTime    @default(now()) @map("create_at") 
 }
 
 // Define the Item model
