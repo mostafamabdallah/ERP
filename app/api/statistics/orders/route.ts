@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     let ordersPerDay = await prisma.$queryRawUnsafe(
-      "SELECT TO_CHAR(create_at, 'YYYY-MM-DD') AS day, COUNT(*) AS orderCount FROM `order` GROUP BY TO_CHAR(create_at, 'YYYY-MM-DD')"
+      'SELECT CAST(DATE(create_at) AS CHAR) AS day, CAST(COUNT(*) AS CHAR) AS orderCount FROM "Order" GROUP BY day;'
     );
 
     return NextResponse.json({ ordersPerDay: ordersPerDay });
