@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -38,6 +38,6 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.17.7",
-    "prisma": "^4.15.0"
+    "prisma": "^4.16.2"
   }
 }
