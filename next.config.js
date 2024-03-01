@@ -1,3 +1,6 @@
+// next.config.js
+
+/** @type {import('next').NextConfig} */
 const nextConfig = {
     async headers() {
         return [
@@ -12,6 +15,10 @@ const nextConfig = {
                 ]
             }
         ]
+    },
+    reactStrictMode: true,
+    env: {
+      BASE_URL: process.env.BASE_URL,
     }
 }
 
