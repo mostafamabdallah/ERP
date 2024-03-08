@@ -1,9 +1,20 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
-import { Order } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import logo from "@/public/logoo.png";
+import logo from "@/public/slogn.png";
+import QR from "@/public/QR.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLocation,
+  faLocationDot,
+  faMap,
+  faMotorcycle,
+  faPhone,
+  faPhoneFlip,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 type Props = {};
 
@@ -61,95 +72,188 @@ const Page = ({ params }: { params: { id: string } }) => {
       })
     : "";
 
-  return (
-    <div
-      className="flex flex-col w-full items-center "
-      style={{ direction: "rtl" }}
-    >
-      <div className="flex flex-col w-[500px] border-2 border-black p-4">
-        <div className="flex justify-between items-start">
-          <div className="10/12">
-            <p>
-              رقم الطلب: <span className="font-bold">{data?.id}</span>
-            </p>
-            <p className="border border-black p-1.5 w-fit  mt-3">
-              التاريخ : <span className="font-bold">{formattedDate}</span>
-            </p>
-            <p className="border border-black p-1.5 w-fit my-3">
-              {" "}
-              طيار : <span className="font-bold">{"حمادة"}</span>
-            </p>
-          </div>
-          <div className="w-2/12">
-            {" "}
-            <img src={logo.src} className="w-full "></img>
-          </div>
-        </div>
-        <table className="border border-black">
-          <thead className="bg-slate-200 border border-black">
-            <tr>
-              <th className="py-3 border border-black">م</th>
-              <th className="py-3 border border-black">أسم الصنف</th>
-              <th className="py-3 border border-black">عدد</th>
-              <th className="py-3 border border-black">السعر</th>
-              <th className="py-3 border border-black">القيمة</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.items?.map((el: any, i: number) => {
-              totalCost += Number(el.quantity) * Number(el.item.price);
-              return (
-                <tr key={i}>
-                  <td className="text-center border border-black">{i + 1}</td>
-                  <td className="text-center border border-black">
-                    {el.item.name}
-                  </td>
-                  <td className="text-center border border-black">
-                    {" "}
-                    {el.quantity}
-                  </td>
-                  <td className="text-center border border-black">
-                    {el.item.price}
-                  </td>
-                  <td className="text-center border border-black">
-                    {Number(el.quantity) * Number(el.item.price)}
-                  </td>
-                </tr>
-              );
-            })}
-            <tr>
-              <td className="text-center border border-black" colSpan={3}>
-                اجمالي المنتجات{" "}
-              </td>
-              <td className="text-center border border-black" colSpan={2}>
-                {totalCost}
-              </td>
-            </tr>
-            <tr>
-              <td className="text-center border border-black" colSpan={3}>
-                التوصيل{" "}
-              </td>
-              <td className="text-center border border-black" colSpan={2}>
-                {data?.deliveryCost}
-              </td>
-            </tr>
-            <tr className="bg-slate-200 font-bold">
-              <td className="text-center border border-black" colSpan={3}>
-                اجمالي الفاتورة{" "}
-              </td>
-              <td className="text-center border border-black " colSpan={2}>
-                {totalCost + Number(data?.deliveryCost)}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  const handlePrint = () => {
+    const printContent = document.getElementById("invoice")?.innerHTML;
+    if (!printContent) return;
 
-        <div className="flex flex-col items-center justify-center mt-5 ">
-          <p className="text-xl font-bold">ت : 01210671670</p>
-          <p className="text-xl font-bold ">تسويقة : لحد باب البيت</p>
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    printWindow.document.write("<html><head><title>Print Section</title>");
+    // Include Tailwind CSS in the print window
+    printWindow.document.write(
+      '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">'
+    );
+    printWindow.document.write(
+      '</head><body style="width:72.1mm ;  direction: rtl" >'
+    );
+    printWindow.document.write(
+      "<style> @media print { @page { size: auto; margin: 5px; } body { margin: 0 } } </style>"
+    );
+    printWindow.document.write(printContent);
+    printWindow.document.write("</body></html>");
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  return (
+    <>
+      <div
+        id="invoice"
+        className="flex flex-col w-full items-center "
+        style={{ direction: "rtl" }}
+      >
+        <div className="flex flex-col w-[300px]" style={{ width: "72.1mm" }}>
+          <div className="flex justify-center  items-start flex-wrap ">
+            <div className="w-6/12">
+              {" "}
+              <img src={logo.src} className="w-full "></img>
+            </div>
+            <div className="w-full">
+              <p className="flex justify-between text-xs">
+                <span>
+                  رقم الطلب: <span>{data?.id}</span>
+                </span>
+                <span>
+                  ID: <span>{data?.customer.id}</span>
+                </span>
+              </p>
+              <p className="flex justify-between text-xs">
+                <span className="flex gap-1 items-center">
+                  <FontAwesomeIcon
+                    className=" w-3"
+                    icon={faUser}
+                  ></FontAwesomeIcon>{" "}
+                  <span>{data?.customer.name}</span>
+                </span>
+                <span className="flex gap-1 items-center">
+                  <FontAwesomeIcon
+                    className=" w-3"
+                    icon={faPhoneFlip}
+                  ></FontAwesomeIcon>{" "}
+                  <span>{data?.customer.phone}</span>
+                </span>
+              </p>
+              <p className="flex justify-between text-xs">
+                <span className="flex gap-1 items-center">
+                  <FontAwesomeIcon
+                    className=" w-3"
+                    icon={faLocationDot}
+                  ></FontAwesomeIcon>
+                  {data?.customer.address}
+                </span>
+              </p>
+              <p className="flex justify-between text-xs">
+                <span className="text-xs">{formattedDate}</span>
+              </p>
+            </div>
+          </div>
+          <table className="border border-black mt-1">
+            <thead className="bg-slate-200 border border-black">
+              <tr>
+                <th className="py-1 border border-black text-xs">م</th>
+                <th className="py-1 border border-black text-xs">أسم الصنف</th>
+                <th className="py-1 border border-black text-xs">عدد</th>
+                <th className="py-1 border border-black text-xs">السعر</th>
+                <th className="py-1 border border-black text-xs">القيمة</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.items?.map((el: any, i: number) => {
+                totalCost += Number(el.quantity) * Number(el.item.price);
+                return (
+                  <tr key={i}>
+                    <td className="text-center border border-black text-xs">
+                      {i + 1}
+                    </td>
+                    <td className="text-center border border-black text-xs">
+                      {el.item.name}
+                    </td>
+                    <td className="text-center border border-black text-xs">
+                      {" "}
+                      {el.quantity}
+                    </td>
+                    <td className="text-center border border-black text-xs">
+                      {el.item.price}
+                    </td>
+                    <td className="text-center border border-black text-xs">
+                      {Number(el.quantity) * Number(el.item.price)}
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr>
+                <td
+                  className="text-center border border-black text-xs"
+                  colSpan={3}
+                >
+                  اجمالي المنتجات{" "}
+                </td>
+                <td
+                  className="text-center border border-black text-xs"
+                  colSpan={2}
+                >
+                  {totalCost}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-center border border-black text-xs"
+                  colSpan={3}
+                >
+                  التوصيل{" "}
+                </td>
+                <td
+                  className="text-center border border-black text-xs"
+                  colSpan={2}
+                >
+                  {data?.deliveryCost}
+                </td>
+              </tr>
+              <tr className="bg-slate-200 font-bold">
+                <td
+                  className="text-center border border-black text-xs"
+                  colSpan={3}
+                >
+                  اجمالي الفاتورة{" "}
+                </td>
+                <td
+                  className="text-center border border-black text-xs"
+                  colSpan={2}
+                >
+                  {totalCost + Number(data?.deliveryCost)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="flex flex-col items-center justify-around mt-2 text-sm">
+            <div className="w-full flex items-center">
+              <div className="w-9/12 flex flex-col">
+                <span className="flex gap-1 items-center">
+                  <FontAwesomeIcon
+                    className="w-3"
+                    icon={faWhatsapp}
+                  ></FontAwesomeIcon>{" "}
+                  <span>01125342420</span>
+                </span>
+                <span className="flex gap-1 items-center">
+                  <FontAwesomeIcon
+                    className="w-3"
+                    icon={faPhoneFlip}
+                  ></FontAwesomeIcon>{" "}
+                  <span>01080790884</span>
+                </span>
+              </div>{" "}
+              <div className="w-3/12 ">
+                <img src={QR.src}></img>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <button onClick={handlePrint}>Print Section</button>
+    </>
   );
 };
 
