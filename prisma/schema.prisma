@@ -38,7 +38,7 @@ model Order {
 model Item {
   id         Int         @id @default(autoincrement())
   name       String      @unique
-  quantity   Int
+  quantity   Float
   price      Float
   unit       String
   categories Category[]
@@ -59,7 +59,7 @@ model ItemOrder {
   order    Order @relation(fields: [orderId], references: [id])
   itemId   Int
   item     Item  @relation(fields: [itemId], references: [id])
-  quantity Int
+  quantity Float
 
   @@id([orderId, itemId])
 }

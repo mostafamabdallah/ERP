@@ -1,16 +1,12 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React from "react";
 import logo from "@/public/slogn.png";
 import QR from "@/public/QR.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLocation,
   faLocationDot,
-  faMap,
-  faMotorcycle,
-  faPhone,
   faPhoneFlip,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -153,7 +149,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               <tr>
                 <th className="py-1 border border-black text-xs">م</th>
                 <th className="py-1 border border-black text-xs">أسم الصنف</th>
-                <th className="py-1 border border-black text-xs">عدد</th>
+                <th className="py-1 border border-black text-xs">كمية</th>
                 <th className="py-1 border border-black text-xs">السعر</th>
                 <th className="py-1 border border-black text-xs">القيمة</th>
               </tr>
