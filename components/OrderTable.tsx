@@ -4,20 +4,58 @@ import { Button, Dropdown, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef, useState } from "react";
-import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { Order } from "@/types/global";
 import OrderStatus from "@/app/orders/components/OrderStatus";
-
+import { Modal } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { customFetch } from "@/utilities/fetch";
 type Props = {
   orders: Order[];
 };
 
 type DataIndex = keyof Order;
 
+const { confirm } = Modal;
+
+
+
 const OrderTable = ({ orders }: Props) => {
   const [searchText, setSearchText] = useState("");
+  const queryClient = useQueryClient();
+
+  const deleteOrder = (data: any) => {
+    return customFetch.put(`/orders/${data.id}`,data);
+  };
+  // @ts-ignore
+  const deleteOrderMutation = useMutation({
+    mutationFn: deleteOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+
+  const handleOrderDeleting = (id: any) => {
+    try {
+      deleteOrderMutation.mutate({
+        id: id,
+      });
+    } catch (error) {}
+  };
+
+
+  const showConfirm = (id: number) => {
+    confirm({
+      title: "Confirmation",
+      content: "Do you want to delete this order?",
+      okType: "danger",
+      onOk() {
+        handleOrderDeleting(id);
+      },
+    });
+  };
 
   const data = orders.map((el, i) => {
     return {
@@ -160,6 +198,25 @@ const OrderTable = ({ orders }: Props) => {
               }}
               className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
               icon={faEye}
+            ></FontAwesomeIcon>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Delete",
+      dataIndex: "delete",
+      key: "delete",
+      render: (id, record) => {
+        return (
+          <div className="flex gap-3">
+            {" "}
+            <FontAwesomeIcon
+              onClick={() => {
+                showConfirm(record.id);
+              }}
+              className="p-3 text-danger bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
+              icon={faTrash}
             ></FontAwesomeIcon>
           </div>
         );
