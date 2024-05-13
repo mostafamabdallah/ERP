@@ -61,7 +61,7 @@ const TopNav = (props: Props) => {
 
       <aside className="lg:w-[20%] 2xl:w-[20%] bg-primary  lg:hidden flex relative z-[999999] ">
         <nav className="lg:hidden  w-full flex ">
-          <div className=" mx-auto flex flex-row items-center justify-start text-primary fixed px-2  w-full p-5 ">
+          <div className=" mx-auto flex flex-row items-center justify-start text-primary fixed px-2 p-5 ">
             <button
               className="w-fit"
               onClick={() => {
