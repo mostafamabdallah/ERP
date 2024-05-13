@@ -224,7 +224,7 @@ const OrderTable = ({ orders }: Props) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  return <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }}/>;
 };
 
 export default OrderTable;

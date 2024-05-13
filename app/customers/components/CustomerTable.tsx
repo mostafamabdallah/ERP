@@ -160,7 +160,7 @@ const CustomerTable = ({ customers }: Props) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={customers} />;
+  return <Table columns={columns} dataSource={customers} pagination={{ pageSize: 100 }} />;
 };
 
 export default CustomerTable;
