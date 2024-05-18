@@ -6,7 +6,11 @@ import { customFetch } from "@/utilities/fetch";
 import { CustomDoughnut } from "@/components/charts/CustomDoughnut";
 export default function Home() {
   const formatter = (value: any) => <CountUp end={value} separator="," />;
-  const { data } = useQuery({
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["ordersPerDay"],
     queryFn: (): Promise<any> => {
       return customFetch
@@ -21,14 +25,16 @@ export default function Home() {
       <div className="flex gap-5 ">
         <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg flex-[3]">
           <span className="text-gray-500 font-bold text-lg">Orders</span>
-          <CustomLine
-            labels={data.map((el: any) => {
-              return el.day;
-            })}
-            data={data.map((el: any) => {
-              return el.orderCount;
-            })}
-          ></CustomLine>
+          {!isLoading && (
+            <CustomLine
+              labels={data.map((el: any) => {
+                return el.order_date;
+              })}
+              data={data.map((el: any) => {
+                return el.order_count;
+              })}
+            ></CustomLine>
+          )}
         </div>
         <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg flex-[1]">
           <span className="text-gray-500 font-bold text-lg">Target</span>
