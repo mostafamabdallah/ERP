@@ -29,16 +29,18 @@ export default function Home() {
     initialData: [],
   });
 
-
   const totalDeliveryMoney = useQuery({
     queryKey: ["deliveryMoney"],
     queryFn: (): Promise<any> => {
       return customFetch
         .get(`statistics/totalDeliveryMoney`)
-        .then((response) => response.data.totalDeliveryCost);
+        .then((response) => {
+          return response.data.totalDeliveryCost;
+        });
     },
     initialData: [],
   });
+
 
   const customers = useQuery({
     queryKey: ["customers"],
@@ -84,11 +86,12 @@ export default function Home() {
       icon: faExclamationCircle,
       iconColor: "text-[#a3965f]",
       iconBgColor: "bg-[#a3965f20]",
-      value: Number(totalDeliveryMoney),
+      value: Number(totalDeliveryMoney.data),
       delta: 15,
       currency: "users",
       period: "week",
     },
+
     {
       title: "Blocked Customers",
       icon: faLock,
@@ -106,7 +109,7 @@ export default function Home() {
   return (
     <main className="flex flex-col  justify-between w-full">
       <div className="flex gap-5 ">
-      {dashboardData.map((el, i) => {
+        {dashboardData.map((el, i) => {
           return <InfoCard key={i} data={el}></InfoCard>;
         })}
       </div>
