@@ -5,10 +5,11 @@ import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef, useState } from "react";
-import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import CustomerStatus from "./CustomerStatus";
+import { faPinterest } from "@fortawesome/free-brands-svg-icons";
 
 type Props = {
   customers: Customer[];
@@ -127,9 +128,7 @@ const CustomerTable = ({ customers }: Props) => {
       key: "status",
       ...getColumnSearchProps("status"),
       render: (status, record) => {
-        return (
-           <CustomerStatus status={status} id={record.id}></CustomerStatus>)
-
+        return <CustomerStatus status={status} id={record.id}></CustomerStatus>;
       },
     },
     {
@@ -154,13 +153,26 @@ const CustomerTable = ({ customers }: Props) => {
               className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
               icon={faEye}
             ></FontAwesomeIcon>
+            <FontAwesomeIcon
+              onClick={() => {
+                push(`/customers/${record.id}/update`);
+              }}
+              className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md "
+              icon={faEdit}
+            ></FontAwesomeIcon>
           </div>
         );
       },
     },
   ];
 
-  return <Table columns={columns} dataSource={customers} pagination={{ pageSize: 100 }} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={customers}
+      pagination={{ pageSize: 100 }}
+    />
+  );
 };
 
 export default CustomerTable;

@@ -14,7 +14,7 @@ export async function GET(
   return NextResponse.json({ customer: customers });
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request, context: any) {
   const data = await request.json();
   try {
     const updatedCustomer = await prisma.customer.update({
@@ -30,3 +30,21 @@ export async function POST(request: Request) {
     console.log(error);
   }
 }
+
+export async function PUT(request: Request, context: any) {
+  const data = await request.json();
+  try {
+    const updatedCustomer = await prisma.customer.update({
+      where: { id: Number(context.params.id) },
+      data: data,
+    });
+    return NextResponse.json({ customer: updatedCustomer });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+
+
