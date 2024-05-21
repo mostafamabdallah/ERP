@@ -1,18 +1,17 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
-import { Button, Form, Input, Select, Space, message } from "antd";
+import { Button, Form, Input, Select, Space, Spin, message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type Props = {};
-const SubmitButton = ({ form}:any) => {
+const SubmitButton = ({ form }: any) => {
   const [submittable, setSubmittable] = React.useState(false);
-  // Watch all values
   const values = Form.useWatch([], form);
 
-  React.useEffect(() => {
+  useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
       () => {
         setSubmittable(true);
@@ -47,14 +46,13 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["customer_orders"],
+    queryKey: [`customer_data_${params.id}`],
     queryFn: (): Promise<any> => {
       return customFetch
         .get(`orders/customers/${params.id}`)
         .then((response) => response.data.customer);
     },
   });
-
 
   const [form] = Form.useForm();
   const { push } = useRouter();
@@ -77,8 +75,28 @@ const Page = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  return (
-    !isLoading && (
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        name: data.name,
+        address: data.address,
+        phone: data.phone,
+        type: data.type,
+      });
+    }
+  }, [data, form]);
+
+  console.log(isLoading);
+  
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col w-full gap-6 p-6 md:p-0">
+        <Spin size="large" />
+      </div>
+    );
+  } else {
+    return (
       <div className="flex flex-col w-full gap-6 p-6 md:p-0">
         <Form
           form={form}
@@ -94,7 +112,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           }}
         >
           <Form.Item name="name" label="Full Name" rules={[{ required: true }]}>
-            <Input  />
+            <Input />
           </Form.Item>
           <Form.Item
             name="address"
@@ -121,7 +139,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 label="Gender"
                 rules={[{ required: true, message: "Please select gender!" }]}
               >
-                <Select  placeholder="select your gender">
+                <Select placeholder="select your gender">
                   <Select.Option value="male">Male</Select.Option>
                   <Select.Option value="female">Female</Select.Option>
                 </Select>
@@ -131,14 +149,14 @@ const Page = ({ params }: { params: { id: string } }) => {
 
           <Form.Item>
             <Space>
-              <SubmitButton form={form} data={data}/>
+              <SubmitButton form={form} data={data} />
               <Button htmlType="reset">Reset</Button>
             </Space>
           </Form.Item>
         </Form>
       </div>
-    )
-  );
+    );
+  }
 };
 
 export default Page;
