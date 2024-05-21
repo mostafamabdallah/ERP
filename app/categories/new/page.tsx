@@ -3,7 +3,7 @@ import { customFetch } from "@/utilities/fetch";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
-import { Button, Form, Input, InputNumber, Select, Space } from "antd";
+import { Button, Form, Input, InputNumber, Select, Space, message } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {};
@@ -21,7 +21,7 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
         setSubmittable(false);
       }
     );
-  }, [values]);
+  }, [values, form]);
 
   return (
     <Button
@@ -42,10 +42,16 @@ const Page = (props: Props) => {
       return customFetch.post("/categories", data);
     },
     onSuccess(data, variables, context) {
-      alert(data.data.category.name + "Has been added successfully");
+      message
+        .success(data.data.category.name + "Has been added successfully")
+        .then(() => {
+          push(`/categories`);
+        });
     },
     onError(error: any, variables, context) {
-      alert(error.response.data.message);
+      message.error(error.response.data.message).then(() => {
+        push(`/categories`);
+      });
     },
   });
 
@@ -54,7 +60,9 @@ const Page = (props: Props) => {
       const categoryMutation = await mutation;
       categoryMutation.mutateAsync(data);
     } catch (error: any) {
-      alert(error.response.data.message);
+      message.error(error.response.data.message).then(() => {
+        push(`/categories`);
+      });
     }
   };
 

@@ -71,7 +71,9 @@ const Page = ({ params }: { params: { id: string } }) => {
     try {
       await mutation.mutateAsync(data);
     } catch (error: any) {
-      alert(error.response.data.message);
+      message.error(error.response.data.message).then(() => {
+        push(`/customers`);
+      });
     }
   };
 
@@ -87,7 +89,6 @@ const Page = ({ params }: { params: { id: string } }) => {
   }, [data, form]);
 
   console.log(isLoading);
-  
 
   if (isLoading) {
     return (

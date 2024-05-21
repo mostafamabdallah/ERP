@@ -1,6 +1,7 @@
 import { customFetch } from "@/utilities/fetch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Dropdown } from "antd";
+import { Dropdown, message } from "antd";
+import { useRouter } from "next/router";
 import React from "react";
 type Props = {};
 const items = [
@@ -47,7 +48,7 @@ const CustomerStatus = ({ status, id }: any) => {
           try {
             await mutation.mutateAsync(data).then((data) => {});
           } catch (error: any) {
-            alert(error.response.data.message);
+            message.error(error.response.data.message).then(() => {});
           }
         },
       }}

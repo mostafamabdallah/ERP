@@ -3,7 +3,7 @@ import { customFetch } from "@/utilities/fetch";
 import { Item } from "@prisma/client";
 import React, { useEffect, useReducer, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, InputNumber, Space, Select } from "antd";
+import { Button, Form, InputNumber, Space, Select, message } from "antd";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -32,8 +32,9 @@ const Page = ({ params }: { params: { id: string } }) => {
         push(`/orders/${data.data.order.id}`);
       });
     } catch (error: any) {
-      alert(error.response.data.message);
-    }
+      message.error(error.response.data.message).then(() => {
+        push(`/categories`);
+      });    }
   };
   const { data, isSuccess } = useQuery({
     queryKey: ["items", item],

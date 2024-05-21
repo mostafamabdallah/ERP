@@ -3,7 +3,7 @@ import { customFetch } from "@/utilities/fetch";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
-import { Button, Form, Input, InputNumber, Select, Space } from "antd";
+import { Button, Form, Input, InputNumber, Select, Space, message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Category } from "@prisma/client";
 
@@ -22,7 +22,7 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
         setSubmittable(false);
       }
     );
-  }, [values]);
+  }, [values,form]);
 
   return (
     <Button
@@ -51,13 +51,20 @@ const Page = (props: Props) => {
     mutationFn: (data) => {
       return customFetch.post("/items", data);
     },
+    onSuccess: (res) => {
+      message.success("items added successfully").then(() => {
+        push(`/items`);
+      });
+    },
   });
 
   const onFinish = async (data: any) => {
     try {
       await mutation.mutateAsync(data);
     } catch (error: any) {
-      alert(error.response.data.message);
+      message.error(error.response.data.message).then(() => {
+        push(`/items`);
+      });
     }
   };
 

@@ -1,6 +1,7 @@
 import { customFetch } from "@/utilities/fetch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Dropdown } from "antd";
+import { Dropdown, message } from "antd";
+import { useRouter } from "next/navigation";
 import React from "react";
 type Props = {};
 const items = [
@@ -18,6 +19,7 @@ const items = [
   },
 ];
 const OrderStatus = ({ status, id }: any) => {
+  const { push } = useRouter();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (data) => {
@@ -47,8 +49,9 @@ const OrderStatus = ({ status, id }: any) => {
           try {
             await mutation.mutateAsync(data).then((data) => {});
           } catch (error: any) {
-            alert(error.response.data.message);
-          }
+            message.error(error.response.data.message).then(() => {
+              push(`/orders`);
+            });          }
         },
       }}
     >
