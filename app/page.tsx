@@ -3,23 +3,16 @@ import CountUp from "react-countup";
 import { CustomLine } from "@/components/charts/CustomLine";
 import { useQuery } from "@tanstack/react-query";
 import { customFetch } from "@/utilities/fetch";
-import { CustomDoughnut } from "@/components/charts/CustomDoughnut";
 import { Customer, Order } from "@/types/global";
 import {
   faBoxOpen,
-  faCheckCircle,
   faExclamationCircle,
   faLock,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import InfoCard from "@/components/layout/InfoCard";
 export default function Home() {
-  const formatter = (value: any) => <CountUp end={value} separator="," />;
-  const {
-    data = [],
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data = [], isLoading } = useQuery({
     queryKey: ["ordersPerDay"],
     queryFn: (): Promise<any> => {
       return customFetch
@@ -40,7 +33,6 @@ export default function Home() {
     },
     initialData: [],
   });
-
 
   const customers = useQuery({
     queryKey: ["customers"],
@@ -108,7 +100,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col w-full gap-5">
-      <div className="flex gap-5 ">
+      <div className="flex gap-5 flex-wrap flex-1 md:flex-nowrap">
         {dashboardData.map((el, i) => {
           return <InfoCard key={i} data={el}></InfoCard>;
         })}
