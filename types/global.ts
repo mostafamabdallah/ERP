@@ -32,6 +32,7 @@ export type Order = {
   customerPhone: string;
   customer: Customer;
   deliveryCost: string;
+  createdAt: string;
 };
 
 export type Item = {
