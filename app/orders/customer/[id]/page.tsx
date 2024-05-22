@@ -23,6 +23,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   const onFinish = async (data: any) => {
+    setDisabled(true)
     const order = {
       customerId: params.id,
       ...data,
@@ -46,6 +47,8 @@ const Page = ({ params }: { params: { id: string } }) => {
     initialData: [],
     enabled: Boolean(item),
   });
+
+  const [disabled,setDisabled] = useState(false)
 
   return (
     <div className="flex w-full justify-center">
@@ -139,7 +142,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           <InputNumber className="w-6/12" placeholder="Delivery Cost" />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit">Submit</Button>
+          <Button disabled={disabled} htmlType="submit">Submit</Button>
         </Form.Item>
       </Form>
     </div>
