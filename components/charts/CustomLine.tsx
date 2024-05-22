@@ -36,7 +36,7 @@ export const options = {
   },
 };
 
-export function CustomLine({ labels, data , dataSet}: any) {
+export function CustomLine({ labels , dataSet}: any) {
   const dataConfig = {
     labels,
     datasets:dataSet

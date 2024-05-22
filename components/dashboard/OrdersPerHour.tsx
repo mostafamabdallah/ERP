@@ -25,16 +25,15 @@ const OrdersPerHour = (props: Props) => {
             dataSet={[
               {
                 label: "Orders Per Hour",
-                data: data,
+                data: data.map((el: any) => {
+                  return el.order_count;
+                }),
                 borderColor: "#542582",
                 backgroundColor: "#54258260",
               },
             ]}
             labels={data.map((el: any) => {
-              return moment(el.hour).format('h A');
-            })}
-            data={data.map((el: any) => {
-              return el.order_count;
+              return moment(el.hour).format("h A");
             })}
           ></CustomLine>
         )}
