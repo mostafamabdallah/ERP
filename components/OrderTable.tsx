@@ -12,6 +12,7 @@ import OrderStatus from "@/app/orders/components/OrderStatus";
 import { Modal } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { customFetch } from "@/utilities/fetch";
+import moment from "moment";
 type Props = {
   orders: Order[];
 };
@@ -20,14 +21,12 @@ type DataIndex = keyof Order;
 
 const { confirm } = Modal;
 
-
-
 const OrderTable = ({ orders }: Props) => {
   const [searchText, setSearchText] = useState("");
   const queryClient = useQueryClient();
 
   const deleteOrder = (data: any) => {
-    return customFetch.put(`/orders/${data.id}`,data);
+    return customFetch.put(`/orders/${data.id}`, data);
   };
   // @ts-ignore
   const deleteOrderMutation = useMutation({
@@ -44,7 +43,6 @@ const OrderTable = ({ orders }: Props) => {
       });
     } catch (error) {}
   };
-
 
   const showConfirm = (id: number) => {
     confirm({
@@ -65,6 +63,7 @@ const OrderTable = ({ orders }: Props) => {
       address: el.customer.address,
       status: el.status,
       deliveryCost: el.deliveryCost,
+      createdAt: moment(el.createdAt).format('YYYY-MM-DD h:mm A'),
     };
   });
 
@@ -176,6 +175,12 @@ const OrderTable = ({ orders }: Props) => {
       ...getColumnSearchProps("address"),
     },
     {
+      title: "Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      ...getColumnSearchProps("createdAt"),
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -224,7 +229,9 @@ const OrderTable = ({ orders }: Props) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }}/>;
+  return (
+    <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} />
+  );
 };
 
 export default OrderTable;
