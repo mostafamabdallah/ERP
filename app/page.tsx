@@ -11,6 +11,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import InfoCard from "@/components/layout/InfoCard";
+import moment from "moment";
 export default function Home() {
   const { data = [], isLoading } = useQuery({
     queryKey: ["ordersPerDay"],
@@ -111,7 +112,7 @@ export default function Home() {
           {!isLoading && (
             <CustomLine
               labels={data.map((el: any) => {
-                return el.order_date;
+                return moment(el.order_date).format("YYYY-MM-DD");
               })}
               data={data.map((el: any) => {
                 return el.order_count;
