@@ -33,7 +33,7 @@ export async function GET(request: Request, context: any) {
   } else if (param == "ordersPerHour") {
     try {
       let ordersPerHour = await prisma.$queryRawUnsafe(
-        `SELECT EXTRACT(HOUR FROM "create_at") as hour, COUNT(*) as order_count FROM "Order" GROUP BY hour ORDER BY hour;`
+        `SELECT EXTRACT(HOUR FROM "create_at") as hour, COUNT(*)::text as order_count FROM "Order" GROUP BY hour ORDER BY hour;`
       );
       return NextResponse.json({ ordersPerHour: ordersPerHour });
     } catch (error) {

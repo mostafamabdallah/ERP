@@ -33,7 +33,7 @@ const OrdersPerHour = (props: Props) => {
               },
             ]}
             labels={data.map((el: any) => {
-              return moment(el.hour).format("h A");
+              return el.hour;
             })}
           ></CustomLine>
         )}
