@@ -48,5 +48,5 @@ export function CustomLine({ labels, data }: any) {
       },
     ],
   };
-  return <Line height={"100px"} options={options} data={dataConfig} />;
+  return <Line height={"80px"} options={options} data={dataConfig} />;
 }

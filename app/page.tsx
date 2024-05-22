@@ -107,14 +107,14 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex flex-col  justify-between w-full">
+    <main className="flex flex-col w-full gap-5">
       <div className="flex gap-5 ">
         {dashboardData.map((el, i) => {
           return <InfoCard key={i} data={el}></InfoCard>;
         })}
       </div>
       <div className="flex gap-5 ">
-        <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg flex-[3]">
+        <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg w-full">
           <span className="text-gray-500 font-bold text-lg">Orders</span>
           {!isLoading && (
             <CustomLine
@@ -126,10 +126,6 @@ export default function Home() {
               })}
             ></CustomLine>
           )}
-        </div>
-        <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg flex-[1]">
-          <span className="text-gray-500 font-bold text-lg">Target</span>
-          <CustomDoughnut></CustomDoughnut>
         </div>
       </div>
     </main>
