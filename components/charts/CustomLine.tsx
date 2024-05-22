@@ -36,17 +36,10 @@ export const options = {
   },
 };
 
-export function CustomLine({ labels, data }: any) {
+export function CustomLine({ labels, data , dataSet}: any) {
   const dataConfig = {
     labels,
-    datasets: [
-      {
-        label: "Orders",
-        data: data,
-        borderColor: "#542582",
-        backgroundColor: "#54258260",
-      },
-    ],
+    datasets:dataSet
   };
   return <Line height={"80px"} options={options} data={dataConfig} />;
 }
