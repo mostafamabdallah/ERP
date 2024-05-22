@@ -7,7 +7,7 @@ import { ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Create a new instance of QueryClient
- const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 const ubuntu = Ubuntu({
   subsets: ["latin"],
   weight: "400",
@@ -20,6 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/icon.png" sizes="any" />
+        <title>Taswiqa</title>
+      </head>
       <ConfigProvider
         theme={{
           token: {
