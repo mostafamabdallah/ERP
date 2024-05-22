@@ -3,6 +3,7 @@ import { CustomLine } from "../charts/CustomLine";
 import { useQuery } from "@tanstack/react-query";
 import { customFetch } from "@/utilities/fetch";
 import moment from "moment";
+import { CustomBar } from "../charts/CustomBar";
 
 type Props = {};
 
@@ -21,21 +22,21 @@ const OrdersPerHour = (props: Props) => {
       <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg w-full">
         <span className="text-gray-500 font-bold text-lg">Orders per Hour</span>
         {!isLoading && (
-          <CustomLine
+          <CustomBar
             dataSet={[
               {
                 label: "Orders Per Hour",
                 data: data.map((el: any) => {
                   return el.order_count;
                 }),
-                borderColor: "#542582",
-                backgroundColor: "#54258260",
+                borderColor: "#fcdc00",
+                backgroundColor: "#fcdc0080",
               },
             ]}
             labels={data.map((el: any) => {
               return el.hour;
             })}
-          ></CustomLine>
+          ></CustomBar>
         )}
       </div>
     </div>
