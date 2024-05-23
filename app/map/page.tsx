@@ -29,24 +29,25 @@ const deliveryManPosition: [number, number] = [
 
 const Page: React.FC = () => {
   return (
-    <MapContainer
-      center={position}
-      zoom={16}
-      style={{ height: "800px", width: "100%" }}
-    >
-      {/* Satellite view */}
-      <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-      {/* OpenStreetMap layer with street names and places */}
+    <></>
+    // <MapContainer
+    //   center={position}
+    //   zoom={16}
+    //   style={{ height: "800px", width: "100%" }}
+    // >
+    //   {/* Satellite view */}
+    //   <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+    //   {/* OpenStreetMap layer with street names and places */}
 
-      <Marker position={position} >
-        <Popup>مقر التسويقة</Popup>
-      </Marker>
-      <Marker position={deliveryManPosition} >
-        <Popup>
-          طيار <br /> محمد
-        </Popup>
-      </Marker>
-    </MapContainer>
+    //   <Marker position={position} >
+    //     <Popup>مقر التسويقة</Popup>
+    //   </Marker>
+    //   <Marker position={deliveryManPosition} >
+    //     <Popup>
+    //       طيار <br /> محمد
+    //     </Popup>
+    //   </Marker>
+    // </MapContainer>
   );
 };
 
