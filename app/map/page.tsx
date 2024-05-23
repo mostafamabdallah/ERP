@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import React from "react";
+// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import taswiqa from "../../public/icon.png";
@@ -27,39 +27,8 @@ const deliveryManPosition: [number, number] = [
   30.82714802683165, 30.534317019077328,
 ];
 
-const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
-const Marker = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import("react-leaflet").then(mod => mod.Popup), { ssr: false });
-
 const Page: React.FC = () => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null; // Or a loading spinner
-  }
-
-  return (
-    <MapContainer
-      center={position}
-      zoom={16}
-      style={{ height: "800px", width: "100%" }}
-    >
-      <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-      <Marker position={position} icon={taswiqaIcon}>
-        <Popup>مقر التسويقة</Popup>
-      </Marker>
-      <Marker position={deliveryManPosition} icon={deliveryManIcon}>
-        <Popup>
-          طيار <br /> محمد
-        </Popup>
-      </Marker>
-    </MapContainer>
-  );
+  return <></>;
 };
 
 export default Page;
