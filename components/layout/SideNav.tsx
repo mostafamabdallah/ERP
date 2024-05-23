@@ -8,6 +8,7 @@ import {
   faTruckFast,
   faBagShopping,
   faLayerGroup,
+  faMap,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
@@ -37,6 +38,11 @@ const pages = [
     name: "Categories",
     icon: faLayerGroup,
     url: "/categories",
+  },
+  {
+    name: "Map",
+    icon: faMap,
+    url: "/map",
   },
 ];
 
