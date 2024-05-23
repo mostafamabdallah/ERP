@@ -19,15 +19,16 @@ model Customer {
 }
 
 model Order {
-  id           Int         @id @default(autoincrement())
-  orderNumber  String
-  customerId   Int
-  deliveryCost Float
-  status       String
-  createdAt    DateTime    @default(now()) @map("create_at")
-  items        ItemOrder[]
-  customer     Customer    @relation(fields: [customerId], references: [id])
+  id            Int          @id @default(autoincrement())
+  orderNumber   String
+  customerId    Int
+  deliveryCost  Float
+  status        String
+  createdAt     DateTime     @default(now()) @map("create_at")
+  items         ItemOrder[]
+  customer      Customer     @relation(fields: [customerId], references: [id])
   deliveryManId Int?
+  deliveryMan   DeliveryMan? @relation(fields: [deliveryManId], references: [id], onDelete: SetNull)
 }
 
 model Item {
@@ -58,9 +59,10 @@ model ItemOrder {
 }
 
 model DeliveryMan {
-  id        Int    @id @default(autoincrement())
-  name      String @db.VarChar(255)
-  phone     String @db.VarChar(20)
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  phone     String  @db.VarChar(20)
   latitude  Float
   longitude Float
+  orders    Order[]
 }
