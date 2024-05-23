@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-// import "leaflet/dist/leaflet.css";
-// import L from "leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 import taswiqa from "../../public/icon.png";
 import deliveryMan from "../../public/delivaryman.png";
 
@@ -28,7 +28,26 @@ const deliveryManPosition: [number, number] = [
 ];
 
 const Page: React.FC = () => {
-  return <></>;
+  return (
+    <MapContainer
+      center={position}
+      zoom={16}
+      style={{ height: "800px", width: "100%" }}
+    >
+      {/* Satellite view */}
+      <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+      {/* OpenStreetMap layer with street names and places */}
+
+      <Marker position={position} >
+        <Popup>مقر التسويقة</Popup>
+      </Marker>
+      <Marker position={deliveryManPosition} >
+        <Popup>
+          طيار <br /> محمد
+        </Popup>
+      </Marker>
+    </MapContainer>
+  );
 };
 
 export default Page;
