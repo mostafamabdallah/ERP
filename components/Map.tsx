@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import taswiqa from "../public/icon.png";
 import deliveryMan from "../public/delivaryman.png";

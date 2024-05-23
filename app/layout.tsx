@@ -5,6 +5,7 @@ import { Ubuntu } from "next/font/google";
 import TopNav from "@/components/layout/TopNav";
 import { ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "leaflet/dist/leaflet.css";
 
 // Create a new instance of QueryClient
 const queryClient = new QueryClient();
