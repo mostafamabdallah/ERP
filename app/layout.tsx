@@ -38,7 +38,7 @@ export default function RootLayout({
               <SideNav></SideNav>
               <div className="flex flex-col w-full lg:w-10/12 h-screen bg-background ">
                 <TopNav></TopNav>
-                <div className="flex flex-1 py-10 lg:px-10 cairoFont">
+                <div className="flex flex-1 py-10 lg:px-10 cairoFont h-[90vh] overflow-y-auto">
                   {children}
                 </div>
               </div>

@@ -22,6 +22,14 @@ export type Customer = {
   createdAt: string;
 };
 
+export type Employee = {
+  id: number;
+  name: string;
+  phone: string;
+  job: string;
+  orders: Order[];
+};
+
 export type Order = {
   id: number;
   items: Item[];
