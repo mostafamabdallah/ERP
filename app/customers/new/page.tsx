@@ -108,6 +108,7 @@ const Page = (props: Props) => {
               <Select placeholder="select your gender">
                 <Select.Option value="male">Male</Select.Option>
                 <Select.Option value="female">Female</Select.Option>
+                <Select.Option value="company">Company</Select.Option>
               </Select>
             </Form.Item>
           </div>
