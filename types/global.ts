@@ -27,6 +27,8 @@ export type Employee = {
   name: string;
   phone: string;
   job: string;
+  latitude: number;
+  longitude: number;
   orders: Order[];
 };
 

@@ -4,6 +4,10 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import taswiqa from "../public/icon.png";
 import deliveryMan from "../public/delivaryman.png";
+import { useQuery } from "@tanstack/react-query";
+import { customFetch } from "@/utilities/fetch";
+import { Spin } from "antd";
+import { Employee } from "@/types/global";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -22,13 +26,19 @@ const deliveryManIcon = L.icon({
 });
 
 const position: [number, number] = [30.824350874212136, 30.53429040746672];
-const deliveryManPosition: [number, number] = [
-  30.82714802683165, 30.534317019077328,
-];
-
-
 const Map: React.FC = () => {
-  return (
+  const { data, isLoading } = useQuery({
+    queryKey: [`employees_delivery`],
+    queryFn: (): Promise<any> => {
+      return customFetch
+        .get(`employees?type=delivery`)
+        .then((response) => response.data.employees);
+    },
+    refetchOnWindowFocus: true,
+    refetchInterval: 1000
+  });
+
+  return !isLoading ? (
     <MapContainer
       center={position}
       zoom={16}
@@ -38,12 +48,22 @@ const Map: React.FC = () => {
       <Marker position={position} icon={taswiqaIcon}>
         <Popup>مقر التسويقة</Popup>
       </Marker>
-      <Marker position={deliveryManPosition} icon={deliveryManIcon}>
-        <Popup>
-          طيار <br /> محمد
-        </Popup>
-      </Marker>
+      {data?.map((el: Employee, i: number) => {
+        return (
+          <Marker
+            key={i}
+            position={[el.latitude, el.longitude]}
+            icon={deliveryManIcon}
+          >
+            <Popup>
+              طيار <br /> {el.name}
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
+  ) : (
+    <Spin></Spin>
   );
 };
 
