@@ -98,7 +98,7 @@ const Page = (props: Props) => {
               rules={[{ required: true, message: "Please select Position!" }]}
             >
               <Select placeholder="select your Position">
-                <Select.Option value="delivery man">Delivery Man</Select.Option>
+                <Select.Option value="delivery">Delivery Man</Select.Option>
                 <Select.Option value="manger">Manger</Select.Option>
                 <Select.Option value="call center">Call Center</Select.Option>
               </Select>
