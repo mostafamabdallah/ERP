@@ -11,7 +11,7 @@ export async function GET(request: Request, context: any) {
   if (type) {
     const employees = await prisma.employees.findMany({
       where: {
-        job: "deliver man",
+        job: "delivery",
       },
     });
 
