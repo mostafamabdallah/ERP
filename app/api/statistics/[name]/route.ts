@@ -1,12 +1,15 @@
 import { PrismaClient } from "@prisma/client";
+import moment from "moment";
 
 const prisma = new PrismaClient();
-
+interface TotalMoneyPerDay {
+  date: string;
+  totalMoney: number;
+}
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, context: any) {
   let param = context.params.name;
-
   if (param == "ordersPerDay") {
     try {
       let ordersPerDay = await prisma.$queryRawUnsafe(
@@ -36,6 +39,61 @@ export async function GET(request: Request, context: any) {
         `SELECT TO_CHAR("create_at", 'HH AM') as hour, COUNT(*)::text as order_count FROM "Order" GROUP BY hour ORDER BY hour;`
       );
       return NextResponse.json({ ordersPerHour: ordersPerHour });
+    } catch (error) {
+      console.log(error);
+    }
+  } else if (param == "moneyPerDay") {
+    try {
+  // Group orders by day and sum the total cost
+  const ordersPerDay = await prisma.order.groupBy({
+    by: ['createdAt'],
+    _sum: {
+      deliveryCost: true
+    },
+    _count: true
+  });
+
+  const result: TotalMoneyPerDay[] = [];
+
+  for (let orderGroup of ordersPerDay) {
+    const date = moment(orderGroup.createdAt).format("YYYY-MM-DD")
+    // Get all order IDs from the orderGroup
+    const orderIds = await prisma.order.findMany({
+      where: {
+        createdAt: orderGroup.createdAt
+      },
+      select: {
+        id: true
+      }
+    }).then(orders => orders.map(order => order.id));
+
+    // Calculate the total item price for each order
+    const items = await prisma.itemOrder.findMany({
+      where: {
+        orderId: {
+          in: orderIds
+        }
+      },
+      include: {
+        item: true
+      }
+    });
+
+    // Sum up item prices
+    let totalItemPrice = items.reduce((total, itemOrder) => {
+      return total + (itemOrder.quantity * itemOrder.item.price);
+    }, 0);
+
+    // Use optional chaining and default value for deliveryCost
+    const totalMoney = (orderGroup._sum.deliveryCost ?? 0) + totalItemPrice;
+
+    result.push({
+      date,
+      totalMoney
+    });
+  }
+
+      return NextResponse.json({ moneyPerDay: result });
     } catch (error) {
       console.log(error);
     }
