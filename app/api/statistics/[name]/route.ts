@@ -46,10 +46,12 @@ export async function GET(request: Request, context: any) {
       const money = await prisma.$queryRaw<
         { date: string; deliveryCostSum: number; orderIds: number[] }[]
       >`
-      SELECT  DATE("create_at") as date, 
-          COALESCE(SUM("deliveryCost"), 0) as "cost"
-        FROM "Order"
-        GROUP BY DATE("create_at")`;
+      SELECT
+      DATE("create_at") as date,
+      COALESCE(SUM("deliveryCost"), 0) as "cost"
+      FROM "Order"
+      GROUP BY DATE("create_at")
+      ORDER BY DATE("create_at")`;
     
 
       return NextResponse.json({ moneyPerDay: money });
