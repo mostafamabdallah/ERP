@@ -44,48 +44,16 @@ export async function GET(request: Request, context: any) {
     }
   } else if (param == "moneyPerDay") {
     try {
-      const ordersPerDay = await prisma.order.groupBy({
-        by: ["createdAt"],
-        _sum: {
-          deliveryCost: true,
-        },
-        _count: true,
-      });
-      const result: TotalMoneyPerDay[] = [];
-      for (let orderGroup of ordersPerDay) {
-        const date = moment(orderGroup.createdAt).format("YYYY-MM-DD");
-        // Get all order IDs from the orderGroup
-        const orderIds = await prisma.order
-          .findMany({
-            where: {
-              createdAt: orderGroup.createdAt,
-            },
-            select: {
-              id: true,
-            },
-          })
-          .then((orders) => orders.map((order) => order.id));
-        const items = await prisma.itemOrder.findMany({
-          where: {
-            orderId: {
-              in: orderIds,
-            },
-          },
-          include: {
-            item: true,
-          },
-        });
-        let totalItemPrice = items.reduce((total, itemOrder) => {
-          return total + itemOrder.quantity * itemOrder.item.price;
-        }, 0);
-        const totalMoney = (orderGroup._sum.deliveryCost ?? 0) + totalItemPrice;
-        result.push({
-          date,
-          totalMoney,
-        });
-      }
+      const money = await prisma.$queryRaw<
+        { date: string; deliveryCostSum: number; orderIds: number[] }[]
+      >`
+      SELECT  DATE("create_at") as date, 
+          COALESCE(SUM("deliveryCost"), 0) as "cost"
+        FROM "Order"
+        GROUP BY DATE("create_at")`;
+    
 
-      return NextResponse.json({ moneyPerDay: result });
+      return NextResponse.json({ moneyPerDay: money });
     } catch (error) {
       console.log(error);
     }

@@ -27,7 +27,7 @@ const MoneyPerDay = (props: Props) => {
                   {
                     label: "Money Per Days",
                     data: data.map((el: any) => {
-                      return el.totalMoney;
+                      return el.cost;
                     }),
                     borderColor: "#FA383E",
                     backgroundColor: "#FA383E20",
