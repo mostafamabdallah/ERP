@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import moment from "moment";
-
+export const maxDuration = 300
 const prisma = new PrismaClient();
 interface TotalMoneyPerDay {
   date: string;
