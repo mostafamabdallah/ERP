@@ -23,12 +23,12 @@ const TopCustomers = (props: Props) => {
   return (
     <>
       <span className="text-gray-500 font-bold text-lg">Top 10 Customers</span>
-      <div className="flex gap-5 flex-wrap flex-1 md:flex-nowrap">
+      <div className="flex gap-5 flex-wrap ">
         {data.map((el: any, i: number) => {
           return (
             <div
               key={i}
-              className="w-full flex flex-col gap-3 px-6 py-4 bg-white rounded-lg "
+              className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg  "
             >
               <div className="flex justify-start gap-3 items-center">
                 <div
@@ -36,16 +36,16 @@ const TopCustomers = (props: Props) => {
                 >
                   <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
                 </div>
-                <span className="text-gray-500 font-bold text-lg">
+                <span className="font-bold text-lg ">
                   {el.name}
                 </span>
               </div>
-              <div className="flex justify-between items-center gap-3">
-                <span className="text-tittle  text-3xl font-bold">
-                  <Statistic
+              <div className="flex justify-between items-center gap-3 text-primary">
+                <span className="text-tittle  text-3xl font-bold ">
+                  <Statistic  className=""
                     value={el["_count"]?.orders}
                     formatter={formatter}
-                    prefix="No. Orders:"
+                    suffix="orders"
                   />
                 </span>
               </div>
