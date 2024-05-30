@@ -52,11 +52,31 @@ export async function GET(request: Request, context: any) {
       FROM "Order"
       GROUP BY DATE("create_at")
       ORDER BY DATE("create_at")`;
-    
-
       return NextResponse.json({ moneyPerDay: money });
     } catch (error) {
       console.log(error);
     }
+  } else if (param == "topCustomers") {
+    try {
+      const topCustomers = await prisma.customer.findMany({
+        select: {
+          id: true,
+          name: true,
+          _count: {
+            select: { orders: true },
+          },
+        },
+        orderBy: {
+          orders: {
+            _count: 'desc',
+          },
+        },
+        take: 10,
+      });
+      return NextResponse.json({ topCustomers: topCustomers });
+    } catch (error) {
+      console.log(error);
+    }
   }
+  
 }
