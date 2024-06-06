@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     },
     orderBy: {
       orders: {
-        _count: 'asc',
+        _count: 'desc',
       },
     },
   });
