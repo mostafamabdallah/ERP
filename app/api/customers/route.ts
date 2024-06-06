@@ -5,7 +5,18 @@ const prisma = new PrismaClient();
 // Get all users
 
 export async function GET(request: Request) {
-  const customers = await prisma.customer.findMany({});
+  const customers = await prisma.customer.findMany({
+    include: {
+      _count: {
+        select: { orders: true },
+      },
+    },
+    orderBy: {
+      orders: {
+        _count: 'asc',
+      },
+    },
+  });
 
   return NextResponse.json({
     customers: customers,
