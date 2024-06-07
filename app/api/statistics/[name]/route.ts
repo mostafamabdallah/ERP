@@ -62,13 +62,14 @@ export async function GET(request: Request, context: any) {
         select: {
           id: true,
           name: true,
+          type: true,
           _count: {
             select: { orders: true },
           },
         },
         orderBy: {
           orders: {
-            _count: 'desc',
+            _count: "desc",
           },
         },
         take: 10,
@@ -78,5 +79,4 @@ export async function GET(request: Request, context: any) {
       console.log(error);
     }
   }
-  
 }
