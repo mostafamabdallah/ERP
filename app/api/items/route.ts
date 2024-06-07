@@ -33,8 +33,6 @@ export async function GET(request: Request, { query }: any) {
 
 export async function POST(request: Request) {
   const data = await request.json();
-  console.log(data);
-
   try {
     const item = await prisma.item.create({
       data: {

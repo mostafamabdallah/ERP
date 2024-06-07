@@ -13,9 +13,11 @@ export default function Home() {
     <main className="flex flex-col w-full gap-5">
       <InfoCards></InfoCards>
       <OrdersPerDay></OrdersPerDay>
-      <TopCustomers></TopCustomers>
       <MoneyPerDay></MoneyPerDay>
-      <OrdersPerHour></OrdersPerHour>
+      <div className="flex flex-wrap gap-5 mb-5">
+        <TopCustomers></TopCustomers>
+        <OrdersPerHour></OrdersPerHour>
+      </div>
     </main>
   );
 }

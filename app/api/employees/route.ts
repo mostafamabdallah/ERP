@@ -29,9 +29,6 @@ export async function GET(request: Request, context: any) {
 
 export async function POST(request: Request, { query }: any) {
   const data = await request.json();
-
-  console.log(data);
-
   try {
     const employee = await prisma.employees.create({
       data: {

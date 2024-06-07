@@ -20,40 +20,33 @@ const TopCustomers = (props: Props) => {
     },
     initialData: [],
   });
+
   return (
-    <>
-      <span className="text-gray-500 font-bold text-lg">Top 10 Customers</span>
-      <div className="flex gap-5 flex-wrap ">
+    <div className="flex-1  gap-3  py-4 bg-white rounded-lg ">
+      <span className="text-gray-500 font-bold text-lg px-6">
+        Top 10 Customers
+      </span>
+      <div className="flex flex-col mt-5 ">
+        <div className="flex flex-row items-center py-2 px-6 bg-gray-100">
+          <div className="w-2/12 flex justify-start">#</div>
+          <div className="w-4/12 flex justify-center">Name</div>
+          <div className="w-3/12 flex justify-center">type</div>
+          <div className="w-3/12 flex justify-end">orders</div>
+        </div>
         {data.map((el: any, i: number) => {
           return (
-            <div
-              key={i}
-              className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg  "
-            >
-              <div className="flex justify-start gap-3 items-center">
-                <div
-                  className={`flex justify-center items-center  rounded-full w-9 h-9`}
-                >
-                  <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                </div>
-                <span className="font-bold text-lg ">
-                  {el.name}
-                </span>
+            <div key={i} className="flex flex-row items-center py-2 px-6">
+              <div className="w-2/12 flex justify-start">{i + 1}</div>
+              <div className="w-4/12 flex justify-center">{el.name}</div>
+              <div className="w-3/12 flex justify-center">
+                <span className={`flex items-center justify-center px-2 py-1 ${(el.type == 'Male' || el.type == 'Female') ? "bg-success" : 'bg-danger'}  text-white rounded-md`}>{el.type}</span>
               </div>
-              <div className="flex justify-between items-center gap-3 text-primary">
-                <span className="text-tittle  text-3xl font-bold ">
-                  <Statistic  className=""
-                    value={el["_count"]?.orders}
-                    formatter={formatter}
-                    suffix="orders"
-                  />
-                </span>
-              </div>
+              <div className="w-3/12 flex justify-end">{el._count.orders}</div>
             </div>
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 

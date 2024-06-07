@@ -106,9 +106,22 @@ const Page = (props: Props) => {
               rules={[{ required: true, message: "Please select gender!" }]}
             >
               <Select placeholder="select your gender">
-                <Select.Option value="male">Male</Select.Option>
-                <Select.Option value="female">Female</Select.Option>
-                <Select.Option value="company">Company</Select.Option>
+                <Select.Option value="Male">Male</Select.Option>
+                <Select.Option value="Female">Female</Select.Option>
+                <Select.Option value="Pharmacy">Pharmacy</Select.Option>
+                <Select.Option value="Super Market">Super Market</Select.Option>
+                <Select.Option value="Restaurant">Restaurant</Select.Option>
+                <Select.Option value="Vegetables">
+                  Vegetables Market
+                </Select.Option>
+                <Select.Option value="Private Business">
+                  Private Business
+                </Select.Option>
+                <Select.Option value="Cleaning Service">
+                  Cleaning Service
+                </Select.Option>
+                <Select.Option value="Butcher">Butcher</Select.Option>
+                <Select.Option value="Others">Others</Select.Option>
               </Select>
             </Form.Item>
           </div>

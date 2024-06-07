@@ -33,5 +33,5 @@ export function CustomBar({ labels , dataSet}: any) {
     labels,
     datasets:dataSet
   };
-  return <Bar height={"80px"} options={options} data={dataConfig} />;
+  return <Bar height={"220px"} options={options} data={dataConfig} />;
 }

@@ -38,8 +38,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ customer: customer });
   } catch (error: any) {
     const { code, meta } = error;
-    console.log(code);
-
     if (code == "P2002") {
       return new Response(
         JSON.stringify({ message: "Customer already exist" }),

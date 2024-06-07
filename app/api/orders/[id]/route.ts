@@ -42,8 +42,6 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const data = await request.json();
-  console.log(data);
-  
   try {
     await prisma.itemOrder.deleteMany({
       where: {
