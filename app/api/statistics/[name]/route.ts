@@ -42,9 +42,6 @@ export async function GET(request: Request, context: any) {
           .startOf("month")
           .toDate();
         const endDate = moment(startDate).endOf("month").toDate();
-
-        console.log(startDate , endDate , '-------------------------------------------------------');
-        
         orders = await prisma.order.findMany({
           where: {
             createdAt: {
@@ -74,15 +71,27 @@ export async function GET(request: Request, context: any) {
     }
   } else if (param == "moneyPerDay") {
     try {
-      const money = await prisma.$queryRaw<
-        { date: string; deliveryCostSum: number; orderIds: number[] }[]
-      >`
-      SELECT
-      DATE("create_at") as date,
-      COALESCE(SUM("deliveryCost"), 0) as "cost"
-      FROM "Order"
-      GROUP BY DATE("create_at")
-      ORDER BY DATE("create_at")`;
+      let money;
+      if (!Number(month)) {
+        money = await prisma.$queryRawUnsafe(
+          `SELECT
+          DATE("create_at") as date,
+          COALESCE(SUM("deliveryCost"), 0) as "cost"
+          FROM "Order"
+          GROUP BY DATE("create_at")
+          ORDER BY DATE("create_at")`
+        );
+      } else {
+        money = await prisma.$queryRawUnsafe(
+          `SELECT
+          DATE("create_at") as date,
+          COALESCE(SUM("deliveryCost"), 0) as "cost"
+          FROM "Order"
+          WHERE EXTRACT(MONTH FROM "create_at") = ${month} AND EXTRACT(YEAR FROM "create_at") = ${year}
+          GROUP BY DATE("create_at")
+          ORDER BY DATE("create_at")`
+        );
+      }
       return NextResponse.json({ moneyPerDay: money });
     } catch (error) {
       console.log(error);

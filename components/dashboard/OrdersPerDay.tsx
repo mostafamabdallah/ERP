@@ -11,17 +11,11 @@ const OrdersPerDay = (props: Props) => {
   const { data = [], isLoading } = useQuery({
     queryKey: ["ordersPerDay", props.selectedMonth],
     queryFn: (): Promise<any> => {
-      if (props.selectedMonth.year) {
-        return customFetch
-          .get(
-            `statistics/ordersPerDay?year=${props.selectedMonth.year}&month=${props.selectedMonth.month}`
-          )
-          .then((response) => response.data.ordersPerDay);
-      } else {
-        return customFetch
-          .get(`statistics/ordersPerDay`)
-          .then((response) => response.data.ordersPerDay);
-      }
+      return customFetch
+        .get(
+          `statistics/ordersPerDay?year=${props.selectedMonth.year}&month=${props.selectedMonth.month}`
+        )
+        .then((response) => response.data.ordersPerDay);
     },
   });
   return (

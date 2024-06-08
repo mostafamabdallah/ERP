@@ -9,19 +9,13 @@ type Props = {
 };
 const MoneyPerDay = (props: Props) => {
   const { data = [], isLoading } = useQuery({
-    queryKey: ["moneyPerDay"],
+    queryKey: ["moneyPerDay",props.selectedMonth],
     queryFn: (): Promise<any> => {
-      if (props.selectedMonth.year) {
-        return customFetch
-          .get(
-            `statistics/moneyPerDay?year=${props.selectedMonth.year}&month=${props.selectedMonth.month}`
-          )
-          .then((response) => response.data.ordersPerDay);
-      } else {
-        return customFetch
-          .get(`statistics/moneyPerDay`)
-          .then((response) => response.data.moneyPerDay);
-      }
+      return customFetch
+        .get(
+          `statistics/moneyPerDay?year=${props.selectedMonth.year}&month=${props.selectedMonth.month}`
+        )
+        .then((response) => response.data.moneyPerDay);
     },
     initialData: [],
   });
