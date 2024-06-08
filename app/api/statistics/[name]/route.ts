@@ -16,7 +16,7 @@ export async function GET(request: Request, context: any) {
   if (param == "ordersPerDay") {
     let ordersPerDay;
     try {
-      if (month) {
+      if (Number(month)) {
         ordersPerDay = await prisma.$queryRawUnsafe(
           `SELECT DATE("create_at") AS order_date, COUNT(*)::text AS order_count
           FROM "Order"
