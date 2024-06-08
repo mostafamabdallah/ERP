@@ -16,9 +16,12 @@ interface SelectedMonth {
 }
 
 export default function Home() {
-  const [selectedMonth, setSelectedMonth] = useState<SelectedMonth | null>(
-    null
-  );
+  let currentDate = new Date();
+  let currentYear = currentDate.getFullYear();
+  const [selectedMonth, setSelectedMonth] = useState<SelectedMonth | null>({
+    month: 0,
+    year: currentYear,
+  });
 
   const handleMonthChange = (date: any | null, dateString: string) => {
     if (date) {
