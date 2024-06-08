@@ -14,7 +14,7 @@ const OrdersPerDay = (props: Props) => {
       if (props.selectedMonth.year) {
         return customFetch
           .get(
-            `statistics/ordersPerDay?year=${props.selectedMonth.year}&month=${props.selectedMonth.year}`
+            `statistics/ordersPerDay?year=${props.selectedMonth.year}&month=${props.selectedMonth.month}`
           )
           .then((response) => response.data.ordersPerDay);
       } else {
