@@ -35,14 +35,22 @@ export async function GET(request: Request, context: any) {
       console.log(error);
     }
   } else if (param == "totalDeliveryMoney") {
+    const startDate = moment(`${year}-${month}`, "YYYY-MM")
+      .startOf("month")
+      .toDate();
+    const endDate = moment(startDate).endOf("month").toDate();
     try {
-      const orders = await prisma.order.findMany();
-
-      // Calculate the total delivery cost
+      const orders = await prisma.order.findMany({
+        where: {
+          createdAt: {
+            gte: startDate,
+            lt: endDate,
+          },
+        },
+      });
       const totalDeliveryCost = orders.reduce((total, order) => {
         return total + order.deliveryCost;
       }, 0);
-
       return NextResponse.json({ totalDeliveryCost: totalDeliveryCost });
     } catch (error) {
       console.log(error);
