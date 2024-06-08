@@ -18,15 +18,15 @@ export async function GET(request: Request, context: any) {
     try {
       if (year) {
         ordersPerDay = await prisma.$queryRawUnsafe(
-          `SELECT DATE("create_at") AS order_date, COUNT(*)::text AS order_count FROM "Order" GROUP BY DATE("create_at") ORDER BY order_date;`
-        );
-      } else {
-        ordersPerDay = await prisma.$queryRawUnsafe(
           `SELECT DATE("create_at") AS order_date, COUNT(*)::text AS order_count
           FROM "Order"
           WHERE EXTRACT(MONTH FROM "create_at") = '${month}' AND EXTRACT(YEAR FROM "create_at") = '${year}'
           GROUP BY DATE("create_at")
           ORDER BY order_date;`
+        );
+      } else {
+        ordersPerDay = await prisma.$queryRawUnsafe(
+          `SELECT DATE("create_at") AS order_date, COUNT(*)::text AS order_count FROM "Order" GROUP BY DATE("create_at") ORDER BY order_date;`
         );
       }
 
