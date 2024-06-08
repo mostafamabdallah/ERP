@@ -10,7 +10,9 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import InfoCard from "../layout/InfoCard";
 
-type Props = {};
+type Props = {
+  selectedMonth:any
+};
 
 const InfoCards = (props: Props) => {
   const customers = useQuery({

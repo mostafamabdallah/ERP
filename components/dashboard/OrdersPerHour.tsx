@@ -5,8 +5,9 @@ import { customFetch } from "@/utilities/fetch";
 import moment from "moment";
 import { CustomBar } from "../charts/CustomBar";
 
-type Props = {};
-
+type Props = {
+  selectedMonth:any
+};
 const OrdersPerHour = (props: Props) => {
   const { data, isLoading } = useQuery({
     queryKey: ["ordersPerHour"],

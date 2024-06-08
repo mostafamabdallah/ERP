@@ -7,7 +7,9 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import CountUp from "react-countup";
 import { Statistic } from "antd";
 
-type Props = {};
+type Props = {
+  selectedMonth:any
+};
 const formatter = (value: any) => <CountUp end={value} separator="," />;
 
 const TopCustomers = (props: Props) => {

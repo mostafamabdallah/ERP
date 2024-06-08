@@ -4,8 +4,9 @@ import { customFetch } from '@/utilities/fetch';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 
-type Props = {}
-
+type Props = {
+  selectedMonth:any
+};
 const MoneyPerDay = (props: Props) => {
     const { data = [], isLoading } = useQuery({
         queryKey: ["moneyPerDay"],
