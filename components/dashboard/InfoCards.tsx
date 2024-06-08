@@ -11,7 +11,7 @@ import React from "react";
 import InfoCard from "../layout/InfoCard";
 
 type Props = {
-  selectedMonth:any
+  selectedMonth: any;
 };
 
 const InfoCards = (props: Props) => {
@@ -34,13 +34,19 @@ const InfoCards = (props: Props) => {
   });
 
   const totalDeliveryMoney = useQuery({
-    queryKey: ["deliveryMoney"],
+    queryKey: ["deliveryMoney", props.selectedMonth],
     queryFn: (): Promise<any> => {
-      return customFetch
-        .get(`statistics/totalDeliveryMoney`)
-        .then((response) => {
-          return response.data.totalDeliveryCost;
-        });
+      if (props.selectedMonth.year) {
+        return customFetch
+          .get(
+            `statistics/totalDeliveryMoney?year=${props.selectedMonth.year}&month=${props.selectedMonth.month}`
+          )
+          .then((response) => response.data.totalDeliveryCost);
+      } else {
+        return customFetch
+          .get(`statistics/totalDeliveryMoney`)
+          .then((response) => response.data.totalDeliveryCost);
+      }
     },
     initialData: [],
   });

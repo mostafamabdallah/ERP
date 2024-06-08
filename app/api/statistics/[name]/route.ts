@@ -35,19 +35,27 @@ export async function GET(request: Request, context: any) {
       console.log(error);
     }
   } else if (param == "totalDeliveryMoney") {
-    const startDate = moment(`${year}-${month}`, "YYYY-MM")
-      .startOf("month")
-      .toDate();
-    const endDate = moment(startDate).endOf("month").toDate();
     try {
-      const orders = await prisma.order.findMany({
-        where: {
-          createdAt: {
-            gte: startDate,
-            lt: endDate,
+      let orders;
+      if (Number(month)) {
+        const startDate = moment(`${year}-${month}`, "YYYY-MM")
+          .startOf("month")
+          .toDate();
+        const endDate = moment(startDate).endOf("month").toDate();
+
+        console.log(startDate , endDate , '-------------------------------------------------------');
+        
+        orders = await prisma.order.findMany({
+          where: {
+            createdAt: {
+              gte: startDate,
+              lt: endDate,
+            },
           },
-        },
-      });
+        });
+      } else {
+        orders = await prisma.order.findMany({});
+      }
       const totalDeliveryCost = orders.reduce((total, order) => {
         return total + order.deliveryCost;
       }, 0);
