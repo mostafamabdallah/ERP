@@ -4,19 +4,26 @@ import { useQuery } from "@tanstack/react-query";
 import { customFetch } from "@/utilities/fetch";
 import moment from "moment";
 
-type Props = {};
-
+type Props = {
+  selectedMonth: any;
+};
 const OrdersPerDay = (props: Props) => {
   const { data = [], isLoading } = useQuery({
-    queryKey: ["ordersPerDay"],
+    queryKey: ["ordersPerDay", props.selectedMonth],
     queryFn: (): Promise<any> => {
-      return customFetch
-        .get(`statistics/ordersPerDay`)
-        .then((response) => response.data.ordersPerDay);
+      if (props.selectedMonth.year) {
+        return customFetch
+          .get(
+            `statistics/ordersPerDay?year=${props.selectedMonth.year}&month=${props.selectedMonth.year}`
+          )
+          .then((response) => response.data.ordersPerDay);
+      } else {
+        return customFetch
+          .get(`statistics/ordersPerDay`)
+          .then((response) => response.data.ordersPerDay);
+      }
     },
-    initialData: [],
   });
-
   return (
     <div className="flex gap-5 ">
       <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg w-full">

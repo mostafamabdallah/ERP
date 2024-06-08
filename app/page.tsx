@@ -1,22 +1,44 @@
 "use client";
-import { CustomLine } from "@/components/charts/CustomLine";
-import { useQuery } from "@tanstack/react-query";
-import { customFetch } from "@/utilities/fetch";
-import moment from "moment";
 import InfoCards from "@/components/dashboard/InfoCards";
 import OrdersPerDay from "@/components/dashboard/OrdersPerDay";
 import OrdersPerHour from "@/components/dashboard/OrdersPerHour";
 import MoneyPerDay from "@/components/dashboard/MoneyPerDay";
 import TopCustomers from "@/components/TopCustomers";
+import { DatePicker, Form } from "antd";
+import { useState } from "react";
+import { Moment } from "moment";
+
+const { MonthPicker } = DatePicker;
+
+interface SelectedMonth {
+  month: number;
+  year: number;
+}
+
 export default function Home() {
+  const [selectedMonth, setSelectedMonth] = useState<SelectedMonth | null>(
+    null
+  );
+
+  const handleMonthChange = (date: any | null, dateString: string) => {
+    if (date) {
+      const month = date.month() + 1; // month is zero-indexed
+      const year = date.year();
+      setSelectedMonth({ month, year });
+    } else {
+      setSelectedMonth(null);
+    }
+  };
+
   return (
     <main className="flex flex-col w-full gap-5">
-      <InfoCards></InfoCards>
-      <OrdersPerDay></OrdersPerDay>
-      <MoneyPerDay></MoneyPerDay>
+      <MonthPicker onChange={handleMonthChange} />
+      <InfoCards selectedMonth={selectedMonth} />
+      <OrdersPerDay selectedMonth={selectedMonth} />
+      <MoneyPerDay selectedMonth={selectedMonth} />
       <div className="flex flex-wrap gap-5 mb-5">
-        <TopCustomers></TopCustomers>
-        <OrdersPerHour></OrdersPerHour>
+        <TopCustomers selectedMonth={selectedMonth} />
+        <OrdersPerHour selectedMonth={selectedMonth} />
       </div>
     </main>
   );
