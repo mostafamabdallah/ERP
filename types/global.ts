@@ -59,3 +59,10 @@ export type Category = {
   id?: number;
   name?: string;
 };
+
+export type Expense = {
+  id: number;
+  type: string;
+  amount: number;
+  description: string;
+};

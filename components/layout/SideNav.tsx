@@ -10,6 +10,7 @@ import {
   faLayerGroup,
   faMap,
   faBriefcase,
+  faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
@@ -49,6 +50,11 @@ const pages = [
     name: "Employees",
     icon: faBriefcase,
     url: "/employees",
+  },
+  {
+    name: "Expenses",
+    icon: faMoneyBill,
+    url: "/expenses",
   },
 ];
 

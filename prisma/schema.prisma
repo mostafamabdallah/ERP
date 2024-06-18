@@ -67,3 +67,11 @@ model Employees {
   longitude Float?
   orders    Order[]
 }
+
+model Expense {
+  id          Int        @id @default(autoincrement())
+  amount      Float
+  type        String     @db.VarChar(50)
+  description String?
+  date        DateTime   @default(now())
+}
