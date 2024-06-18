@@ -25,10 +25,10 @@ model Order {
   deliveryCost Float
   status       String
   createdAt    DateTime    @default(now()) @map("create_at")
+  employeeId   Int?
   items        ItemOrder[]
   customer     Customer    @relation(fields: [customerId], references: [id])
-  employeeId   Int?
-  employee     Employees?  @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  employee     Employees?  @relation(fields: [employeeId], references: [id])
 }
 
 model Item {
