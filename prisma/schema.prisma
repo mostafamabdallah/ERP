@@ -24,6 +24,7 @@ model Order {
   customerId   Int
   deliveryCost Float
   status       String
+  orderDetails String?
   createdAt    DateTime    @default(now()) @map("create_at")
   employeeId   Int?
   items        ItemOrder[]
@@ -69,9 +70,9 @@ model Employees {
 }
 
 model Expense {
-  id          Int        @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   amount      Float
-  type        String     @db.VarChar(50)
+  type        String   @db.VarChar(50)
   description String?
-  date        DateTime   @default(now())
+  date        DateTime @default(now())
 }

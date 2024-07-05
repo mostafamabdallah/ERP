@@ -21,6 +21,7 @@ type OrderData = {
   deliveryCost: number;
   status: string;
   createdAt: string;
+  orderDetails: string;
   customer: {
     id: number;
     name: string;
@@ -222,6 +223,11 @@ const Page = ({ params }: { params: { id: string } }) => {
               </tr>
             </tbody>
           </table>
+          {data?.orderDetails && (
+            <div className="text-center border border-black text-xs py-2 mt-3">
+              {data?.orderDetails}
+            </div>
+          )}
 
           <div className="flex flex-col items-center justify-around mt-2 text-sm">
             <div className="w-full flex items-center">
@@ -246,9 +252,14 @@ const Page = ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
+          <button
+            className="mt-32 px-8 py-3 rounded-md bg-primary text-white"
+            onClick={handlePrint}
+          >
+            Print
+          </button>
         </div>
       </div>
-      <button onClick={handlePrint}>Print Section</button>
     </>
   );
 };

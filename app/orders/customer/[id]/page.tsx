@@ -6,6 +6,7 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, InputNumber, Space, Select, message } from "antd";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import TextArea from "antd/es/input/TextArea";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const { push } = useRouter();
@@ -23,7 +24,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   const onFinish = async (data: any) => {
-    setDisabled(true)
+    setDisabled(true);
     const order = {
       customerId: params.id,
       ...data,
@@ -35,7 +36,8 @@ const Page = ({ params }: { params: { id: string } }) => {
     } catch (error: any) {
       message.error(error.response.data.message).then(() => {
         push(`/categories`);
-      });    }
+      });
+    }
   };
   const { data, isSuccess } = useQuery({
     queryKey: ["items", item],
@@ -48,7 +50,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     enabled: Boolean(item),
   });
 
-  const [disabled,setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(false);
 
   return (
     <div className="flex w-full justify-center">
@@ -64,52 +66,54 @@ const Page = ({ params }: { params: { id: string } }) => {
               <>
                 {fields.map(({ key, name, ...restField }) => {
                   return (
-                    <Space
-                      key={key}
-                      style={{ display: "flex", marginBottom: 8 }}
-                      align="start"
-                    >
-                      <Form.Item
-                        {...restField}
-                        name={[name, "id"]}
-                        rules={[{ required: true, message: "Missing Item" }]}
+                    <>
+                      <Space
+                        key={key}
+                        style={{ display: "flex", marginBottom: 8 }}
+                        align="start"
                       >
-                        <Select
-                          showSearch
-                          placeholder="Select an item"
-                          optionFilterProp="children"
-                          onSearch={(value) => {
-                            setItem(value);
-                          }}
-                          filterOption={filterOption}
-                          options={data.map((el, i) => {
-                            return {
-                              value: el.id.toString(),
-                              label: el.name,
-                            };
-                          })}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, "quantity"]}
-                        rules={[
-                          {
-                            type: "number",
-                            required: true,
-                            message: "Please enter a valid number",
-                            min: 0,
-                            max: 1000,
-                          },
-                        ]}
-                      >
-                        <InputNumber
-                          className="w-full"
-                          placeholder="Quantity "
-                        />
-                      </Form.Item>
-                      <MinusCircleOutlined onClick={() => remove(name)} />
-                    </Space>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "id"]}
+                          rules={[{ required: true, message: "Missing Item" }]}
+                        >
+                          <Select
+                            showSearch
+                            placeholder="Select an item"
+                            optionFilterProp="children"
+                            onSearch={(value) => {
+                              setItem(value);
+                            }}
+                            filterOption={filterOption}
+                            options={data.map((el, i) => {
+                              return {
+                                value: el.id.toString(),
+                                label: el.name,
+                              };
+                            })}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "quantity"]}
+                          rules={[
+                            {
+                              type: "number",
+                              required: true,
+                              message: "Please enter a valid number",
+                              min: 0,
+                              max: 1000,
+                            },
+                          ]}
+                        >
+                          <InputNumber
+                            className="w-full"
+                            placeholder="Quantity "
+                          />
+                        </Form.Item>
+                        <MinusCircleOutlined onClick={() => remove(name)} />
+                      </Space>
+                    </>
                   );
                 })}
                 <Form.Item>
@@ -141,8 +145,13 @@ const Page = ({ params }: { params: { id: string } }) => {
         >
           <InputNumber className="w-6/12" placeholder="Delivery Cost" />
         </Form.Item>
+        <Form.Item name="orderDetails">
+          <TextArea className="w-full" placeholder="Order Details "></TextArea>
+        </Form.Item>
         <Form.Item>
-          <Button disabled={disabled} htmlType="submit">Submit</Button>
+          <Button disabled={disabled} htmlType="submit">
+            Submit
+          </Button>
         </Form.Item>
       </Form>
     </div>

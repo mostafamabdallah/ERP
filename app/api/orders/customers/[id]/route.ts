@@ -43,6 +43,7 @@ export async function POST(
         orderNumber: generateOrderNumber(),
         customerId: Number(params.id),
         deliveryCost: data.deliveryCost,
+        orderDetails: data.orderDetails,
         status: "pending",
         items: {
           create: data.items?.map((el: any) => ({

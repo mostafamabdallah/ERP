@@ -8,6 +8,7 @@ import React, { useRef, useState } from "react";
 import { faEdit, faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
+import moment from "moment";
 
 type Props = {
   expenses: Expense[];
@@ -16,6 +17,15 @@ type Props = {
 type DataIndex = keyof Expense;
 
 const ExpensesTable = ({ expenses }: Props) => {
+  const data = expenses.map((el, i) => {
+    return {
+      id: el.id,
+      amount: el.amount,
+      type: el.type,
+      description: el.description,
+      date: moment(el.date).format("YYYY-MM-DD h:mm A"),
+    };
+  });
   const { push } = useRouter();
   const [searchText, setSearchText] = useState("");
 
@@ -33,9 +43,7 @@ const ExpensesTable = ({ expenses }: Props) => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (
-    dataIndex: DataIndex
-  ): ColumnType<Expense> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Expense> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -120,12 +128,18 @@ const ExpensesTable = ({ expenses }: Props) => {
       key: "description",
       ...getColumnSearchProps("description"),
     },
+    {
+      title: "Date	",
+      dataIndex: "date",
+      key: "date",
+      ...getColumnSearchProps("date"),
+    },
   ];
 
   return (
     <Table
       columns={columns}
-      dataSource={expenses}
+      dataSource={data}
       pagination={{ pageSize: 100 }}
     />
   );

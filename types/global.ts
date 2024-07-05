@@ -65,4 +65,5 @@ export type Expense = {
   type: string;
   amount: number;
   description: string;
+  date: string;
 };
