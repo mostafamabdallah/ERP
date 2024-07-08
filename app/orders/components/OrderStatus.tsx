@@ -10,8 +10,12 @@ const items = [
     label: "Pending",
   },
   {
-    key: "success",
-    label: "success",
+    key: "delivered",
+    label: "Delivered",
+  },
+  {
+    key: "collected",
+    label: "Collected",
   },
   {
     key: "failed",
@@ -33,10 +37,12 @@ const OrderStatus = ({ status, id }: any) => {
   return (
     <Dropdown.Button
       className={`w-fit ${
-        status == "success"
+        status == "success" || status == "collected"
           ? "bg-[#8cbfad20]"
           : status == "pending"
           ? "bg-[#a3965f20]"
+          : status == "delivered"
+          ? "bg-[#54258220]"
           : "bg-[#ff939820]"
       } `}
       menu={{
@@ -51,16 +57,19 @@ const OrderStatus = ({ status, id }: any) => {
           } catch (error: any) {
             message.error(error.response.data.message).then(() => {
               push(`/orders`);
-            });          }
+            });
+          }
         },
       }}
     >
       <span
         className={`capitalize ${
-          status == "success"
+          status == "success" || status == "collected"
             ? "text-[#8cbfad]"
             : status == "pending"
             ? "text-[#a3965f]"
+            : status == "delivered"
+            ? "text-[#542582]"
             : "text-[#ff9398]"
         } `}
       >

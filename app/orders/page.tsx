@@ -43,7 +43,7 @@ const Page = (props: Props) => {
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
       value: data.filter((el) => {
-        return el.status == "success";
+        return el.status == "success" || el.status == "money_collected";
       }).length,
       delta: 5,
       currency: "users",
