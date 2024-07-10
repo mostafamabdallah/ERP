@@ -22,6 +22,9 @@ type OrderData = {
   status: string;
   createdAt: string;
   orderDetails: string;
+  employee: {
+    name: string;
+  };
   customer: {
     id: number;
     name: string;
@@ -113,6 +116,11 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </span>
                 <span>
                   ID: <span>{data?.customer.id}</span>
+                </span>
+              </p>
+              <p className="flex justify-between text-xs">
+                <span>
+                  طيار : <span>{data?.employee.name}</span>
                 </span>
               </p>
               <p className="flex justify-between text-xs">

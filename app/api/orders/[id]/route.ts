@@ -17,6 +17,7 @@ export async function GET(
           item: {},
         },
       },
+      employee: true,
     },
   });
   return NextResponse.json({ order: order });
@@ -38,7 +39,6 @@ export async function POST(request: Request) {
     console.log(error);
   }
 }
-
 
 export async function PUT(request: Request) {
   const data = await request.json();
@@ -72,7 +72,8 @@ export async function DELETE(request: Request) {
 
     if (!order) {
       // If order with the given ID doesn't exist, return 404 Not Found
-      NextResponse.json({ mes: 'Order not found' });    }
+      NextResponse.json({ mes: "Order not found" });
+    }
 
     // Delete the order
     await prisma.order.delete({
@@ -82,10 +83,10 @@ export async function DELETE(request: Request) {
     });
 
     // Return success response
-    return NextResponse.json({ mes:  'order deleted successfully'});
+    return NextResponse.json({ mes: "order deleted successfully" });
   } catch (error) {
     // If any error occurs during database operation, return 500 Internal Server Error
-    console.error('Error deleting order:', error);
-    return NextResponse.json({ mes:  'internal server error'});
+    console.error("Error deleting order:", error);
+    return NextResponse.json({ mes: "internal server error" });
   }
 }
