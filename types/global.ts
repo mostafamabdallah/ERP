@@ -43,6 +43,8 @@ export type Order = {
   customer: Customer;
   deliveryCost: string;
   createdAt: string;
+  employee: Employee;
+  deliveryMan: string;
 };
 
 export type Item = {

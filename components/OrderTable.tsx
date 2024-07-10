@@ -63,7 +63,8 @@ const OrderTable = ({ orders }: Props) => {
       address: el.customer.address,
       status: el.status,
       deliveryCost: el.deliveryCost,
-      createdAt: moment(el.createdAt).format('YYYY-MM-DD h:mm A'),
+      createdAt: moment(el.createdAt).format("YYYY-MM-DD h:mm A"),
+      deliveryMan: el.employee?.name,
     };
   });
 
@@ -179,6 +180,12 @@ const OrderTable = ({ orders }: Props) => {
       dataIndex: "createdAt",
       key: "createdAt",
       ...getColumnSearchProps("createdAt"),
+    },
+    {
+      title: "Deliver Man",
+      dataIndex: "deliveryMan",
+      key: "deliveryMan",
+      ...getColumnSearchProps("deliveryMan"),
     },
     {
       title: "Status",

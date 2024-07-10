@@ -7,8 +7,8 @@ import { Button, Form, InputNumber, Space, Select, message } from "antd";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import TextArea from "antd/es/input/TextArea";
-
 const Page = ({ params }: { params: { id: string } }) => {
+  const { Option } = Select;
   const { push } = useRouter();
 
   const [item, setItem] = useState<string | null>(null);
@@ -51,6 +51,17 @@ const Page = ({ params }: { params: { id: string } }) => {
   });
 
   const [disabled, setDisabled] = useState(false);
+
+  const deliveryMen = useQuery({
+    queryKey: [`employees_delivery`],
+    queryFn: (): Promise<any> => {
+      return customFetch
+        .get(`employees?type=delivery`)
+        .then((response) => response.data.employees);
+    },
+    refetchOnWindowFocus: true,
+    refetchInterval: 1000,
+  });
 
   return (
     <div className="flex w-full justify-center">
@@ -147,6 +158,24 @@ const Page = ({ params }: { params: { id: string } }) => {
         </Form.Item>
         <Form.Item name="orderDetails">
           <TextArea className="w-full" placeholder="Order Details "></TextArea>
+        </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+          name="deliveryMan"
+        >
+          <Select placeholder="Delivery Man">
+            {deliveryMen.data?.map((el: any, i: number) => {
+              return (
+                <Option key={i} value={el.id}>
+                  {el.name}
+                </Option>
+              );
+            })}
+          </Select>
         </Form.Item>
         <Form.Item>
           <Button disabled={disabled} htmlType="submit">

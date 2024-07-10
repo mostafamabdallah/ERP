@@ -14,6 +14,7 @@ export async function GET(request: Request) {
   const orders = await prisma.order.findMany({
     include: {
       customer: {},
+      employee: {},
     },
     orderBy: {
       createdAt: "desc",
@@ -21,10 +22,9 @@ export async function GET(request: Request) {
   });
   return NextResponse.json({ orders: orders });
 }
-// Create New Order
 export async function POST(request: Request) {
   const data = await request.json();
-  
+
   try {
     const order = await prisma.order.create({
       data: {

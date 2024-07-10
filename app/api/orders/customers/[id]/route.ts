@@ -44,6 +44,7 @@ export async function POST(
         customerId: Number(params.id),
         deliveryCost: data.deliveryCost,
         orderDetails: data.orderDetails,
+        employeeId: data.deliveryMan,
         status: "pending",
         items: {
           create: data.items?.map((el: any) => ({
@@ -53,6 +54,7 @@ export async function POST(
         },
       },
       include: {
+        employee: true,
         items: {
           include: {
             item: true,
