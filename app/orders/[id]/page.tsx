@@ -120,7 +120,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               </p>
               <p className="flex justify-between text-xs">
                 <span>
-                  طيار : <span>{data?.employee.name}</span>
+                  طيار : <span>{data?.employee?.name}</span>
                 </span>
               </p>
               <p className="flex justify-between text-xs">
