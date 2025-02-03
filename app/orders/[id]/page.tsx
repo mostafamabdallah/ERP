@@ -97,7 +97,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center w-full">
       <div
         id="invoice"
         className="flex flex-col w-full items-center "
@@ -260,15 +260,15 @@ const Page = ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
-          <button
-            className="mt-32 px-8 py-3 rounded-md bg-primary text-white"
-            onClick={handlePrint}
-          >
-            Print
-          </button>
         </div>
       </div>
-    </>
+      <button
+        className="mt-32 px-8 py-3 rounded-md bg-primary text-white print-button"
+        onClick={handlePrint}
+      >
+        Print
+      </button>
+    </div>
   );
 };
 
