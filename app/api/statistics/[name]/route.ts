@@ -118,5 +118,49 @@ export async function GET(request: Request, context: any) {
     } catch (error) {
       console.log(error);
     }
+  } else if (param == "netProfit") {
+    try {
+      let orders;
+      let expense;
+      if (Number(month)) {
+        const startDate = moment(`${year}-${month}`, "YYYY-MM")
+          .startOf("month")
+          .toDate();
+        const endDate = moment(startDate).endOf("month").toDate();
+        orders = await prisma.order.findMany({
+          where: {
+            createdAt: {
+              gte: startDate,
+              lt: endDate,
+            },
+          },
+        });
+        expense = await prisma.expense.findMany({
+          where: {
+            date: {
+              gte: startDate,
+              lt: endDate,
+            },
+          },
+        });
+      } else {
+        orders = await prisma.order.findMany({});
+        expense = await prisma.expense.findMany({});
+      }
+      const totalDeliveryCost = orders.reduce((total, order) => {
+        return total + order.deliveryCost;
+      }, 0);
+      const totalExpense = expense.reduce((total, expense) => {
+        return total + expense.amount;
+      }, 0);
+      let netProfit = totalDeliveryCost - totalExpense;
+
+      return NextResponse.json({
+        netProfit,
+        totalExpense,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

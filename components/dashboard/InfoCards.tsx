@@ -4,6 +4,7 @@ import {
   faBoxOpen,
   faExclamationCircle,
   faLock,
+  faMoneyBill1Wave,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -51,23 +52,42 @@ const InfoCards = (props: Props) => {
     initialData: [],
   });
 
-  const dashboardData = [
-    {
-      title: "Total Customers",
-      icon: faUsers,
-      iconColor: "text-[#0f62fe]",
-      iconBgColor: "bg-[#0f62fe20]",
-      value: customers.data.length,
-      delta: 15,
-      currency: "users",
-      period: "week",
+  const netProfit = useQuery({
+    queryKey: ["netProfit", props.selectedMonth],
+    queryFn: (): Promise<any> => {
+      if (props.selectedMonth.year) {
+        return customFetch
+          .get(
+            `statistics/netProfit?year=${props.selectedMonth.year}&month=${props.selectedMonth.month}`
+          )
+          .then((response) => response.data);
+      } else {
+        return customFetch
+          .get(`statistics/netProfit`)
+          .then((response) => response.data);
+      }
     },
+    initialData: [],
+  });
+
+  const dashboardData = [
     {
       title: "Total orders",
       icon: faBoxOpen,
       iconColor: "text-[#0f62fe]",
       iconBgColor: "bg-[#0f62fe20]",
       value: orders.data.length,
+      delta: 15,
+      currency: "users",
+      period: "week",
+    },
+
+    {
+      title: "Total Expenses",
+      icon: faMoneyBill1Wave,
+      iconColor: "text-[#0f62fe]",
+      iconBgColor: "bg-[#0f62fe20]",
+      value: netProfit.data.totalExpense,
       delta: 15,
       currency: "users",
       period: "week",
@@ -84,13 +104,11 @@ const InfoCards = (props: Props) => {
     },
 
     {
-      title: "Blocked Customers",
+      title: "Net Profit",
       icon: faLock,
-      iconColor: "text-[#ff9398]",
-      iconBgColor: "bg-[#ff939820]",
-      value: customers.data.filter((el) => {
-        return el.status == "blocked";
-      }).length,
+      iconColor: "text-[#8cbfad]",
+      iconBgColor: "bg-[#8cbfad20]",
+      value: Number(netProfit.data.netProfit),
       delta: 1,
       currency: "users",
       period: "week",
