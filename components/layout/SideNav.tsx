@@ -32,21 +32,6 @@ const pages = [
     url: "/orders",
   },
   {
-    name: "Items",
-    icon: faBagShopping,
-    url: "/items",
-  },
-  {
-    name: "Categories",
-    icon: faLayerGroup,
-    url: "/categories",
-  },
-  {
-    name: "Map",
-    icon: faMap,
-    url: "/map",
-  },
-  {
     name: "Employees",
     icon: faBriefcase,
     url: "/employees",
