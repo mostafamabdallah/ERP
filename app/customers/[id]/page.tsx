@@ -14,6 +14,7 @@ import React from "react";
 import { Avatar, Badge } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useLanguage } from "@/contexts/LanguageContext";
+import OrderTable from "@/components/OrderTable";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const { t } = useLanguage();
@@ -61,49 +62,62 @@ const Page = ({ params }: { params: { id: string } }) => {
     },
   ];
 
+  const enrichedOrders = (data?.orders || [])
+    .slice()
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .map((order: any) => ({
+      ...order,
+      customer: order.customer || data,
+    }));
+
   return (
-    <div className="flex justify-between w-full">
-      <div className="flex flex-col w-full md:w-3/12 items-start gap-2">
-        <Badge.Ribbon
-          color={
-            data.status == "verified"
-              ? "#27783f"
-              : data.status == "warned"
-              ? "yellow"
-              : "#da1e27"
-          }
-          text={data.status}
-        >
-          <Avatar shape="square" size={150} icon={<UserOutlined />} />
-        </Badge.Ribbon>
-        <p className="text-2xl mt-5 font-bold text-primary dark:text-primary-dark">
-          {data.name}
-        </p>
-        <p className="flex gap-3 items-center text-tittle dark:text-on-surface">
-          <FontAwesomeIcon
-            className="text-primary dark:text-primary-dark"
-            icon={faMapLocationDot}
-          />
-          {data.address}
-        </p>
-        <p className="flex gap-3 items-center text-tittle dark:text-on-surface">
-          <FontAwesomeIcon
-            className="text-primary dark:text-primary-dark"
-            icon={faPhone}
-          />
-          {data.phone}
-        </p>
-        <Badge text={data.status} />
+    <div className="flex flex-col w-full gap-6">
+      <div className="flex justify-between w-full gap-6">
+        <div className="flex flex-col w-full md:w-3/12 items-start gap-2">
+          <Badge.Ribbon
+            color={
+              data.status == "verified"
+                ? "#27783f"
+                : data.status == "warned"
+                ? "yellow"
+                : "#da1e27"
+            }
+            text={data.status}
+          >
+            <Avatar shape="square" size={150} icon={<UserOutlined />} />
+          </Badge.Ribbon>
+          <p className="text-2xl mt-5 font-bold text-primary dark:text-primary-dark">
+            {data.name}
+          </p>
+          <p className="flex gap-3 items-center text-tittle dark:text-on-surface">
+            <FontAwesomeIcon
+              className="text-primary dark:text-primary-dark"
+              icon={faMapLocationDot}
+            />
+            {data.address}
+          </p>
+          <p className="flex gap-3 items-center text-tittle dark:text-on-surface">
+            <FontAwesomeIcon
+              className="text-primary dark:text-primary-dark"
+              icon={faPhone}
+            />
+            {data.phone}
+          </p>
+          <Badge text={data.status} />
+        </div>
+        <div className="flex flex-col w-full md:w-9/12 gap-6">
+          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 w-full">
+            {dashboardData.map((el, i) => (
+              <InfoCard key={i} data={el} />
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="flex flex-col w-full md:w-9/12 gap-6">
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 w-full">
-          {dashboardData.map((el, i) => (
-            <InfoCard key={i} data={el} />
-          ))}
-        </div>
-        <div className="flex flex-row flex-wrap gap-6">
-          <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
-        </div>
+      <div className="w-full">
+        <h2 className="text-lg font-semibold text-primary dark:text-primary-dark mb-3">
+          {t.customers.orders}
+        </h2>
+        <OrderTable orders={enrichedOrders} />
       </div>
     </div>
   );
