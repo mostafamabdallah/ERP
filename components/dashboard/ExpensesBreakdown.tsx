@@ -9,6 +9,7 @@ import CountUp from "react-countup";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type CategoryRow = { type: string; total: number };
+type ExpenseType = { id: number; nameAr: string; nameEn: string };
 
 type Props = {
   selectedMonth: { month: number; year: number } | null;
@@ -24,24 +25,6 @@ const CATEGORY_COLORS = [
   { bg: "#14b8a680", border: "#14b8a6" },
 ];
 
-const EXPENSE_TYPE_AR: Record<string, string> = {
-  salaries: "مرتبات وأجور",
-  gasoline: "بنزين",
-  advertising: "دعاية وإعلان",
-  maintenance: "تصليح",
-  capital: "رأس مال",
-  other: "أخرى",
-};
-
-const EXPENSE_TYPE_EN: Record<string, string> = {
-  salaries: "Salaries",
-  gasoline: "Gasoline",
-  advertising: "Advertising",
-  maintenance: "Maintenance",
-  capital: "Capital",
-  other: "Other",
-};
-
 const ExpensesBreakdown = ({ selectedMonth }: Props) => {
   const { t, language } = useLanguage();
   const year = selectedMonth?.year ?? new Date().getFullYear();
@@ -56,7 +39,19 @@ const ExpensesBreakdown = ({ selectedMonth }: Props) => {
     initialData: [],
   });
 
-  const typeMap = language === "ar" ? EXPENSE_TYPE_AR : EXPENSE_TYPE_EN;
+  const { data: expenseTypes = [] } = useQuery<ExpenseType[]>({
+    queryKey: ["expense-types"],
+    queryFn: () => customFetch.get("expense-types").then((res) => res.data),
+  });
+
+  const typeMap = React.useMemo(() => {
+    const map: Record<string, string> = {};
+    expenseTypes.forEach((et) => {
+      map[et.nameAr] = language === "ar" ? et.nameAr : et.nameEn;
+    });
+    return map;
+  }, [expenseTypes, language]);
+
   const labels = data.map((d) => typeMap[d.type] ?? d.type);
   const totals = data.map((d) => d.total);
   const grandTotal = totals.reduce((s, v) => s + v, 0);
@@ -136,7 +131,7 @@ const ExpensesBreakdown = ({ selectedMonth }: Props) => {
                     className="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
                     style={{ backgroundColor: color }}
                   />
-                  <span className="text-gray-600 dark:text-on-surface-variant">
+                  <span className="text-gray-600 dark:text-on-surface-variant" dir="rtl">
                     {typeMap[row.type] ?? row.type}
                   </span>
                 </div>

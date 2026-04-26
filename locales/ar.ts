@@ -6,6 +6,7 @@ export type Translations = {
     orders: string;
     employees: string;
     expenses: string;
+    expenseTypes: string;
     items: string;
     categories: string;
   };
@@ -182,6 +183,24 @@ export type Translations = {
     categoryName: string;
     addedSuccess: string;
   };
+  expenseTypes: {
+    pageTitle: string;
+    addNew: string;
+    nameAr: string;
+    nameEn: string;
+    nameArPlaceholder: string;
+    nameEnPlaceholder: string;
+    nameArRequired: string;
+    nameEnRequired: string;
+    addedSuccess: string;
+    addError: string;
+    deletedSuccess: string;
+    deleteError: string;
+    confirmDeleteTitle: string;
+    confirmDeleteContent: string;
+    loading: string;
+    empty: string;
+  };
 };
 
 const ar: Translations = {
@@ -192,6 +211,7 @@ const ar: Translations = {
     orders: "الطلبات",
     employees: "الموظفون",
     expenses: "المصروفات",
+    expenseTypes: "أنواع المصروفات",
     items: "المنتجات",
     categories: "الأقسام",
   },
@@ -367,6 +387,24 @@ const ar: Translations = {
     name: "الاسم",
     categoryName: "اسم الفئة",
     addedSuccess: "تمت الإضافة بنجاح",
+  },
+  expenseTypes: {
+    pageTitle: "أنواع المصروفات",
+    addNew: "إضافة نوع جديد",
+    nameAr: "الاسم بالعربية",
+    nameEn: "الاسم بالإنجليزية",
+    nameArPlaceholder: "مثال: بنزين",
+    nameEnPlaceholder: "e.g. Gasoline",
+    nameArRequired: "الرجاء إدخال الاسم بالعربية",
+    nameEnRequired: "الرجاء إدخال الاسم بالإنجليزية",
+    addedSuccess: "تم إضافة النوع بنجاح",
+    addError: "حدث خطأ أثناء الإضافة",
+    deletedSuccess: "تم حذف النوع بنجاح",
+    deleteError: "حدث خطأ أثناء الحذف",
+    confirmDeleteTitle: "تأكيد الحذف",
+    confirmDeleteContent: "هل تريد حذف هذا النوع؟",
+    loading: "جاري التحميل...",
+    empty: "لا توجد أنواع مضافة بعد",
   },
 };
 

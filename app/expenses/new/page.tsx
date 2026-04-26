@@ -4,9 +4,15 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
 import { Button, Form, InputNumber, Select, Space, message } from "antd";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import TextArea from "antd/es/input/TextArea";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+type ExpenseType = {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+};
 
 const SubmitButton = ({ form }: { form: FormInstance }) => {
   const [submittable, setSubmittable] = React.useState(false);
@@ -32,12 +38,17 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
 };
 
 const Page = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [form] = Form.useForm();
   const { push } = useRouter();
 
+  const { data: expenseTypes = [], isLoading: typesLoading } = useQuery<ExpenseType[]>({
+    queryKey: ["expense-types"],
+    queryFn: () => customFetch.get("expense-types").then((res) => res.data),
+  });
+
   const mutation = useMutation({
-    mutationFn: (data) => customFetch.post("/expenses", data),
+    mutationFn: (data: any) => customFetch.post("/expenses", data),
     onSuccess: () => {
       message.success(t.expenses.addedSuccess).then(() => {
         push(`/expenses`);
@@ -49,7 +60,7 @@ const Page = () => {
     try {
       await mutation.mutateAsync(data);
     } catch (error: any) {
-      message.error(error.response.data.message).then(() => {
+      message.error(error.response?.data?.message).then(() => {
         push(`/expenses`);
       });
     }
@@ -71,13 +82,26 @@ const Page = () => {
               label={t.expenses.expenseType}
               rules={[{ required: true, message: t.expenses.selectUnitError }]}
             >
-              <Select placeholder={t.expenses.selectUnit}>
-                <Select.Option value="اجور">{t.expenses.salaries}</Select.Option>
-                <Select.Option value="بنزين">{t.expenses.gasoline}</Select.Option>
-                <Select.Option value="دعاية">{t.expenses.advertising}</Select.Option>
-                <Select.Option value="تصليح">{t.expenses.maintenance}</Select.Option>
-                <Select.Option value=">رأس مال">{t.expenses.capital}</Select.Option>
-                <Select.Option value="أخرى">{t.expenses.other}</Select.Option>
+              <Select
+                placeholder={t.expenses.selectUnit}
+                loading={typesLoading}
+                showSearch
+                optionFilterProp="label"
+              >
+                {expenseTypes.map((type) => (
+                  <Select.Option
+                    key={type.id}
+                    value={type.nameAr}
+                    label={language === "ar" ? type.nameAr : type.nameEn}
+                  >
+                    <span dir="rtl">{type.nameAr}</span>
+                    {type.nameEn !== type.nameAr && (
+                      <span className="text-gray-400 ms-2 text-xs">
+                        ({type.nameEn})
+                      </span>
+                    )}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </div>
@@ -96,7 +120,7 @@ const Page = () => {
                 },
               ]}
             >
-              <InputNumber />
+              <InputNumber className="w-full" />
             </Form.Item>
           </div>
           <div className="w-fit flex-1 gap-8">

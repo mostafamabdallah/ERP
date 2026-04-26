@@ -73,7 +73,14 @@ model Employees {
 model Expense {
   id          Int      @id @default(autoincrement())
   amount      Float
-  type        String   @db.VarChar(50)
+  type        String   @db.VarChar(100)
   description String?
   date        DateTime @default(now())
+}
+
+model ExpenseType {
+  id        Int      @id @default(autoincrement())
+  nameAr    String   @db.VarChar(100)
+  nameEn    String   @db.VarChar(100)
+  createdAt DateTime @default(now())
 }

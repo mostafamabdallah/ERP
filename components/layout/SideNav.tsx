@@ -12,6 +12,7 @@ import {
   faMap,
   faBriefcase,
   faMoneyBill,
+  faTag,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,6 +30,7 @@ const SideNav = () => {
     { name: t.nav.orders, icon: faTruckFast, url: "/orders" },
     { name: t.nav.employees, icon: faBriefcase, url: "/employees" },
     { name: t.nav.expenses, icon: faMoneyBill, url: "/expenses" },
+    { name: t.nav.expenseTypes, icon: faTag, url: "/expense-types" },
   ];
 
   return (
@@ -46,7 +48,10 @@ const SideNav = () => {
       </span>
       <div className="flex flex-col">
         {pages.map((el, i) => {
-          const isActive = pathname == el.url;
+          const isActive =
+            el.url === "/"
+              ? pathname === "/"
+              : pathname === el.url || pathname.startsWith(el.url + "/");
           return (
             <Link
               key={i}
