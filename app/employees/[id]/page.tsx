@@ -17,6 +17,7 @@ import {
   faBriefcase,
   faTrophy,
   faChartLine,
+  faIdCard,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -241,6 +242,15 @@ const Page = ({ params }: { params: { id: string } }) => {
               />
               {jobLabelMap[employee?.job] ?? employee?.job}
             </p>
+            {employee?.nationalId && (
+              <p className="flex gap-2 items-center text-sm text-gray-500 dark:text-on-surface-variant">
+                <FontAwesomeIcon
+                  icon={faIdCard}
+                  className="text-primary dark:text-primary-dark w-3"
+                />
+                {employee.nationalId}
+              </p>
+            )}
           </div>
         </div>
 

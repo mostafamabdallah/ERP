@@ -60,13 +60,14 @@ model ItemOrder {
 }
 
 model Employees {
-  id        Int     @id @default(autoincrement())
-  name      String  @db.VarChar(255)
-  job       String  @db.VarChar(255)
-  phone     String  @db.VarChar(20)
-  latitude  Float?
-  longitude Float?
-  orders    Order[]
+  id         Int     @id @default(autoincrement())
+  name       String  @db.VarChar(255)
+  job        String  @db.VarChar(255)
+  phone      String  @db.VarChar(20)
+  nationalId String? @db.VarChar(20)
+  latitude   Float?
+  longitude  Float?
+  orders     Order[]
 }
 
 model Expense {

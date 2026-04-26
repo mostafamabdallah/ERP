@@ -27,6 +27,7 @@ export type Employee = {
   name: string;
   phone: string;
   job: string;
+  nationalId?: string | null;
   latitude: number;
   longitude: number;
   orders: Order[];

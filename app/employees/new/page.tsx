@@ -98,6 +98,10 @@ const Page = () => {
           </div>
         </div>
 
+        <Form.Item name="nationalId" label={t.employees.nationalId}>
+          <Input placeholder={t.employees.nationalIdPlaceholder} maxLength={20} />
+        </Form.Item>
+
         <Form.Item>
           <Space>
             <SubmitButton form={form} />

@@ -35,6 +35,7 @@ export async function POST(request: Request, { query }: any) {
         name: data.name,
         phone: data.phone,
         job: data.job,
+        nationalId: data.nationalId ?? null,
       },
     });
 

@@ -111,6 +111,8 @@ export type Translations = {
     jobDelivery: string;
     jobManager: string;
     jobCallCenter: string;
+    nationalId: string;
+    nationalIdPlaceholder: string;
     viewProfile: string;
     profile: string;
     totalOrders: string;
@@ -291,6 +293,8 @@ const ar: Translations = {
     jobDelivery: "مندوب توصيل",
     jobManager: "مدير",
     jobCallCenter: "مركز اتصال",
+    nationalId: "الرقم القومي",
+    nationalIdPlaceholder: "أدخل الرقم القومي",
     viewProfile: "عرض الملف",
     profile: "ملف الموظف",
     totalOrders: "إجمالي الطلبات",

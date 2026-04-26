@@ -113,6 +113,8 @@ const en: Translations = {
     jobDelivery: "Delivery Man",
     jobManager: "Manager",
     jobCallCenter: "Call Center",
+    nationalId: "National ID",
+    nationalIdPlaceholder: "Enter national ID",
     viewProfile: "View Profile",
     profile: "Employee Profile",
     totalOrders: "Total Orders",
