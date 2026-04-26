@@ -111,6 +111,23 @@ export type Translations = {
     jobDelivery: string;
     jobManager: string;
     jobCallCenter: string;
+    viewProfile: string;
+    profile: string;
+    totalOrders: string;
+    deliveredOrders: string;
+    failedOrders: string;
+    pendingOrders: string;
+    totalDeliveryMoney: string;
+    successRate: string;
+    avgDeliveryMoney: string;
+    performance: string;
+    excellent: string;
+    good: string;
+    average: string;
+    poor: string;
+    monthlyOrders: string;
+    avgOrdersPerDay: string;
+    allTime: string;
   };
   expenses: {
     expenseType: string;
@@ -274,6 +291,23 @@ const ar: Translations = {
     jobDelivery: "مندوب توصيل",
     jobManager: "مدير",
     jobCallCenter: "مركز اتصال",
+    viewProfile: "عرض الملف",
+    profile: "ملف الموظف",
+    totalOrders: "إجمالي الطلبات",
+    deliveredOrders: "الطلبات المسلمة",
+    failedOrders: "الطلبات الفاشلة",
+    pendingOrders: "الطلبات المعلقة",
+    totalDeliveryMoney: "إجمالي التوصيل",
+    successRate: "نسبة النجاح",
+    avgDeliveryMoney: "متوسط سعر التوصيل",
+    performance: "الأداء",
+    excellent: "ممتاز",
+    good: "جيد",
+    average: "متوسط",
+    poor: "ضعيف",
+    monthlyOrders: "طلبات الشهر",
+    avgOrdersPerDay: "متوسط التسليم اليومي",
+    allTime: "كل الوقت",
   },
   expenses: {
     expenseType: "نوع المصروف",

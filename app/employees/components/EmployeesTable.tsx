@@ -6,6 +6,9 @@ import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef, useState } from "react";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
@@ -16,6 +19,7 @@ type DataIndex = keyof Employee;
 
 const EmployeesTable = ({ employees }: Props) => {
   const { t } = useLanguage();
+  const { push } = useRouter();
   const [searchText, setSearchText] = useState("");
 
   const jobLabelMap: Record<string, string> = {
@@ -118,6 +122,17 @@ const EmployeesTable = ({ employees }: Props) => {
       key: "job",
       ...getColumnSearchProps("job"),
       render: (job: string) => jobLabelMap[job] ?? job,
+    },
+    {
+      title: t.employees.viewProfile,
+      key: "profile",
+      render: (_: any, record: Employee) => (
+        <FontAwesomeIcon
+          onClick={() => push(`/employees/${record.id}`)}
+          className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md"
+          icon={faEye}
+        />
+      ),
     },
   ];
 
