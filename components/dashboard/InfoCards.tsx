@@ -10,21 +10,14 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import InfoCard from "../layout/InfoCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   selectedMonth: any;
 };
 
 const InfoCards = (props: Props) => {
-  const customers = useQuery({
-    queryKey: ["customers"],
-    queryFn: (): Promise<Customer[]> => {
-      return customFetch
-        .get("customers")
-        .then((response) => response.data.customers);
-    },
-    initialData: [],
-  });
+  const { t } = useLanguage();
 
   const orders = useQuery({
     queryKey: ["orders"],
@@ -72,48 +65,47 @@ const InfoCards = (props: Props) => {
 
   const dashboardData = [
     {
-      title: "Total orders",
+      title: t.dashboard.totalOrders,
       icon: faBoxOpen,
       iconColor: "text-[#0f62fe]",
       iconBgColor: "bg-[#0f62fe20]",
       value: orders.data.length,
       delta: 15,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
-
     {
-      title: "Total Expenses",
+      title: t.dashboard.totalExpenses,
       icon: faMoneyBill1Wave,
       iconColor: "text-[#0f62fe]",
       iconBgColor: "bg-[#0f62fe20]",
       value: netProfit.data.totalExpense,
       delta: 15,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Total Delivery Money",
+      title: t.dashboard.totalDeliveryMoney,
       icon: faExclamationCircle,
       iconColor: "text-[#a3965f]",
       iconBgColor: "bg-[#a3965f20]",
       value: Number(totalDeliveryMoney.data),
       delta: 15,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
-
     {
-      title: "Net Profit",
+      title: t.dashboard.netProfit,
       icon: faLock,
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
       value: Number(netProfit.data.netProfit),
       delta: 1,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
   ];
+
   return (
     <div className="flex gap-5 flex-wrap flex-1 md:flex-nowrap">
       {dashboardData.map((el, i) => {

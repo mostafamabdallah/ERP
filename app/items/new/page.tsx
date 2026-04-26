@@ -1,28 +1,24 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
 import { Button, Form, Input, InputNumber, Select, Space, message } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Category } from "@prisma/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
 const SubmitButton = ({ form }: { form: FormInstance }) => {
   const [submittable, setSubmittable] = React.useState(false);
-  // Watch all values
+  const { t } = useLanguage();
   const values = Form.useWatch([], form);
 
   React.useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
-      () => {
-        setSubmittable(true);
-      },
-      () => {
-        setSubmittable(false);
-      }
+      () => setSubmittable(true),
+      () => setSubmittable(false)
     );
-  }, [values,form]);
+  }, [values, form]);
 
   return (
     <Button
@@ -30,12 +26,14 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
       htmlType="submit"
       disabled={!submittable}
     >
-      Submit
+      {t.common.submit}
     </Button>
   );
 };
 
-const Page = (props: Props) => {
+const Page = () => {
+  const { t } = useLanguage();
+
   const categories = useQuery({
     queryKey: ["categories"],
     queryFn: (): Promise<Category[]> => {
@@ -45,14 +43,14 @@ const Page = (props: Props) => {
     },
     initialData: [],
   });
+
   const [form] = Form.useForm();
   const { push } = useRouter();
+
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return customFetch.post("/items", data);
-    },
-    onSuccess: (res) => {
-      message.success("items added successfully").then(() => {
+    mutationFn: (data) => customFetch.post("/items", data),
+    onSuccess: () => {
+      message.success(t.items.addedSuccess).then(() => {
         push(`/items`);
       });
     },
@@ -77,12 +75,11 @@ const Page = (props: Props) => {
         layout="vertical"
         autoComplete="off"
       >
-        {" "}
         <div className="flex gap-8">
           <div className="w-full md:w-6/12">
             <Form.Item
               name="name"
-              label="Item Name"
+              label={t.items.itemName}
               rules={[{ required: true }]}
             >
               <Input />
@@ -92,12 +89,12 @@ const Page = (props: Props) => {
             <Form.Item
               className="w-fit"
               name="price"
-              label="Item Price"
+              label={t.items.itemPrice}
               rules={[
                 {
                   type: "number",
                   required: true,
-                  message: "Please enter a valid number",
+                  message: t.common.validNumber,
                   min: 0,
                   max: 10000,
                 },
@@ -108,12 +105,12 @@ const Page = (props: Props) => {
             <Form.Item
               className="w-fit"
               name="quantity"
-              label="Item Quantity"
+              label={t.items.itemQuantity}
               rules={[
                 {
                   type: "number",
                   required: true,
-                  message: "Please enter a valid number",
+                  message: t.common.validNumber,
                   min: 1,
                   max: 10000,
                 },
@@ -127,17 +124,15 @@ const Page = (props: Props) => {
           <div className="w-full md:w-6/12">
             <Form.Item
               name="category"
-              label="Category"
-              rules={[{ required: true, message: "Please select category!" }]}
+              label={t.items.category}
+              rules={[{ required: true, message: t.items.selectCategoryError }]}
             >
-              <Select placeholder="Select item category">
-                {categories.data.map((el, i) => {
-                  return (
-                    <Select.Option key={i} value={el.id}>
-                      {el.name}
-                    </Select.Option>
-                  );
-                })}
+              <Select placeholder={t.items.selectItemCategory}>
+                {categories.data.map((el, i) => (
+                  <Select.Option key={i} value={el.id}>
+                    {el.name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </div>
@@ -145,16 +140,16 @@ const Page = (props: Props) => {
           <div className="w-full md:w-6/12">
             <Form.Item
               name="unit"
-              label="Item Unit"
-              rules={[{ required: true, message: "Please select unit!" }]}
+              label={t.items.itemUnit}
+              rules={[{ required: true, message: t.items.selectUnitError }]}
             >
-              <Select placeholder="Select item unit">
-                <Select.Option value="كيلو">كيلو</Select.Option>
-                <Select.Option value="علبة">علبة</Select.Option>
-                <Select.Option value="كرتونة">كرتونة</Select.Option>
-                <Select.Option value="زجاجة">زجاجة</Select.Option>
-                <Select.Option value="كيس">كيس</Select.Option>
-                <Select.Option value="وحدة">وحدة</Select.Option>
+              <Select placeholder={t.items.selectItemUnit}>
+                <Select.Option value="كيلو">{t.items.kilo}</Select.Option>
+                <Select.Option value="علبة">{t.items.box}</Select.Option>
+                <Select.Option value="كرتونة">{t.items.carton}</Select.Option>
+                <Select.Option value="زجاجة">{t.items.bottle}</Select.Option>
+                <Select.Option value="كيس">{t.items.bag}</Select.Option>
+                <Select.Option value="وحدة">{t.items.unitOption}</Select.Option>
               </Select>
             </Form.Item>
           </div>
@@ -162,7 +157,7 @@ const Page = (props: Props) => {
         <Form.Item>
           <Space>
             <SubmitButton form={form} />
-            <Button htmlType="reset">Reset</Button>
+            <Button htmlType="reset">{t.common.reset}</Button>
           </Space>
         </Form.Item>
       </Form>

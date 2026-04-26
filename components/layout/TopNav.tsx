@@ -7,6 +7,7 @@ import {
   faBars,
   faBell,
   faClose,
+  faGlobe,
   faMoon,
   faSun,
   faUser,
@@ -14,13 +15,13 @@ import {
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
-
-const TopNav = (props: Props) => {
+const TopNav = () => {
   const pathname = usePathname();
   const pageName = pathname.split("/");
   const { isDark, toggleTheme } = useTheme();
+  const { language, toggleLanguage, t } = useLanguage();
   const [animate, setAnimate] = useState({
     opacity: 0,
     display: "none",
@@ -43,9 +44,25 @@ const TopNav = (props: Props) => {
                   return " / " + el;
                 }
               })
-            : "Dashboard"}
+            : t.nav.dashboard}
         </span>
         <span className="flex gap-3 items-center justify-center">
+          {/* Language toggle */}
+          <button
+            onClick={toggleLanguage}
+            aria-label="Toggle language"
+            title={language === "ar" ? "Switch to English" : "التبديل للعربية"}
+            className="flex relative rounded-full text-sm font-bold w-12 h-12 items-center justify-center bg-white dark:bg-surface-mid border border-border dark:border-outline-dark cursor-pointer hover:bg-gray-100 dark:hover:bg-surface-high transition-colors duration-200 gap-1"
+          >
+            <FontAwesomeIcon
+              className="text-primary dark:text-primary-dark text-base"
+              icon={faGlobe}
+            />
+            <span className="text-[10px] font-bold text-primary dark:text-primary-dark leading-none">
+              {language === "ar" ? "EN" : "عر"}
+            </span>
+          </button>
+
           {/* Dark / Light mode toggle */}
           <button
             onClick={toggleTheme}
@@ -118,31 +135,31 @@ const TopNav = (props: Props) => {
                   onClick={() => callBackAnimate()}
                   className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
-                  <Link href={"/"}>Dashboard</Link>
+                  <Link href={"/"}>{t.nav.dashboard}</Link>
                 </li>
                 <li
                   onClick={() => callBackAnimate()}
                   className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
-                  <Link href={"/customers"}>Customers</Link>
+                  <Link href={"/customers"}>{t.nav.customers}</Link>
                 </li>
                 <li
                   onClick={() => callBackAnimate()}
                   className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
-                  <Link href={"/orders"}>Orders</Link>
+                  <Link href={"/orders"}>{t.nav.orders}</Link>
                 </li>
                 <li
                   onClick={() => callBackAnimate()}
                   className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
-                  <Link href={"/items"}>Items</Link>
+                  <Link href={"/items"}>{t.nav.items}</Link>
                 </li>
                 <li
                   onClick={() => callBackAnimate()}
                   className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
-                  <Link href={"/categories"}>Categories</Link>
+                  <Link href={"/categories"}>{t.nav.categories}</Link>
                 </li>
               </ul>
             </div>

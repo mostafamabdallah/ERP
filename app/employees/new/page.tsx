@@ -1,27 +1,23 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
 import { Button, Form, Input, Select, Space, message } from "antd";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
 const SubmitButton = ({ form }: { form: FormInstance }) => {
   const [submittable, setSubmittable] = React.useState(false);
-  // Watch all values
+  const { t } = useLanguage();
   const values = Form.useWatch([], form);
 
   React.useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
-      () => {
-        setSubmittable(true);
-      },
-      () => {
-        setSubmittable(false);
-      }
+      () => setSubmittable(true),
+      () => setSubmittable(false)
     );
-  }, [values,form]);
+  }, [values, form]);
 
   return (
     <Button
@@ -29,30 +25,28 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
       htmlType="submit"
       disabled={!submittable}
     >
-      Submit
+      {t.common.submit}
     </Button>
   );
 };
 
-const Page = (props: Props) => {
-  const validatePhoneNumber = (_: any, value: any) => {
-    // Define your phone number pattern using a regular expression
-    const phoneRegex = /^[0-9]{11}$/;
-
-    if (value && !phoneRegex.test(value)) {
-      return Promise.reject("Please enter a valid phone number (11 digits).");
-    }
-
-    return Promise.resolve();
-  };
+const Page = () => {
+  const { t } = useLanguage();
   const [form] = Form.useForm();
   const { push } = useRouter();
+
+  const validatePhoneNumber = (_: any, value: any) => {
+    const phoneRegex = /^[0-9]{11}$/;
+    if (value && !phoneRegex.test(value)) {
+      return Promise.reject(t.common.phoneError);
+    }
+    return Promise.resolve();
+  };
+
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return customFetch.post("/employees", data);
-    },
-    onSuccess: (res) => {
-      message.success("employee added successfully").then(() => {
+    mutationFn: (data) => customFetch.post("/employees", data),
+    onSuccess: () => {
+      message.success(t.employees.addedSuccess).then(() => {
         push(`/employees`);
       });
     },
@@ -62,9 +56,7 @@ const Page = (props: Props) => {
     try {
       await mutation.mutateAsync(data);
     } catch (error: any) {
-      message.error(error.response.data.message).then(() => {
-        // push(`/employees`);
-      });
+      message.error(error.response.data.message).then(() => {});
     }
   };
 
@@ -77,14 +69,14 @@ const Page = (props: Props) => {
         layout="vertical"
         autoComplete="off"
       >
-        <Form.Item name="name" label="Full Name" rules={[{ required: true }]}>
+        <Form.Item name="name" label={t.employees.fullName} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
         <div className="flex gap-8">
           <div className="w-full md:w-6/12">
             <Form.Item
               name="phone"
-              label="Phone Number"
+              label={t.employees.phoneNumber}
               rules={[{ required: true }, { validator: validatePhoneNumber }]}
             >
               <Input />
@@ -94,13 +86,13 @@ const Page = (props: Props) => {
           <div className="w-full md:w-6/12">
             <Form.Item
               name="job"
-              label="Position"
-              rules={[{ required: true, message: "Please select Position!" }]}
+              label={t.employees.position}
+              rules={[{ required: true, message: t.employees.selectPositionError }]}
             >
-              <Select placeholder="select your Position">
-                <Select.Option value="delivery">Delivery Man</Select.Option>
-                <Select.Option value="manger">Manger</Select.Option>
-                <Select.Option value="call center">Call Center</Select.Option>
+              <Select placeholder={t.employees.selectPosition}>
+                <Select.Option value="delivery">{t.employees.deliveryMan}</Select.Option>
+                <Select.Option value="manger">{t.employees.manager}</Select.Option>
+                <Select.Option value="call center">{t.employees.callCenter}</Select.Option>
               </Select>
             </Form.Item>
           </div>
@@ -109,7 +101,7 @@ const Page = (props: Props) => {
         <Form.Item>
           <Space>
             <SubmitButton form={form} />
-            <Button htmlType="reset">Reset</Button>
+            <Button htmlType="reset">{t.common.reset}</Button>
           </Space>
         </Form.Item>
       </Form>

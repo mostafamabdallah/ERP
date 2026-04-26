@@ -1,13 +1,12 @@
+"use client";
 import { SearchOutlined } from "@ant-design/icons";
-import { Customer, Employee } from "../../../types/global";
+import { Employee } from "../../../types/global";
 import type { InputRef } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef, useState } from "react";
-import { faEdit, faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   employees: Employee[];
@@ -16,9 +15,14 @@ type Props = {
 type DataIndex = keyof Employee;
 
 const EmployeesTable = ({ employees }: Props) => {
-  const { push } = useRouter();
+  const { t } = useLanguage();
   const [searchText, setSearchText] = useState("");
 
+  const jobLabelMap: Record<string, string> = {
+    delivery: t.employees.jobDelivery,
+    manger: t.employees.jobManager,
+    "call center": t.employees.jobCallCenter,
+  };
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
@@ -28,6 +32,7 @@ const EmployeesTable = ({ employees }: Props) => {
   ) => {
     confirm({ closeDropdown: false });
   };
+
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
@@ -36,23 +41,18 @@ const EmployeesTable = ({ employees }: Props) => {
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): ColumnType<Employee> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`${t.common.search} ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onKeyDown={() => {
-            handleSearch(selectedKeys as string[], confirm, dataIndex);
-          }}
+          onKeyDown={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
           onPressEnter={() =>
             handleSearch(selectedKeys as string[], confirm, dataIndex)
           }
@@ -68,14 +68,14 @@ const EmployeesTable = ({ employees }: Props) => {
             size="small"
             style={{ width: 90 }}
           >
-            Search
+            {t.common.search}
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{ width: 90 }}
           >
-            Reset
+            {t.common.reset}
           </Button>
         </Space>
       </div>
@@ -85,40 +85,39 @@ const EmployeesTable = ({ employees }: Props) => {
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        .toString()
+        ?.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
+      if (visible) setTimeout(() => searchInput.current?.select(), 100);
     },
   });
 
   const columns: ColumnsType<Employee> = [
     {
-      title: "ID",
+      title: t.common.id,
       dataIndex: "id",
       key: "id",
       ...getColumnSearchProps("id"),
     },
     {
-      title: "Name",
+      title: t.common.name,
       dataIndex: "name",
       key: "name",
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Phone	",
+      title: t.common.phone,
       dataIndex: "phone",
       key: "phone",
       ...getColumnSearchProps("phone"),
     },
     {
-      title: "Job	",
+      title: t.employees.job,
       dataIndex: "job",
       key: "job",
       ...getColumnSearchProps("job"),
+      render: (job: string) => jobLabelMap[job] ?? job,
     },
   ];
 

@@ -3,24 +3,21 @@ import InfoCard from "@/components/layout/InfoCard";
 import { useQuery } from "@tanstack/react-query";
 import { customFetch } from "@/utilities/fetch";
 import {
-  faAddressCard,
   faCheckCircle,
-  faExclamationCircle,
   faLock,
-  faMap,
-  faMapLocation,
   faMapLocationDot,
-  faMarker,
   faPhone,
-  faPlus,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Avatar, Badge } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Page = ({ params }: { params: { id: string } }) => {
+  const { t } = useLanguage();
+
   const { data } = useQuery({
     queryKey: ["customer_orders"],
     queryFn: (): Promise<any> => {
@@ -33,44 +30,40 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const dashboardData = [
     {
-      title: "Total Orders",
+      title: t.customers.totalOrders,
       icon: faUsers,
       iconColor: "text-[#0f62fe]",
       iconBgColor: "bg-[#0f62fe20]",
       value: data?.orders?.length,
       delta: 15,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Delivered Orders",
+      title: t.customers.deliveredOrders,
       icon: faCheckCircle,
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
-      value: data?.orders?.filter((el: any) => {
-        return el.status == "succeeded";
-      }).length,
+      value: data?.orders?.filter((el: any) => el.status == "succeeded").length,
       delta: 5,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Failed Orders",
+      title: t.customers.failedOrders,
       icon: faLock,
       iconColor: "text-[#ff9398]",
       iconBgColor: "bg-[#ff939820]",
-      value: data?.orders?.filter((el: any) => {
-        return el.status == "failed";
-      }).length,
+      value: data?.orders?.filter((el: any) => el.status == "failed").length,
       delta: 1,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
   ];
 
   return (
     <div className="flex justify-between w-full">
-      <div className="flex flex-col w-full  md:w-3/12 items-start gap-2">
+      <div className="flex flex-col w-full md:w-3/12 items-start gap-2">
         <Badge.Ribbon
           color={
             data.status == "verified"
@@ -83,7 +76,9 @@ const Page = ({ params }: { params: { id: string } }) => {
         >
           <Avatar shape="square" size={150} icon={<UserOutlined />} />
         </Badge.Ribbon>
-        <p className="text-2xl mt-5 font-bold text-primary dark:text-primary-dark">{data.name}</p>
+        <p className="text-2xl mt-5 font-bold text-primary dark:text-primary-dark">
+          {data.name}
+        </p>
         <p className="flex gap-3 items-center text-tittle dark:text-on-surface">
           <FontAwesomeIcon
             className="text-primary dark:text-primary-dark"
@@ -101,13 +96,12 @@ const Page = ({ params }: { params: { id: string } }) => {
         <Badge text={data.status} />
       </div>
       <div className="flex flex-col w-full md:w-9/12 gap-6">
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-3 w-full">
-          {dashboardData.map((el, i) => {
-            return <InfoCard key={i} data={el}></InfoCard>;
-          })}
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 w-full">
+          {dashboardData.map((el, i) => (
+            <InfoCard key={i} data={el} />
+          ))}
         </div>
-        <div className="flex flex-row flex-wrap gap-6 ">
-          {/* <div className="w-full ">{<OrderTable orders={data} />}</div> */}
+        <div className="flex flex-row flex-wrap gap-6">
           <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
         </div>
       </div>

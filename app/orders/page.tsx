@@ -10,15 +10,16 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Customer, Order } from "../../types/global";
+import { Order } from "../../types/global";
 import React from "react";
 import Link from "next/link";
 import OrderTable from "../../components/OrderTable";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
+const Page = () => {
+  const { t } = useLanguage();
 
-const Page = (props: Props) => {
-  const { data, isSuccess } = useQuery({
+  const { data } = useQuery({
     queryKey: ["orders"],
     queryFn: (): Promise<Order[]> => {
       return customFetch.get("orders").then((response) => response.data.orders);
@@ -28,50 +29,44 @@ const Page = (props: Props) => {
 
   const dashboardData = [
     {
-      title: "Total Orders",
+      title: t.orders.totalOrders,
       icon: faUsers,
       iconColor: "text-[#0f62fe]",
       iconBgColor: "bg-[#0f62fe20]",
       value: data.length,
       delta: 100,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Delivered Orders",
+      title: t.orders.deliveredOrders,
       icon: faCheckCircle,
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
-      value: data.filter((el) => {
-        return el.status == "success" || el.status == "money_collected";
-      }).length,
+      value: data.filter((el) => el.status == "success" || el.status == "money_collected").length,
       delta: 5,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Pending Orders",
+      title: t.orders.pendingOrders,
       icon: faExclamationCircle,
       iconColor: "text-[#a3965f]",
       iconBgColor: "bg-[#a3965f20]",
-      value: data.filter((el) => {
-        return el.status == "pending";
-      }).length,
+      value: data.filter((el) => el.status == "pending").length,
       delta: 15,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Failed Orders",
+      title: t.orders.failedOrders,
       icon: faLock,
       iconColor: "text-[#ff9398]",
       iconBgColor: "bg-[#ff939820]",
-      value: data.filter((el) => {
-        return el.status == "failed";
-      }).length,
+      value: data.filter((el) => el.status == "failed").length,
       delta: 1,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
   ];
 
@@ -82,20 +77,19 @@ const Page = (props: Props) => {
           href="/customers/new"
           className="rounded-md px-5 py-2 flex gap-1 text-sm items-center justify-between text-white bg-primary hover:bg-[#0f62fe95]"
         >
-          <FontAwesomeIcon
-            className="font-bold"
-            icon={faPlus}
-          ></FontAwesomeIcon>
-          Add New
+          <FontAwesomeIcon className="font-bold" icon={faPlus} />
+          {t.common.addNew}
         </Link>
       </div>
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 ">
-        {dashboardData.map((el, i) => {
-          return <InfoCard key={i} data={el}></InfoCard>;
-        })}
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {dashboardData.map((el, i) => (
+          <InfoCard key={i} data={el} />
+        ))}
       </div>
-      <div className="flex flex-row flex-wrap gap-6 ">
-        <div className="w-full ">{<OrderTable orders={data} />}</div>
+      <div className="flex flex-row flex-wrap gap-6">
+        <div className="w-full">
+          <OrderTable orders={data} />
+        </div>
         <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
       </div>
     </div>

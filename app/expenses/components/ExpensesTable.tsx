@@ -1,14 +1,13 @@
+"use client";
 import { SearchOutlined } from "@ant-design/icons";
-import { Customer, Employee, Expense } from "../../../types/global";
+import { Expense } from "../../../types/global";
 import type { InputRef } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef, useState } from "react";
-import { faEdit, faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/navigation";
 import moment from "moment";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   expenses: Expense[];
@@ -17,18 +16,17 @@ type Props = {
 type DataIndex = keyof Expense;
 
 const ExpensesTable = ({ expenses }: Props) => {
-  const data = expenses.map((el, i) => {
-    return {
-      id: el.id,
-      amount: el.amount,
-      type: el.type,
-      description: el.description,
-      date: moment(el.date).format("YYYY-MM-DD h:mm A"),
-    };
-  });
-  const { push } = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const { t } = useLanguage();
 
+  const data = expenses.map((el) => ({
+    id: el.id,
+    amount: el.amount,
+    type: el.type,
+    description: el.description,
+    date: moment(el.date).format("YYYY-MM-DD h:mm A"),
+  }));
+
+  const [searchText, setSearchText] = useState("");
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
@@ -38,29 +36,25 @@ const ExpensesTable = ({ expenses }: Props) => {
   ) => {
     confirm({ closeDropdown: false });
   };
+
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Expense> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`${t.common.search} ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onKeyDown={() => {
-            handleSearch(selectedKeys as string[], confirm, dataIndex);
-          }}
+          onKeyDown={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
           onPressEnter={() =>
             handleSearch(selectedKeys as string[], confirm, dataIndex)
           }
@@ -76,14 +70,14 @@ const ExpensesTable = ({ expenses }: Props) => {
             size="small"
             style={{ width: 90 }}
           >
-            Search
+            {t.common.search}
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{ width: 90 }}
           >
-            Reset
+            {t.common.reset}
           </Button>
         </Space>
       </div>
@@ -93,43 +87,41 @@ const ExpensesTable = ({ expenses }: Props) => {
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        .toString()
+        ?.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
+      if (visible) setTimeout(() => searchInput.current?.select(), 100);
     },
   });
 
   const columns: ColumnsType<Expense> = [
     {
-      title: "ID",
+      title: t.common.id,
       dataIndex: "id",
       key: "id",
       ...getColumnSearchProps("id"),
     },
     {
-      title: "Type",
+      title: t.expenses.type,
       dataIndex: "type",
       key: "type",
       ...getColumnSearchProps("type"),
     },
     {
-      title: "Amount	",
+      title: t.expenses.amount,
       dataIndex: "amount",
       key: "amount",
       ...getColumnSearchProps("amount"),
     },
     {
-      title: "Description	",
+      title: t.expenses.description,
       dataIndex: "description",
       key: "description",
       ...getColumnSearchProps("description"),
     },
     {
-      title: "Date	",
+      title: t.common.date,
       dataIndex: "date",
       key: "date",
       ...getColumnSearchProps("date"),

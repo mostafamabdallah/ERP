@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Statistic } from "antd";
 import React from "react";
 import CountUp from "react-countup";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   data: CardData;
@@ -12,6 +13,7 @@ type Props = {
 const formatter = (value: any) => <CountUp end={value} separator="," />;
 
 const InfoCard = ({ data }: Props) => {
+  const { t } = useLanguage();
   return (
     <div className="w-full flex flex-col gap-3 px-6 py-4 bg-white dark:bg-surface-mid rounded-lg transition-colors duration-300">
       <div className="flex justify-start gap-3 items-center">
@@ -32,10 +34,10 @@ const InfoCard = ({ data }: Props) => {
           <Statistic value={data.value} formatter={formatter} />
         </span>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col text-end">
           <span className="text-green-500">{data.delta}%</span>
           <span className="text-gray-300 dark:text-on-surface-variant">
-            vs last {data.period}
+            {t.common.vsLast} {data.period}
           </span>
         </div>
       </div>

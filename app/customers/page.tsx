@@ -14,10 +14,11 @@ import { Customer } from "../../types/global";
 import React from "react";
 import Link from "next/link";
 import CustomerTable from "./components/CustomerTable";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
+const Page = () => {
+  const { t } = useLanguage();
 
-const Page = (props: Props) => {
   const customers = useQuery({
     queryKey: ["customers"],
     queryFn: (): Promise<Customer[]> => {
@@ -27,52 +28,47 @@ const Page = (props: Props) => {
     },
     initialData: [],
   });
+
   const dashboardData = [
     {
-      title: "Total Customers",
+      title: t.customers.totalCustomers,
       icon: faUsers,
       iconColor: "text-[#0f62fe]",
       iconBgColor: "bg-[#0f62fe20]",
       value: customers.data.length,
       delta: 15,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Verified Customers",
+      title: t.customers.verifiedCustomers,
       icon: faCheckCircle,
       iconColor: "text-[#8cbfad]",
       iconBgColor: "bg-[#8cbfad20]",
-      value: customers.data.filter((el) => {
-        return el.status == "verified";
-      }).length,
+      value: customers.data.filter((el) => el.status == "verified").length,
       delta: 5,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Warned Customers",
+      title: t.customers.warnedCustomers,
       icon: faExclamationCircle,
       iconColor: "text-[#a3965f]",
       iconBgColor: "bg-[#a3965f20]",
-      value: customers.data.filter((el) => {
-        return el.status == "warned";
-      }).length,
+      value: customers.data.filter((el) => el.status == "warned").length,
       delta: 15,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
     {
-      title: "Blocked Customers",
+      title: t.customers.blockedCustomers,
       icon: faLock,
       iconColor: "text-[#ff9398]",
       iconBgColor: "bg-[#ff939820]",
-      value: customers.data.filter((el) => {
-        return el.status == "blocked";
-      }).length,
+      value: customers.data.filter((el) => el.status == "blocked").length,
       delta: 1,
       currency: "users",
-      period: "week",
+      period: t.dashboard.week,
     },
   ];
 
@@ -83,27 +79,23 @@ const Page = (props: Props) => {
           href="/customers/new"
           className="rounded-md px-5 py-2 flex gap-1 text-sm items-center justify-between text-white bg-primary hover:bg-[#0f62fe95]"
         >
-          <FontAwesomeIcon
-            className="font-bold"
-            icon={faPlus}
-          ></FontAwesomeIcon>
-          Add New
+          <FontAwesomeIcon className="font-bold" icon={faPlus} />
+          {t.common.addNew}
         </Link>
       </div>
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 ">
-        {dashboardData.map((el, i) => {
-          return <InfoCard key={i} data={el}></InfoCard>;
-        })}
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {dashboardData.map((el, i) => (
+          <InfoCard key={i} data={el} />
+        ))}
       </div>
-      <div className="flex flex-row flex-wrap gap-6 ">
-        <div className="w-full ">
-          {<CustomerTable customers={customers.data} />}
+      <div className="flex flex-row flex-wrap gap-6">
+        <div className="w-full">
+          <CustomerTable customers={customers.data} />
         </div>
         <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
       </div>
     </div>
   );
 };
-
 
 export default Page;

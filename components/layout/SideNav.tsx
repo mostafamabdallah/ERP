@@ -16,41 +16,23 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/contexts/ThemeContext";
-const pages = [
-  {
-    name: "Dashboard",
-    icon: faGrip,
-    url: "/",
-  },
-  {
-    name: "Customers",
-    icon: faUsers,
-    url: "/customers",
-  },
-  {
-    name: "Orders",
-    icon: faTruckFast,
-    url: "/orders",
-  },
-  {
-    name: "Employees",
-    icon: faBriefcase,
-    url: "/employees",
-  },
-  {
-    name: "Expenses",
-    icon: faMoneyBill,
-    url: "/expenses",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
-
-const SideNav = (props: Props) => {
+const SideNav = () => {
   const pathname = usePathname();
   const { isDark } = useTheme();
+  const { t } = useLanguage();
+
+  const pages = [
+    { name: t.nav.dashboard, icon: faGrip, url: "/" },
+    { name: t.nav.customers, icon: faUsers, url: "/customers" },
+    { name: t.nav.orders, icon: faTruckFast, url: "/orders" },
+    { name: t.nav.employees, icon: faBriefcase, url: "/employees" },
+    { name: t.nav.expenses, icon: faMoneyBill, url: "/expenses" },
+  ];
+
   return (
-    <div className="flex-col hidden lg:flex lg:w-3/12 xl:w-2/12 border-r-2 border-border dark:border-outline-dark h-screen bg-white dark:bg-surface-low lg:px-6 pt-8 transition-colors duration-300">
+    <div className="flex-col hidden lg:flex lg:w-3/12 xl:w-2/12 border-e-2 border-border dark:border-outline-dark h-screen bg-white dark:bg-surface-low lg:px-6 pt-8 transition-colors duration-300">
       <div className="flex flex-row mb-10">
         <img
           src={isDark ? logoDark.src : logo.src}
@@ -60,7 +42,7 @@ const SideNav = (props: Props) => {
       </div>
 
       <span className="text-gray2 dark:text-on-surface-variant mb-3 text-xs font-semibold tracking-widest">
-        MENU
+        {t.nav.menu}
       </span>
       <div className="flex flex-col">
         {pages.map((el, i) => {
@@ -71,7 +53,7 @@ const SideNav = (props: Props) => {
               href={el.url}
               className={`${
                 isActive
-                  ? "bg-[#0f62fe15] dark:bg-[#d09afa20] text-primary dark:text-primary-dark before:content-[''] before:w-1.5 before:h-[calc(100%+1.5rem)] before:rounded-l-lg before:bg-primary dark:before:bg-primary-dark before:-ml-[1rem]"
+                  ? "bg-[#0f62fe15] dark:bg-[#d09afa20] text-primary dark:text-primary-dark before:content-[''] before:w-1.5 before:h-[calc(100%+1.5rem)] before:rounded-e-lg before:bg-primary dark:before:bg-primary-dark ltr:before:-ml-[1rem] rtl:before:-mr-[1rem]"
                   : "text-gray1 dark:text-on-surface-variant"
               } flex flex-row gap-4 items-center justify-between px-4 py-3 rounded-md hover:bg-[#0f62fe15] dark:hover:bg-[#d09afa15] hover:text-primary dark:hover:text-primary-dark transition-colors duration-200`}
             >

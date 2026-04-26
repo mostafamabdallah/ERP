@@ -1,25 +1,26 @@
+"use client";
 import { customFetch } from "@/utilities/fetch";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dropdown, message } from "antd";
-import { useRouter } from "next/router";
 import React from "react";
-type Props = {};
-const items = [
-  {
-    key: "verified",
-    label: "Verified",
-  },
-  {
-    key: "warned",
-    label: "Warned",
-  },
-  {
-    key: "blocked",
-    label: "Blocked",
-  },
-];
+
 const CustomerStatus = ({ status, id }: any) => {
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
+
+  const items = [
+    { key: "verified", label: t.customers.verified },
+    { key: "warned", label: t.customers.warned },
+    { key: "blocked", label: t.customers.blocked },
+  ];
+
+  const statusLabelMap: Record<string, string> = {
+    verified: t.customers.verified,
+    warned: t.customers.warned,
+    blocked: t.customers.blocked,
+  };
+
   const mutation = useMutation({
     mutationFn: (data) => {
       return customFetch.post(`/customers/${id}`, data);
@@ -41,12 +42,9 @@ const CustomerStatus = ({ status, id }: any) => {
       menu={{
         items,
         onClick: async (e) => {
-          const data: any = {
-            id: id,
-            status: e.key,
-          };
+          const data: any = { id, status: e.key };
           try {
-            await mutation.mutateAsync(data).then((data) => {});
+            await mutation.mutateAsync(data);
           } catch (error: any) {
             message.error(error.response.data.message).then(() => {});
           }
@@ -54,7 +52,7 @@ const CustomerStatus = ({ status, id }: any) => {
       }}
     >
       <span
-        className={`capitalize ${
+        className={`${
           status == "verified"
             ? "text-[#8cbfad]"
             : status == "warned"
@@ -62,7 +60,7 @@ const CustomerStatus = ({ status, id }: any) => {
             : "text-[#ff9398]"
         } `}
       >
-        {status}
+        {statusLabelMap[status] ?? status}
       </span>
     </Dropdown.Button>
   );

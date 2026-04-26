@@ -1,27 +1,22 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
-import { Button, Form, Input, InputNumber, Select, Space, message } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Category } from "@prisma/client";
+import { Button, Form, InputNumber, Select, Space, message } from "antd";
+import { useMutation } from "@tanstack/react-query";
 import TextArea from "antd/es/input/TextArea";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
 const SubmitButton = ({ form }: { form: FormInstance }) => {
   const [submittable, setSubmittable] = React.useState(false);
-  // Watch all values
+  const { t } = useLanguage();
   const values = Form.useWatch([], form);
 
   React.useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
-      () => {
-        setSubmittable(true);
-      },
-      () => {
-        setSubmittable(false);
-      }
+      () => setSubmittable(true),
+      () => setSubmittable(false)
     );
   }, [values, form]);
 
@@ -31,20 +26,20 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
       htmlType="submit"
       disabled={!submittable}
     >
-      Submit
+      {t.common.submit}
     </Button>
   );
 };
 
-const Page = (props: Props) => {
+const Page = () => {
+  const { t } = useLanguage();
   const [form] = Form.useForm();
   const { push } = useRouter();
+
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return customFetch.post("/expenses", data);
-    },
-    onSuccess: (res) => {
-      message.success("expenses added successfully").then(() => {
+    mutationFn: (data) => customFetch.post("/expenses", data),
+    onSuccess: () => {
+      message.success(t.expenses.addedSuccess).then(() => {
         push(`/expenses`);
       });
     },
@@ -69,21 +64,20 @@ const Page = (props: Props) => {
         layout="vertical"
         autoComplete="off"
       >
-        {" "}
         <div className="flex gap-8">
           <div className="w-full md:w-4/12">
             <Form.Item
               name="type"
-              label="Expense Type"
-              rules={[{ required: true, message: "Please select unit!" }]}
+              label={t.expenses.expenseType}
+              rules={[{ required: true, message: t.expenses.selectUnitError }]}
             >
-              <Select placeholder="Select item unit">
-                <Select.Option value="اجور">مرتبات و اجور</Select.Option>
-                <Select.Option value="بنزين">بنزين</Select.Option>
-                <Select.Option value="دعاية">دعاية و إعلان</Select.Option>
-                <Select.Option value="تصليح">تصليح</Select.Option>
-                <Select.Option value=">رأس مال">رأس مال</Select.Option>
-                <Select.Option value="أخرى">أخرى</Select.Option>
+              <Select placeholder={t.expenses.selectUnit}>
+                <Select.Option value="اجور">{t.expenses.salaries}</Select.Option>
+                <Select.Option value="بنزين">{t.expenses.gasoline}</Select.Option>
+                <Select.Option value="دعاية">{t.expenses.advertising}</Select.Option>
+                <Select.Option value="تصليح">{t.expenses.maintenance}</Select.Option>
+                <Select.Option value=">رأس مال">{t.expenses.capital}</Select.Option>
+                <Select.Option value="أخرى">{t.expenses.other}</Select.Option>
               </Select>
             </Form.Item>
           </div>
@@ -91,12 +85,12 @@ const Page = (props: Props) => {
             <Form.Item
               className="w-full"
               name="amount"
-              label="Expense Amount"
+              label={t.expenses.expenseAmount}
               rules={[
                 {
                   type: "number",
                   required: true,
-                  message: "Please enter a valid number",
+                  message: t.common.validNumber,
                   min: 0,
                   max: 100000,
                 },
@@ -109,7 +103,7 @@ const Page = (props: Props) => {
             <Form.Item
               className="w-full"
               name="description"
-              label="Expense Description"
+              label={t.expenses.expenseDescription}
               rules={[{ required: true }]}
             >
               <TextArea rows={1} />
@@ -119,7 +113,7 @@ const Page = (props: Props) => {
         <Form.Item>
           <Space>
             <SubmitButton form={form} />
-            <Button htmlType="reset">Reset</Button>
+            <Button htmlType="reset">{t.common.reset}</Button>
           </Space>
         </Form.Item>
       </Form>

@@ -1,25 +1,21 @@
 "use client";
 import { customFetch } from "@/utilities/fetch";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
-import { Button, Form, Input, InputNumber, Select, Space, message } from "antd";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Form, Input, Space, message } from "antd";
+import { useMutation } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Props = {};
 const SubmitButton = ({ form }: { form: FormInstance }) => {
   const [submittable, setSubmittable] = React.useState(false);
-  // Watch all values
+  const { t } = useLanguage();
   const values = Form.useWatch([], form);
 
   React.useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
-      () => {
-        setSubmittable(true);
-      },
-      () => {
-        setSubmittable(false);
-      }
+      () => setSubmittable(true),
+      () => setSubmittable(false)
     );
   }, [values, form]);
 
@@ -29,26 +25,26 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
       htmlType="submit"
       disabled={!submittable}
     >
-      Submit
+      {t.common.submit}
     </Button>
   );
 };
 
-const Page = (props: Props) => {
+const Page = () => {
+  const { t } = useLanguage();
   const [form] = Form.useForm();
   const { push } = useRouter();
+
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return customFetch.post("/categories", data);
-    },
-    onSuccess(data, variables, context) {
+    mutationFn: (data) => customFetch.post("/categories", data),
+    onSuccess(data) {
       message
-        .success(data.data.category.name + "Has been added successfully")
+        .success(data.data.category.name + " " + t.categories.addedSuccess)
         .then(() => {
           push(`/categories`);
         });
     },
-    onError(error: any, variables, context) {
+    onError(error: any) {
       message.error(error.response.data.message).then(() => {
         push(`/categories`);
       });
@@ -75,12 +71,11 @@ const Page = (props: Props) => {
         layout="vertical"
         autoComplete="off"
       >
-        {" "}
         <div className="flex gap-8">
           <div className="w-full md:w-6/12">
             <Form.Item
               name="name"
-              label="Category Name"
+              label={t.categories.categoryName}
               rules={[{ required: true }]}
             >
               <Input />
@@ -90,7 +85,7 @@ const Page = (props: Props) => {
         <Form.Item>
           <Space>
             <SubmitButton form={form} />
-            <Button htmlType="reset">Reset</Button>
+            <Button htmlType="reset">{t.common.reset}</Button>
           </Space>
         </Form.Item>
       </Form>

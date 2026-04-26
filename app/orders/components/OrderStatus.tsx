@@ -1,30 +1,32 @@
+"use client";
 import { customFetch } from "@/utilities/fetch";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dropdown, message } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
-type Props = {};
-const items = [
-  {
-    key: "pending",
-    label: "Pending",
-  },
-  {
-    key: "delivered",
-    label: "Delivered",
-  },
-  {
-    key: "collected",
-    label: "Collected",
-  },
-  {
-    key: "failed",
-    label: "Failed",
-  },
-];
+
 const OrderStatus = ({ status, id }: any) => {
   const { push } = useRouter();
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
+
+  const items = [
+    { key: "pending", label: t.orders.pending },
+    { key: "delivered", label: t.orders.delivered },
+    { key: "collected", label: t.orders.collected },
+    { key: "failed", label: t.orders.failed },
+  ];
+
+  const statusLabelMap: Record<string, string> = {
+    pending: t.orders.pending,
+    delivered: t.orders.delivered,
+    collected: t.orders.collected,
+    failed: t.orders.failed,
+    success: t.orders.success,
+    money_collected: t.orders.moneyCollected,
+  };
+
   const mutation = useMutation({
     mutationFn: (data) => {
       return customFetch.post(`/orders/${id}`, data);
@@ -48,12 +50,9 @@ const OrderStatus = ({ status, id }: any) => {
       menu={{
         items,
         onClick: async (e) => {
-          const data: any = {
-            id: id,
-            status: e.key,
-          };
+          const data: any = { id, status: e.key };
           try {
-            await mutation.mutateAsync(data).then((data) => {});
+            await mutation.mutateAsync(data);
           } catch (error: any) {
             message.error(error.response.data.message).then(() => {
               push(`/orders`);
@@ -63,8 +62,8 @@ const OrderStatus = ({ status, id }: any) => {
       }}
     >
       <span
-        className={`capitalize ${
-          status == "success" || status == "collected"
+        className={`${
+          status == "success" || status == "collected" || status == "money_collected"
             ? "text-[#8cbfad]"
             : status == "pending"
             ? "text-[#a3965f]"
@@ -73,7 +72,7 @@ const OrderStatus = ({ status, id }: any) => {
             : "text-[#ff9398]"
         } `}
       >
-        {status}
+        {statusLabelMap[status] ?? status}
       </span>
     </Dropdown.Button>
   );
