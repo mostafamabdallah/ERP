@@ -104,6 +104,9 @@ const en: Translations = {
     orderDetails: "Order Details",
     deliveryManPlaceholder: "Delivery Man",
     addItem: "Add item",
+    createNewItem: "Create New Item",
+    itemPrice: "Price",
+    priceUpdated: "Price updated",
   },
   employees: {
     fullName: "Full Name",

@@ -102,6 +102,9 @@ export type Translations = {
     orderDetails: string;
     deliveryManPlaceholder: string;
     addItem: string;
+    createNewItem: string;
+    itemPrice: string;
+    priceUpdated: string;
   };
   employees: {
     fullName: string;
@@ -308,6 +311,9 @@ const ar: Translations = {
     orderDetails: "تفاصيل الطلب",
     deliveryManPlaceholder: "المندوب",
     addItem: "إضافة صنف",
+    createNewItem: "إنشاء صنف جديد",
+    itemPrice: "السعر",
+    priceUpdated: "تم تحديث السعر",
   },
   employees: {
     fullName: "الاسم الكامل",
