@@ -22,6 +22,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLanguage } from "@/contexts/LanguageContext";
 import moment from "moment";
+import dayjs from "dayjs";
 import OrderStatus from "@/app/orders/components/OrderStatus";
 
 const { MonthPicker } = DatePicker;
@@ -259,9 +260,9 @@ const Page = ({ params }: { params: { id: string } }) => {
             onChange={handleMonthChange}
             value={
               selectedMonth.month !== 0
-                ? moment(
-                    `${selectedMonth.year}-${selectedMonth.month}`,
-                    "YYYY-M"
+                ? dayjs(
+                    `${selectedMonth.year}-${String(selectedMonth.month).padStart(2, "0")}`,
+                    "YYYY-MM"
                   )
                 : null
             }
