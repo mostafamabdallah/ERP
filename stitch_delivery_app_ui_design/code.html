@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#fcd401",
+                        "on-secondary": "#594a00",
+                        "surface-dim": "#1c0324",
+                        "on-tertiary": "#680a1d",
+                        "surface-container-highest": "#3a1646",
+                        "on-primary-container": "#38005e",
+                        "outline-variant": "#5a3d61",
+                        "on-primary-fixed-variant": "#511f78",
+                        "inverse-primary": "#7a49a1",
+                        "on-error": "#490013",
+                        "outline": "#8b6a91",
+                        "primary-container": "#bf8ae9",
+                        "on-tertiary-fixed": "#39000a",
+                        "on-surface": "#fcdbff",
+                        "surface-container-high": "#32103d",
+                        "primary-fixed-dim": "#c28dec",
+                        "error-container": "#a70138",
+                        "on-tertiary-container": "#570014",
+                        "on-secondary-fixed-variant": "#645300",
+                        "surface-container-lowest": "#000000",
+                        "inverse-on-surface": "#684a6f",
+                        "tertiary-fixed-dim": "#fb7c86",
+                        "on-primary": "#48146f",
+                        "on-secondary-container": "#fff7e6",
+                        "on-error-container": "#ffb2b9",
+                        "tertiary": "#ff959c",
+                        "surface-bright": "#431b4f",
+                        "error-dim": "#d73357",
+                        "surface-container": "#2b0b34",
+                        "secondary": "#fcd401",
+                        "background": "#1c0324",
+                        "secondary-container": "#705d00",
+                        "primary": "#d09afa",
+                        "on-surface-variant": "#c39fc9",
+                        "inverse-surface": "#fff7fb",
+                        "secondary-fixed-dim": "#ecc700",
+                        "tertiary-container": "#fe7e89",
+                        "surface-container-low": "#23062c",
+                        "on-primary-fixed": "#280046",
+                        "error": "#ff6e84",
+                        "tertiary-fixed": "#ff9198",
+                        "primary-dim": "#c28dec",
+                        "surface-variant": "#3a1646",
+                        "primary-fixed": "#d09afa",
+                        "tertiary-dim": "#f47781",
+                        "on-tertiary-fixed-variant": "#721323",
+                        "surface-tint": "#d09afa",
+                        "secondary-dim": "#ecc700",
+                        "on-background": "#fcdbff",
+                        "surface": "#1c0324",
+                        "on-secondary-fixed": "#433700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"],
+                        "arabic": ["IBM Plex Sans Arabic"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+        }
+        .glass-card {
+            background: rgba(58, 22, 70, 0.4);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary selection:text-on-secondary">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#1c0324]/70 backdrop-blur-md shadow-[0_8px_32px_0_rgba(252,219,255,0.05)]">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<span class="material-symbols-outlined text-[#fcd401] active:scale-90 transition-transform cursor-pointer">menu</span>
+<h1 class="text-2xl font-black text-[#fcd401] italic tracking-tighter font-['Plus_Jakarta_Sans']">Tasweeha</h1>
+<span class="material-symbols-outlined text-[#fcd401] active:scale-90 transition-transform cursor-pointer">shopping_bag</span>
+</div>
+<div class="bg-gradient-to-b from-[#32103d] to-transparent h-[2px]"></div>
+</header>
+<main class="pt-28 pb-20 px-6 max-w-7xl mx-auto space-y-24">
+<!-- Brand Header Section -->
+<section class="flex flex-col md:flex-row items-end justify-between gap-8 border-b border-outline-variant/15 pb-12">
+<div class="space-y-4 max-w-2xl">
+<p class="text-secondary font-bold tracking-[0.2em] uppercase text-sm">Brand Identity v1.0</p>
+<h2 class="text-5xl md:text-7xl font-black tracking-tighter leading-none italic">THE NEON NOCTURNE</h2>
+<p class="text-on-surface-variant text-lg md:text-xl font-light leading-relaxed">
+                    A visual language defined by electric energy and editorial precision. Tasweeha blends urban night aesthetics with high-performance digital commerce.
+                </p>
+</div>
+<div class="relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+<img alt="Tasweeha Logo" class="relative w-48 h-48 object-contain rounded-xl bg-surface-container-highest p-8" data-alt="minimalist and premium logo for Tasweeha, featuring sleek geometric shapes in electric yellow and deep purple with professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtP2UrhPQs1ON8LlZWgztZpKf88B-hIhyPQY_hOzl5NVywLLnstLjEGoD9fG2I72_kMISqKX1dtGcMtLI99apJGo-S2MXv_oAgmmEs3BhajPOskkN151cZrfoBNeB_Hg486cfA9dNrHQHKuDEPQI3sw1p5WLdwRWOCtWCv1-1pGM32X6NWMvgLxZzPV81E7P224UmeOlw_IXge4TgsWdHIbmztTwzPdkQBhrPWufhA4TZ1z70PFDU89Odc9YEV8riz3Wv3GdQ42pQy"/>
+</div>
+</section>
+<!-- Color Palette Bento Grid -->
+<section class="space-y-8">
+<div class="flex items-center justify-between">
+<h3 class="text-3xl font-bold italic tracking-tight">Core Spectrum</h3>
+<span class="h-px flex-1 mx-8 bg-outline-variant/20 hidden md:block"></span>
+<p class="text-on-surface-variant font-mono text-sm tracking-widest uppercase">Color Strategy</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Primary Purple -->
+<div class="md:col-span-2 bg-[#1c0324] rounded-3xl p-8 border border-outline-variant/10 group overflow-hidden relative">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px]"></div>
+<div class="relative space-y-6">
+<div class="w-full h-48 bg-primary rounded-2xl shadow-lg flex items-end p-6 group-hover:scale-[1.02] transition-transform duration-500">
+<span class="text-on-primary font-bold text-xl">#5E2D85 (Primary)</span>
+</div>
+<div>
+<h4 class="text-primary font-bold text-lg">Midnight Pulse</h4>
+<p class="text-on-surface-variant text-sm">The foundation of our depth. Used for immersive backgrounds and high-contrast containers.</p>
+</div>
+</div>
+</div>
+<!-- Primary Yellow -->
+<div class="md:col-span-2 bg-[#1c0324] rounded-3xl p-8 border border-outline-variant/10 group overflow-hidden relative">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 blur-[60px]"></div>
+<div class="relative space-y-6">
+<div class="w-full h-48 bg-secondary rounded-2xl shadow-lg flex items-end p-6 group-hover:scale-[1.02] transition-transform duration-500">
+<span class="text-on-secondary font-bold text-xl">#FFD709 (Secondary)</span>
+</div>
+<div>
+<h4 class="text-secondary font-bold text-lg">Electric Neon</h4>
+<p class="text-on-surface-variant text-sm">Our surgical strike of energy. Reserved for critical CTAs and brand-critical navigation anchors.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Dual Mode Visualization -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<div class="space-y-6">
+<h3 class="text-4xl font-black italic">Dual Tonal Philosophy</h3>
+<p class="text-on-surface-variant leading-relaxed">Our interface breathes through tonal layering. Instead of borders, we use background shifts to define importance and hierarchy.</p>
+<div class="flex gap-4">
+<div class="h-12 w-12 rounded-full bg-surface shadow-inner border border-outline-variant/20"></div>
+<div class="h-12 w-12 rounded-full bg-surface-container-high shadow-lg"></div>
+<div class="h-12 w-12 rounded-full bg-surface-container-highest shadow-xl"></div>
+</div>
+</div>
+<div class="relative h-[400px] rounded-[40px] overflow-hidden border border-outline-variant/20 group">
+<div class="absolute inset-0 flex">
+<!-- Light Side (Simulated) -->
+<div class="w-1/2 bg-[#fcf8ff] p-8 flex flex-col justify-center gap-4">
+<div class="h-8 w-3/4 bg-[#5e2d85]/10 rounded-full"></div>
+<div class="h-24 w-full bg-[#5e2d85]/5 rounded-2xl"></div>
+<div class="h-12 w-1/2 bg-[#ffd709] rounded-full"></div>
+<span class="text-[#5e2d85] font-bold text-xs uppercase tracking-widest mt-4">Light Mode Accent</span>
+</div>
+<!-- Dark Side -->
+<div class="w-1/2 bg-surface p-8 flex flex-col justify-center gap-4 border-l border-outline-variant/30">
+<div class="h-8 w-3/4 bg-primary/20 rounded-full"></div>
+<div class="h-24 w-full bg-surface-container-high rounded-2xl"></div>
+<div class="h-12 w-1/2 bg-secondary rounded-full"></div>
+<span class="text-on-surface font-bold text-xs uppercase tracking-widest mt-4">Dark Mode Depth</span>
+</div>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-on-surface text-surface px-6 py-2 rounded-full font-bold text-sm tracking-tighter uppercase shadow-2xl">
+                    Contrast Split
+                </div>
+</div>
+</section>
+<!-- Typography Section -->
+<section class="editorial-grid space-y-0">
+<div class="col-span-12 md:col-span-4 space-y-4">
+<h3 class="text-3xl font-bold italic">The Bilingual Narrative</h3>
+<p class="text-on-surface-variant">A harmonious intersection of Latin precision and Arabic flow.</p>
+<div class="p-6 bg-surface-container-low rounded-3xl border border-outline-variant/10">
+<span class="text-primary text-4xl font-bold">Aa</span>
+<p class="text-on-surface text-sm mt-2 font-mono">Plus Jakarta Sans</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-3xl border border-outline-variant/10">
+<span class="text-secondary text-4xl font-arabic font-bold">تس</span>
+<p class="text-on-surface text-sm mt-2 font-mono">IBM Plex Sans Arabic</p>
+</div>
+</div>
+<div class="col-span-12 md:col-span-8 space-y-12 bg-surface-container-low/50 p-8 md:p-12 rounded-[48px] border border-outline-variant/5">
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-[0.3em] text-on-surface-variant font-bold">Display LG / Tight Tracking</label>
+<h4 class="text-6xl md:text-8xl font-black tracking-tighter leading-none italic group hover:text-secondary transition-colors duration-500">Premium Curated.</h4>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<div class="space-y-4">
+<label class="text-[10px] uppercase tracking-[0.3em] text-on-surface-variant font-bold">English Hierarchy</label>
+<h5 class="text-2xl font-bold tracking-tight">Bold Headlines for Impact</h5>
+<p class="text-on-surface-variant leading-relaxed">Body text should breathe. Plus Jakarta Sans provides wide apertures and modern curves for a friendly yet bold energy.</p>
+</div>
+<div class="space-y-4 text-right">
+<label class="text-[10px] uppercase tracking-[0.3em] text-on-surface-variant font-bold">Arabic Hierarchy</label>
+<h5 class="text-3xl font-arabic font-bold leading-normal">عناوين قوية للتأثير المباشر</h5>
+<p class="text-on-surface-variant font-arabic leading-loose text-lg">يوفر هذا الخط شعوراً متطوراً ومنظماً يطابق الدقة التقنية للخط الإنجليزي، مما يضمن عدم ضياع هوية البراند.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- UI Elements Showcase -->
+<section class="space-y-12">
+<div class="text-center space-y-2">
+<h3 class="text-4xl font-black italic">Atomic Components</h3>
+<p class="text-on-surface-variant">The building blocks of the Tasweeha ecosystem.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Buttons -->
+<div class="bg-surface-container-high p-10 rounded-[32px] space-y-8 flex flex-col justify-center">
+<label class="text-[10px] uppercase tracking-[0.2em] text-secondary font-bold text-center">Interactive States</label>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-full font-bold tracking-tight hover:bg-primary-container transition-all active:scale-95 shadow-lg shadow-primary/10">
+                        Primary Action
+                    </button>
+<button class="bg-secondary text-on-secondary px-8 py-4 rounded-full font-black tracking-tight hover:opacity-90 transition-all active:scale-95 shadow-xl shadow-secondary/20">
+                        EXPLORE NOW
+                    </button>
+<button class="text-on-surface font-bold underline underline-offset-8 hover:text-primary transition-colors">
+                        Tertiary Link
+                    </button>
+</div>
+<!-- Icons & Labels -->
+<div class="bg-surface-container-highest p-10 rounded-[32px] space-y-8">
+<label class="text-[10px] uppercase tracking-[0.2em] text-primary font-bold text-center block">Iconography</label>
+<div class="grid grid-cols-3 gap-6">
+<div class="flex flex-col items-center gap-2">
+<div class="h-16 w-16 rounded-2xl bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl">auto_awesome</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Offers</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="h-16 w-16 rounded-2xl bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">local_shipping</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Orders</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="h-16 w-16 rounded-2xl bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface text-3xl" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Profile</span>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/10">
+<div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-2xl">
+<div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl">shopping_bag</span>
+</div>
+<div>
+<p class="text-sm font-bold">Premium Cart</p>
+<p class="text-xs text-on-surface-variant">Elevated selection</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Cards -->
+<div class="relative overflow-hidden group rounded-[32px]">
+<img alt="Premium Card Lifestyle" class="absolute inset-0 w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" data-alt="high-fashion urban photography with neon purple and yellow ambient lighting, cinematic and luxury vibe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQFZvvu0nBK3qD2uHtyktUy6yQ7rCN1l_JjNZfIH4VAY6twDRm4vBsX1862y49FGMh7L568TRj2Ufnv3omApB7bz98s1NgUDKa8FzM6sSgTDjp_MREz3bWfT3ygKT_65d5XIJK5t8m3Y-cTjW9pnbl2ggdPSBAr3LXbUy5XsGOUYNgq33qeUiom9tRsIkNjNp5Vchbew9h3ZThQru2NOcCjhoYRy-qQKiCMtRKC4vsVHy12TdZoWY7tNOAg7cc-BmluxnFSoalUTUS"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-highest to-transparent"></div>
+<div class="relative h-full flex flex-col justify-end p-8 space-y-4">
+<label class="text-[10px] uppercase tracking-[0.2em] text-secondary font-bold">Visual Depth</label>
+<h5 class="text-2xl font-bold tracking-tight">Editorial Image Layering</h5>
+<p class="text-sm text-on-surface/80 leading-relaxed">Images should feel like they are floating in a liquid space, layered through tonal depth.</p>
+<div class="flex gap-2">
+<span class="h-1.5 w-8 rounded-full bg-secondary"></span>
+<span class="h-1.5 w-2 rounded-full bg-on-surface/20"></span>
+<span class="h-1.5 w-2 rounded-full bg-on-surface/20"></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full rounded-t-[32px] overflow-hidden bg-[#1c0324]/80 backdrop-blur-lg border-t border-[#5a3d61]/15 shadow-[0_-10px_40px_rgba(50,16,61,0.5)] z-50 md:hidden">
+<div class="flex justify-around items-center h-20 px-4 w-full">
+<div class="flex flex-col items-center justify-center text-[#fcdbff]/40 px-4 py-2 hover:bg-[#32103d]/50 transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] uppercase font-bold tracking-widest font-['Plus_Jakarta_Sans'] mt-1">Explore</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#fcdbff]/40 px-4 py-2 hover:bg-[#32103d]/50 transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-[10px] uppercase font-bold tracking-widest font-['Plus_Jakarta_Sans'] mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#fcdbff]/40 px-4 py-2 hover:bg-[#32103d]/50 transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-[10px] uppercase font-bold tracking-widest font-['Plus_Jakarta_Sans'] mt-1">Offers</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#fcd401] bg-[#32103d] rounded-2xl px-4 py-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] uppercase font-bold tracking-widest font-['Plus_Jakarta_Sans'] mt-1">Profile</span>
+</div>
+</div>
+</nav>
+</body></html>

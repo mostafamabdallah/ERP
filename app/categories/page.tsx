@@ -44,7 +44,7 @@ const Page = (props: Props) => {
                   return (
                     <th
                       scope="col"
-                      className="px-2 capitalize py-1 lg:px-4  lg:py-3 font-bold lg:text-base text-sm sticky  top-0 bg-white text-tittle "
+                      className="px-2 capitalize py-1 lg:px-4 lg:py-3 font-bold lg:text-base text-sm sticky top-0 bg-white dark:bg-surface-mid text-tittle dark:text-on-surface"
                       key={i}
                     >
                       {el}
@@ -58,15 +58,15 @@ const Page = (props: Props) => {
                 return (
                   <tr
                     key={i}
-                    className="bg-white border-b  font-bold text-sm border-border"
+                    className="bg-white dark:bg-surface-mid border-b font-bold text-sm border-border dark:border-outline-dark transition-colors duration-300"
                   >
                     <td
                       scope="row"
-                      className="px-2  py-2 lg:px-4  lg:py-3 font-medium text-gray-900 "
+                      className="px-2 py-2 lg:px-4 lg:py-3 font-medium text-gray-900 dark:text-on-surface"
                     >
                       {el.id}
                     </td>
-                    <td className="px-2  py-2 lg:px-4  lg:py-3 ">
+                    <td className="px-2 py-2 lg:px-4 lg:py-3 text-gray-700 dark:text-on-surface">
                       <span className="truncate">{el.name}</span>
                     </td>
                   </tr>
@@ -75,7 +75,7 @@ const Page = (props: Props) => {
             </tbody>
           </table>
         </div>
-        <div className="w-full lg:w-4/12 bg-white rounded-md  flex-1"></div>
+        <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
       </div>
     </div>
   );

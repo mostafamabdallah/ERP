@@ -99,7 +99,7 @@ const Page = (props: Props) => {
         <div className="w-full ">
           {<CustomerTable customers={customers.data} />}
         </div>
-        <div className="w-full lg:w-4/12 bg-white rounded-md  flex-1"></div>
+        <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
       </div>
     </div>
   );

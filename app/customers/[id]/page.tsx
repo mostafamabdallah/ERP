@@ -83,19 +83,19 @@ const Page = ({ params }: { params: { id: string } }) => {
         >
           <Avatar shape="square" size={150} icon={<UserOutlined />} />
         </Badge.Ribbon>
-        <p className="text-2xl mt-5  font-bold text-primary">{data.name}</p>
-        <p className="flex gap-3 items-center ">
+        <p className="text-2xl mt-5 font-bold text-primary dark:text-primary-dark">{data.name}</p>
+        <p className="flex gap-3 items-center text-tittle dark:text-on-surface">
           <FontAwesomeIcon
-            className="text-primary "
+            className="text-primary dark:text-primary-dark"
             icon={faMapLocationDot}
-          ></FontAwesomeIcon>{" "}
+          />
           {data.address}
         </p>
-        <p className="flex gap-3 items-center ">
+        <p className="flex gap-3 items-center text-tittle dark:text-on-surface">
           <FontAwesomeIcon
-            className="text-primary"
+            className="text-primary dark:text-primary-dark"
             icon={faPhone}
-          ></FontAwesomeIcon>{" "}
+          />
           {data.phone}
         </p>
         <Badge text={data.status} />
@@ -108,7 +108,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="flex flex-row flex-wrap gap-6 ">
           {/* <div className="w-full ">{<OrderTable orders={data} />}</div> */}
-          <div className="w-full lg:w-4/12 bg-white rounded-md  flex-1"></div>
+          <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
         </div>
       </div>
     </div>

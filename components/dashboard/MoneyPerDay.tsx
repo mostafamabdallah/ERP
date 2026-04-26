@@ -22,8 +22,8 @@ const MoneyPerDay = (props: Props) => {
 
   return (
     <div className="flex gap-5 ">
-      <div className="flex flex-col gap-3 px-6 py-4 bg-white rounded-lg w-full">
-        <span className="text-gray-500 font-bold text-lg">Money Per Day</span>
+      <div className="flex flex-col gap-3 px-6 py-4 bg-white dark:bg-surface-mid rounded-lg w-full transition-colors duration-300">
+        <span className="text-gray-500 dark:text-on-surface-variant font-bold text-lg">Money Per Day</span>
         {!isLoading && (
           <CustomLine
             dataSet={[

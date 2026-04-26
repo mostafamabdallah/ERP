@@ -7,17 +7,20 @@ import {
   faBars,
   faBell,
   faClose,
-  faPills,
+  faMoon,
+  faSun,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type Props = {};
 
 const TopNav = (props: Props) => {
   const pathname = usePathname();
   const pageName = pathname.split("/");
+  const { isDark, toggleTheme } = useTheme();
   const [animate, setAnimate] = useState({
     opacity: 0,
     display: "none",
@@ -30,8 +33,8 @@ const TopNav = (props: Props) => {
 
   return (
     <>
-      <div className="flex flex-row w-full items-center justify-between py-3 border-b-2 border-border lg:px-10">
-        <span className="text-lg text-gray-600 capitalize">
+      <div className="flex flex-row w-full items-center justify-between py-3 border-b-2 border-border dark:border-outline-dark lg:px-10 bg-background dark:bg-surface transition-colors duration-300">
+        <span className="text-lg text-gray-600 dark:text-on-surface-variant capitalize">
           {pageName[1]
             ? pageName.map((el, i) => {
                 if (i == 0) {
@@ -42,26 +45,42 @@ const TopNav = (props: Props) => {
               })
             : "Dashboard"}
         </span>
-        <span className="flex gap-4 items-center justify-center">
-          <div className="flex relative rounded-full text-xl w-12 h-12  items-center justify-center bg-white border border-border cursor-pointer">
+        <span className="flex gap-3 items-center justify-center">
+          {/* Dark / Light mode toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="flex relative rounded-full text-xl w-12 h-12 items-center justify-center bg-white dark:bg-surface-mid border border-border dark:border-outline-dark cursor-pointer hover:bg-gray-100 dark:hover:bg-surface-high transition-colors duration-200"
+          >
+            <FontAwesomeIcon
+              className={isDark ? "text-[#fcd401]" : "text-gray-700"}
+              icon={isDark ? faMoon : faSun}
+            />
+          </button>
+
+          {/* Notification bell */}
+          <div className="flex relative rounded-full text-xl w-12 h-12 items-center justify-center bg-white dark:bg-surface-mid border border-border dark:border-outline-dark cursor-pointer">
             <span className="flex items-center justify-center w-5 h-5 text-sm bg-red-600 text-white absolute -top-1 -right-1 rounded-full">
               4
             </span>
             <FontAwesomeIcon
-              className="text-tittle"
+              className="text-tittle dark:text-on-surface"
               icon={faBell}
-            ></FontAwesomeIcon>
+            />
           </div>
+
+          {/* User icon */}
           <FontAwesomeIcon
-            className="bg-[#0f62fe15] p-3 text-xl rounded-full text-primary border border-primary"
+            className="bg-[#0f62fe15] dark:bg-[#d09afa20] p-3 text-xl rounded-full text-primary dark:text-primary-dark border border-primary dark:border-primary-dark"
             icon={faUser}
-          ></FontAwesomeIcon>
+          />
         </span>
       </div>
 
-      <aside className="lg:w-[20%] 2xl:w-[20%] bg-primary  lg:hidden flex relative z-[999999] ">
-        <nav className="lg:hidden  w-full flex ">
-          <div className=" mx-auto flex flex-row items-center justify-start text-primary fixed px-2 p-5 ">
+      {/* Mobile nav */}
+      <aside className="lg:w-[20%] 2xl:w-[20%] bg-primary lg:hidden flex relative z-[999999]">
+        <nav className="lg:hidden w-full flex">
+          <div className="mx-auto flex flex-row items-center justify-start text-primary fixed px-2 p-5">
             <button
               className="w-fit"
               onClick={() => {
@@ -73,16 +92,14 @@ const TopNav = (props: Props) => {
                   animate.opacity && "hidden"
                 }`}
                 icon={faBars}
-              ></FontAwesomeIcon>
+              />
             </button>
           </div>
           <motion.div
             initial={{ display: "none", x: 1000 }}
             animate={animate}
-            transition={{
-              duration: 1,
-            }}
-            className="bg-primary w-screen h-screen flex flex-col justify-center items-center fixed "
+            transition={{ duration: 1 }}
+            className="bg-primary w-screen h-screen flex flex-col justify-center items-center fixed"
           >
             <button
               onClick={() => {
@@ -93,47 +110,37 @@ const TopNav = (props: Props) => {
               <FontAwesomeIcon
                 className="pl-3 text-5xl text-white"
                 icon={faClose}
-              ></FontAwesomeIcon>
+              />
             </button>
             <div className="container mx-auto">
-              <ul className="w-full flex gap-2 justify-end items-center flex-col ">
+              <ul className="w-full flex gap-2 justify-end items-center flex-col">
                 <li
-                  onClick={(e) => {
-                    callBackAnimate();
-                  }}
-                  className="px-5 py-2 text-white font-bold font-ITCAVANTGARDESTD tracking-[0.2rem] hover:text-black text-lg"
+                  onClick={() => callBackAnimate()}
+                  className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
                   <Link href={"/"}>Dashboard</Link>
                 </li>
                 <li
-                  onClick={(e) => {
-                    callBackAnimate();
-                  }}
-                  className="px-5 py-2 text-white font-bold font-ITCAVANTGARDESTD tracking-[0.2rem] hover:text-black text-lg"
+                  onClick={() => callBackAnimate()}
+                  className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
                   <Link href={"/customers"}>Customers</Link>
                 </li>
                 <li
-                  onClick={(e) => {
-                    callBackAnimate();
-                  }}
-                  className="px-5 py-2 text-white font-bold font-ITCAVANTGARDESTD tracking-[0.2rem] hover:text-black text-lg"
+                  onClick={() => callBackAnimate()}
+                  className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
                   <Link href={"/orders"}>Orders</Link>
                 </li>
                 <li
-                  onClick={(e) => {
-                    callBackAnimate();
-                  }}
-                  className="px-5 py-2 text-white font-bold font-ITCAVANTGARDESTD tracking-[0.2rem] hover:text-black text-lg"
+                  onClick={() => callBackAnimate()}
+                  className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
                   <Link href={"/items"}>Items</Link>
                 </li>
                 <li
-                  onClick={(e) => {
-                    callBackAnimate();
-                  }}
-                  className="px-5 py-2 text-white font-bold font-ITCAVANTGARDESTD tracking-[0.2rem] hover:text-black text-lg"
+                  onClick={() => callBackAnimate()}
+                  className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
                 >
                   <Link href={"/categories"}>Categories</Link>
                 </li>
