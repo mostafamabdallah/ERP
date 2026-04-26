@@ -10,6 +10,8 @@ export type CardData = {
   delta?: any;
   currency?: string;
   period?: string;
+  isCurrency?: boolean;
+  isProfit?: boolean;
 };
 
 export type Customer = {

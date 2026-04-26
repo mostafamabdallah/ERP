@@ -21,7 +21,7 @@ const TopCustomers = (props: Props) => {
   });
 
   return (
-    <div className="flex-1 gap-3 py-4 bg-white dark:bg-surface-mid rounded-lg transition-colors duration-300">
+    <div className="flex-1 flex flex-col gap-3 py-4 bg-white dark:bg-surface-mid rounded-lg transition-colors duration-300 self-stretch">
       <span className="text-gray-500 dark:text-on-surface-variant font-bold text-lg px-6">
         {t.dashboard.top10Customers}
       </span>

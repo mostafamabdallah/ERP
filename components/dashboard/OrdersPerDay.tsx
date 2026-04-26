@@ -23,29 +23,23 @@ const OrdersPerDay = (props: Props) => {
   });
 
   return (
-    <div className="flex gap-5 ">
-      <div className="flex flex-col gap-3 px-6 py-4 bg-white dark:bg-surface-mid rounded-lg w-full transition-colors duration-300">
-        <span className="text-gray-500 dark:text-on-surface-variant font-bold text-lg">
-          {t.dashboard.ordersChart}
-        </span>
-        {!isLoading && (
-          <CustomLine
-            dataSet={[
-              {
-                label: t.dashboard.ordersPerDay,
-                data: data.map((el: any) => {
-                  return el.order_count;
-                }),
-                borderColor: "#542582",
-                backgroundColor: "#54258260",
-              },
-            ]}
-            labels={data.map((el: any) => {
-              return moment(el.order_date).format("YYYY-MM-DD");
-            })}
-          ></CustomLine>
-        )}
-      </div>
+    <div className="flex flex-col gap-3 px-6 py-4 bg-white dark:bg-surface-mid rounded-lg w-full transition-colors duration-300">
+      <span className="text-gray-500 dark:text-on-surface-variant font-bold text-lg">
+        {t.dashboard.ordersChart}
+      </span>
+      {!isLoading && (
+        <CustomLine
+          dataSet={[
+            {
+              label: t.dashboard.ordersPerDay,
+              data: data.map((el: any) => el.order_count),
+              borderColor: "#542582",
+              backgroundColor: "#54258260",
+            },
+          ]}
+          labels={data.map((el: any) => moment(el.order_date).format("YYYY-MM-DD"))}
+        />
+      )}
     </div>
   );
 };

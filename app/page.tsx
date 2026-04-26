@@ -3,10 +3,11 @@ import InfoCards from "@/components/dashboard/InfoCards";
 import OrdersPerDay from "@/components/dashboard/OrdersPerDay";
 import OrdersPerHour from "@/components/dashboard/OrdersPerHour";
 import MoneyPerDay from "@/components/dashboard/MoneyPerDay";
+import MonthlyFinancials from "@/components/dashboard/MonthlyFinancials";
+import ExpensesBreakdown from "@/components/dashboard/ExpensesBreakdown";
 import TopCustomers from "@/components/TopCustomers";
-import { DatePicker, Form } from "antd";
+import { DatePicker } from "antd";
 import { useState } from "react";
-import { Moment } from "moment";
 
 const { MonthPicker } = DatePicker;
 
@@ -16,30 +17,48 @@ interface SelectedMonth {
 }
 
 export default function Home() {
-  let currentDate = new Date();
-  let currentYear = currentDate.getFullYear();
+  const currentDate = new Date();
   const [selectedMonth, setSelectedMonth] = useState<SelectedMonth | null>({
     month: 0,
-    year: currentYear,
+    year: currentDate.getFullYear(),
   });
 
-  const handleMonthChange = (date: any | null, dateString: string) => {
+  const handleMonthChange = (date: any | null) => {
     if (date) {
-      const month = date.month() + 1; // month is zero-indexed
+      const month = date.month() + 1;
       const year = date.year();
       setSelectedMonth({ month, year });
     } else {
-      setSelectedMonth(null);
+      setSelectedMonth({ month: 0, year: currentDate.getFullYear() });
     }
   };
 
   return (
-    <main className="flex flex-col w-full gap-5">
+    <main className="flex flex-col w-full gap-5 pb-8">
+      {/* Month filter */}
       <MonthPicker onChange={handleMonthChange} />
+
+      {/* KPI Summary Cards */}
       <InfoCards selectedMonth={selectedMonth} />
-      <OrdersPerDay selectedMonth={selectedMonth} />
+
+      {/* Monthly Financials: yearly revenue / expenses / gross profit */}
+      <MonthlyFinancials selectedMonth={selectedMonth} />
+
+      {/* Expenses breakdown + Orders per day side by side */}
+      <div className="flex flex-wrap gap-5">
+        <div className="flex-1 min-w-[300px]">
+          <ExpensesBreakdown selectedMonth={selectedMonth} />
+        </div>
+        <div className="flex-1 min-w-[300px]">
+          <OrdersPerDay selectedMonth={selectedMonth} />
+        </div>
+      </div>
+
+      {/* Revenue per day line chart */}
       <MoneyPerDay selectedMonth={selectedMonth} />
-      <div className="flex flex-wrap gap-5 mb-5">
+
+      {/* Top customers + orders per hour */}
+      <div className="flex flex-wrap gap-5 mb-5 items-stretch">
         <TopCustomers selectedMonth={selectedMonth} />
         <OrdersPerHour selectedMonth={selectedMonth} />
       </div>

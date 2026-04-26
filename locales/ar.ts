@@ -39,6 +39,10 @@ export type Translations = {
     top10Customers: string;
     type: string;
     orders: string;
+    monthlyFinancials: string;
+    grossProfit: string;
+    revenue: string;
+    expensesByCategory: string;
   };
   customers: {
     totalCustomers: string;
@@ -209,7 +213,7 @@ const ar: Translations = {
   dashboard: {
     totalOrders: "إجمالي الطلبات",
     totalExpenses: "إجمالي المصروفات",
-    totalDeliveryMoney: "إجمالي التوصيل",
+    totalDeliveryMoney: "إجمالي الإيرادات",
     netProfit: "صافي الربح",
     week: "أسبوع",
     ordersChart: "الطلبات",
@@ -221,6 +225,10 @@ const ar: Translations = {
     top10Customers: "أفضل 10 عملاء",
     type: "النوع",
     orders: "الطلبات",
+    monthlyFinancials: "المالية الشهرية",
+    grossProfit: "الربح الإجمالي",
+    revenue: "الإيرادات",
+    expensesByCategory: "تصنيف المصروفات",
   },
   customers: {
     totalCustomers: "إجمالي العملاء",

@@ -29,7 +29,7 @@ const en: Translations = {
   dashboard: {
     totalOrders: "Total Orders",
     totalExpenses: "Total Expenses",
-    totalDeliveryMoney: "Total Delivery Money",
+    totalDeliveryMoney: "Total Revenue",
     netProfit: "Net Profit",
     week: "week",
     ordersChart: "Orders",
@@ -41,6 +41,10 @@ const en: Translations = {
     top10Customers: "Top 10 Customers",
     type: "type",
     orders: "orders",
+    monthlyFinancials: "Monthly Financials",
+    grossProfit: "Gross Profit",
+    revenue: "Revenue",
+    expensesByCategory: "Expenses by Category",
   },
   customers: {
     totalCustomers: "Total Customers",

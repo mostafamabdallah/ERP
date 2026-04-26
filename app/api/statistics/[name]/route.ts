@@ -162,5 +162,70 @@ export async function GET(request: Request, context: any) {
     } catch (error) {
       console.log(error);
     }
+  } else if (param == "monthlyFinancials") {
+    try {
+      const targetYear = year || new Date().getFullYear().toString();
+
+      const revenueRows: any[] = await prisma.$queryRawUnsafe(
+        `SELECT EXTRACT(MONTH FROM "create_at")::int AS month,
+                COALESCE(SUM("deliveryCost"), 0)::float AS revenue
+         FROM "Order"
+         WHERE EXTRACT(YEAR FROM "create_at") = ${targetYear}
+         GROUP BY month
+         ORDER BY month`
+      );
+
+      const expenseRows: any[] = await prisma.$queryRawUnsafe(
+        `SELECT EXTRACT(MONTH FROM date)::int AS month,
+                COALESCE(SUM(amount), 0)::float AS expenses
+         FROM "Expense"
+         WHERE EXTRACT(YEAR FROM date) = ${targetYear}
+         GROUP BY month
+         ORDER BY month`
+      );
+
+      const revenueMap: Record<number, number> = {};
+      revenueRows.forEach((r) => { revenueMap[r.month] = Number(r.revenue); });
+
+      const expenseMap: Record<number, number> = {};
+      expenseRows.forEach((e) => { expenseMap[e.month] = Number(e.expenses); });
+
+      const months = Array.from({ length: 12 }, (_, i) => {
+        const m = i + 1;
+        const revenue = revenueMap[m] ?? 0;
+        const expenses = expenseMap[m] ?? 0;
+        return { month: m, revenue, expenses, grossProfit: revenue - expenses };
+      });
+
+      return NextResponse.json({ monthlyFinancials: months });
+    } catch (error) {
+      console.log(error);
+    }
+  } else if (param == "expensesByCategory") {
+    try {
+      let whereClause = "";
+      if (Number(month)) {
+        whereClause = `WHERE EXTRACT(YEAR FROM date) = ${year} AND EXTRACT(MONTH FROM date) = ${month}`;
+      } else if (year) {
+        whereClause = `WHERE EXTRACT(YEAR FROM date) = ${year}`;
+      }
+
+      const rows: any[] = await prisma.$queryRawUnsafe(
+        `SELECT type, COALESCE(SUM(amount), 0)::float AS total
+         FROM "Expense"
+         ${whereClause}
+         GROUP BY type
+         ORDER BY total DESC`
+      );
+
+      return NextResponse.json({
+        expensesByCategory: rows.map((r) => ({
+          type: r.type,
+          total: Number(r.total),
+        })),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
