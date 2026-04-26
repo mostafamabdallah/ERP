@@ -11,6 +11,7 @@ const en: Translations = {
     expenseTypes: "Expense Types",
     items: "Items",
     categories: "Categories",
+    dailyPrices: "Daily Prices",
   },
   common: {
     addNew: "Add New",

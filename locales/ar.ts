@@ -9,6 +9,7 @@ export type Translations = {
     expenseTypes: string;
     items: string;
     categories: string;
+    dailyPrices: string;
   };
   common: {
     addNew: string;
@@ -214,6 +215,7 @@ const ar: Translations = {
     expenseTypes: "أنواع المصروفات",
     items: "المنتجات",
     categories: "الأقسام",
+    dailyPrices: "أسعار اليوم",
   },
   common: {
     addNew: "إضافة جديد",

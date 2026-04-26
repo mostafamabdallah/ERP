@@ -13,6 +13,7 @@ import {
   faBriefcase,
   faMoneyBill,
   faTag,
+  faListAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -31,6 +32,7 @@ const SideNav = () => {
     { name: t.nav.employees, icon: faBriefcase, url: "/employees" },
     { name: t.nav.expenses, icon: faMoneyBill, url: "/expenses" },
     { name: t.nav.expenseTypes, icon: faTag, url: "/expense-types" },
+    { name: t.nav.dailyPrices, icon: faListAlt, url: "/daily-prices" },
   ];
 
   return (
