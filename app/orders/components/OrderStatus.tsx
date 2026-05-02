@@ -33,20 +33,33 @@ const OrderStatus = ({ status, id }: any) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["dailyStats"] });
     },
   });
 
+  const colorClass =
+    status == "success" || status == "collected" || status == "money_collected"
+      ? "text-[#8cbfad]"
+      : status == "pending"
+      ? "text-[#a3965f]"
+      : status == "delivered"
+      ? "text-[#542582]"
+      : "text-[#ff9398]";
+
+  const bgClass =
+    status == "success" || status == "collected"
+      ? "bg-[#8cbfad20]"
+      : status == "pending"
+      ? "bg-[#a3965f20]"
+      : status == "delivered"
+      ? "bg-[#54258220]"
+      : "bg-[#ff939820]";
+
   return (
     <Dropdown.Button
-      className={`w-fit ${
-        status == "success" || status == "collected"
-          ? "bg-[#8cbfad20]"
-          : status == "pending"
-          ? "bg-[#a3965f20]"
-          : status == "delivered"
-          ? "bg-[#54258220]"
-          : "bg-[#ff939820]"
-      } `}
+      className={`w-fit ${bgClass}`}
+      loading={mutation.isPending}
+      disabled={mutation.isPending}
       menu={{
         items,
         onClick: async (e) => {
@@ -62,15 +75,9 @@ const OrderStatus = ({ status, id }: any) => {
       }}
     >
       <span
-        className={`${
-          status == "success" || status == "collected" || status == "money_collected"
-            ? "text-[#8cbfad]"
-            : status == "pending"
-            ? "text-[#a3965f]"
-            : status == "delivered"
-            ? "text-[#542582]"
-            : "text-[#ff9398]"
-        } `}
+        className={`${colorClass} transition-opacity duration-200 ${
+          mutation.isPending ? "opacity-40" : "opacity-100"
+        }`}
       >
         {statusLabelMap[status] ?? status}
       </span>

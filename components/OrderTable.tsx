@@ -55,6 +55,7 @@ const OrderTable = ({
     mutationFn: deleteOrder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["dailyStats"] });
     },
   });
 
