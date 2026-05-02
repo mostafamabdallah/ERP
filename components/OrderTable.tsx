@@ -18,16 +18,34 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   orders: Order[];
+  // Server-side pagination & search (optional — omit for client-side mode)
+  total?: number;
+  currentPage?: number;
+  pageSize?: number;
+  onPageChange?: (page: number, pageSize: number) => void;
+  onSearch?: (search: string) => void;
+  loading?: boolean;
 };
 
 type DataIndex = keyof Order;
 
 const { confirm } = Modal;
 
-const OrderTable = ({ orders }: Props) => {
+const OrderTable = ({
+  orders,
+  total,
+  currentPage = 1,
+  pageSize = 20,
+  onPageChange,
+  onSearch,
+  loading,
+}: Props) => {
   const { t } = useLanguage();
   const [searchText, setSearchText] = useState("");
   const queryClient = useQueryClient();
+  const searchInput = useRef<InputRef>(null);
+
+  const isServerSide = Boolean(onPageChange);
 
   const deleteOrder = (data: any) => {
     return customFetch.put(`/orders/${data.id}`, data);
@@ -57,7 +75,7 @@ const OrderTable = ({ orders }: Props) => {
     });
   };
 
-  const data = orders.map((el) => ({
+  const tableData = orders.map((el) => ({
     id: el.id,
     customerName: el.customer.name,
     customerPhone: el.customer.phone,
@@ -69,7 +87,6 @@ const OrderTable = ({ orders }: Props) => {
   }));
 
   const { push } = useRouter();
-  const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
     selectedKeys: string[],
@@ -84,30 +101,37 @@ const OrderTable = ({ orders }: Props) => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Order> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<any> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm: confirmFilter, clearFilters }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`${t.common.search} ${dataIndex}`}
+          placeholder={`${t.common.search}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onKeyDown={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
+          onPressEnter={() => {
+            if (onSearch) {
+              onSearch((selectedKeys[0] as string) || "");
+              confirmFilter();
+            } else {
+              handleSearch(selectedKeys as string[], confirmFilter, dataIndex);
+            }
+          }}
           style={{ marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
             className="bg-primary text-white"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
+            onClick={() => {
+              if (onSearch) {
+                onSearch((selectedKeys[0] as string) || "");
+                confirmFilter();
+              } else {
+                handleSearch(selectedKeys as string[], confirmFilter, dataIndex);
+              }
+            }}
             icon={<SearchOutlined />}
             size="middle"
             style={{ width: 90 }}
@@ -115,7 +139,10 @@ const OrderTable = ({ orders }: Props) => {
             {t.common.search}
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              onSearch?.("");
+            }}
             size="small"
             style={{ width: 90 }}
           >
@@ -127,11 +154,15 @@ const OrderTable = ({ orders }: Props) => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ?.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
+    ...(onSearch
+      ? {}
+      : {
+          onFilter: (value, record) =>
+            record[dataIndex]
+              ?.toString()
+              .toLowerCase()
+              .includes((value as string).toLowerCase()),
+        }),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -222,7 +253,25 @@ const OrderTable = ({ orders }: Props) => {
   ];
 
   return (
-    <Table columns={columns} dataSource={data} pagination={{ pageSize: 100 }} />
+    <Table
+      columns={columns}
+      dataSource={tableData}
+      loading={loading}
+      rowKey="id"
+      pagination={
+        isServerSide
+          ? {
+              total,
+              current: currentPage,
+              pageSize,
+              onChange: onPageChange,
+              showTotal: (t) => `Total ${t} records`,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "20", "50", "100"],
+            }
+          : { pageSize: 20, showSizeChanger: true }
+      }
+    />
   );
 };
 

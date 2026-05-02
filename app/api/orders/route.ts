@@ -11,16 +11,49 @@ function generateOrderNumber() {
 }
 const prisma = new PrismaClient();
 export async function GET(request: Request) {
-  const orders = await prisma.order.findMany({
-    include: {
-      customer: {},
-      employee: {},
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-  return NextResponse.json({ orders: orders });
+  const { searchParams } = new URL(request.url);
+  const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+  const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")));
+  const search = (searchParams.get("search") || "").trim();
+  const skip = (page - 1) * limit;
+
+  const numericId = parseInt(search);
+  const searchWhere = search
+    ? {
+        OR: [
+          ...(Number.isInteger(numericId) && numericId > 0 ? [{ id: numericId }] : []),
+          { customer: { name: { contains: search, mode: "insensitive" as const } } },
+          { customer: { phone: { contains: search, mode: "insensitive" as const } } },
+          { customer: { address: { contains: search, mode: "insensitive" as const } } },
+          { employee: { name: { contains: search, mode: "insensitive" as const } } },
+          { status: { contains: search, mode: "insensitive" as const } },
+        ],
+      }
+    : {};
+
+  const [orders, total, statusGroups] = await Promise.all([
+    prisma.order.findMany({
+      where: searchWhere,
+      include: { customer: {}, employee: {} },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.order.count({ where: searchWhere }),
+    prisma.order.groupBy({ by: ["status"], _count: { id: true } }),
+  ]);
+
+  const statsMap: Record<string, number> = {};
+  for (const g of statusGroups) statsMap[g.status] = g._count.id;
+
+  const stats = {
+    total: Object.values(statsMap).reduce((sum, v) => sum + v, 0),
+    delivered: (statsMap["success"] || 0) + (statsMap["money_collected"] || 0),
+    pending: statsMap["pending"] || 0,
+    failed: statsMap["failed"] || 0,
+  };
+
+  return NextResponse.json({ orders, total, stats });
 }
 export async function POST(request: Request) {
   const data = await request.json();

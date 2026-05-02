@@ -14,15 +14,32 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   customers: Customer[];
+  // Server-side pagination & search (optional — omit for client-side mode)
+  total?: number;
+  currentPage?: number;
+  pageSize?: number;
+  onPageChange?: (page: number, pageSize: number) => void;
+  onSearch?: (search: string) => void;
+  loading?: boolean;
 };
 
 type DataIndex = keyof Customer;
 
-const CustomerTable = ({ customers }: Props) => {
+const CustomerTable = ({
+  customers,
+  total,
+  currentPage = 1,
+  pageSize = 20,
+  onPageChange,
+  onSearch,
+  loading,
+}: Props) => {
   const { push } = useRouter();
   const { t } = useLanguage();
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef<InputRef>(null);
+
+  const isServerSide = Boolean(onPageChange);
 
   const handleSearch = (
     selectedKeys: string[],
@@ -40,29 +57,36 @@ const CustomerTable = ({ customers }: Props) => {
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): ColumnType<Customer> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm: confirmFilter, clearFilters }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`${t.common.search} ${dataIndex}`}
+          placeholder={`${t.common.search}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onKeyDown={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
+          onPressEnter={() => {
+            if (onSearch) {
+              onSearch((selectedKeys[0] as string) || "");
+              confirmFilter();
+            } else {
+              handleSearch(selectedKeys as string[], confirmFilter, dataIndex);
+            }
+          }}
           style={{ marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
             className="bg-primary text-white"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
+            onClick={() => {
+              if (onSearch) {
+                onSearch((selectedKeys[0] as string) || "");
+                confirmFilter();
+              } else {
+                handleSearch(selectedKeys as string[], confirmFilter, dataIndex);
+              }
+            }}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
@@ -70,7 +94,10 @@ const CustomerTable = ({ customers }: Props) => {
             {t.common.search}
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              onSearch?.("");
+            }}
             size="small"
             style={{ width: 90 }}
           >
@@ -82,11 +109,15 @@ const CustomerTable = ({ customers }: Props) => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ?.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
+    ...(onSearch
+      ? {}
+      : {
+          onFilter: (value, record) =>
+            record[dataIndex]
+              ?.toString()
+              .toLowerCase()
+              .includes((value as string).toLowerCase()),
+        }),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) setTimeout(() => searchInput.current?.select(), 100);
     },
@@ -156,7 +187,21 @@ const CustomerTable = ({ customers }: Props) => {
     <Table
       columns={columns}
       dataSource={customers}
-      pagination={{ pageSize: 100 }}
+      rowKey="id"
+      loading={loading}
+      pagination={
+        isServerSide
+          ? {
+              total,
+              current: currentPage,
+              pageSize,
+              onChange: onPageChange,
+              showTotal: (t) => `Total ${t} records`,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "20", "50", "100"],
+            }
+          : { pageSize: 20, showSizeChanger: true }
+      }
     />
   );
 };
