@@ -12,6 +12,7 @@ const en: Translations = {
     items: "Items",
     categories: "Categories",
     dailyPrices: "Daily Prices",
+    dailyStats: "Daily Stats",
   },
   common: {
     addNew: "Add New",

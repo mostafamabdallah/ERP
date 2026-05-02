@@ -28,10 +28,10 @@ export const options = {
   },
 };
 
-export function CustomBar({ labels , dataSet}: any) {
+export function CustomBar({ labels, dataSet, height = "220px" }: any) {
   const dataConfig = {
     labels,
-    datasets:dataSet
+    datasets: dataSet,
   };
-  return <Bar height={"220px"} options={options} data={dataConfig} />;
+  return <Bar height={height} options={options} data={dataConfig} />;
 }

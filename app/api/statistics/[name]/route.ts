@@ -62,8 +62,23 @@ export async function GET(request: Request, context: any) {
     }
   } else if (param == "ordersPerHour") {
     try {
+      // Return UTC hours (0-23) so the frontend can shift to browser local time.
+      // AT TIME ZONE 'UTC' on a TIMESTAMPTZ normalises to UTC regardless of the
+      // database session timezone, giving a stable baseline for the client shift.
+      let whereClause = "";
+      if (Number(month)) {
+        whereClause = `WHERE EXTRACT(MONTH FROM "create_at" AT TIME ZONE 'UTC') = ${month}
+                         AND EXTRACT(YEAR  FROM "create_at" AT TIME ZONE 'UTC') = ${year}`;
+      } else if (year) {
+        whereClause = `WHERE EXTRACT(YEAR FROM "create_at" AT TIME ZONE 'UTC') = ${year}`;
+      }
       let ordersPerHour = await prisma.$queryRawUnsafe(
-        `SELECT TO_CHAR("create_at", 'HH AM') as hour, COUNT(*)::text as order_count FROM "Order" GROUP BY hour ORDER BY hour;`
+        `SELECT EXTRACT(HOUR FROM "create_at" AT TIME ZONE 'UTC')::int AS hour,
+                COUNT(*)::text AS order_count
+         FROM "Order"
+         ${whereClause}
+         GROUP BY hour
+         ORDER BY hour`
       );
       return NextResponse.json({ ordersPerHour: ordersPerHour });
     } catch (error) {
@@ -98,23 +113,39 @@ export async function GET(request: Request, context: any) {
     }
   } else if (param == "topCustomers") {
     try {
+      // Build a date filter for orders so the ranking reflects the selected period.
+      let orderWhere: any = {};
+      if (Number(month)) {
+        const startDate = moment(`${year}-${month}`, "YYYY-MM").startOf("month").toDate();
+        const endDate   = moment(startDate).endOf("month").toDate();
+        orderWhere = { createdAt: { gte: startDate, lt: endDate } };
+      } else if (year) {
+        const startDate = moment(`${year}`, "YYYY").startOf("year").toDate();
+        const endDate   = moment(startDate).endOf("year").toDate();
+        orderWhere = { createdAt: { gte: startDate, lt: endDate } };
+      }
+
       const topCustomers = await prisma.customer.findMany({
         select: {
           id: true,
           name: true,
           type: true,
           _count: {
-            select: { orders: true },
+            select: { orders: { where: orderWhere } },
           },
         },
         orderBy: {
-          orders: {
-            _count: "desc",
-          },
+          orders: { _count: "desc" },
         },
         take: 10,
       });
-      return NextResponse.json({ topCustomers: topCustomers });
+
+      // Filter out customers with zero orders in the period when a filter is active.
+      const filtered = (Number(month) || year)
+        ? topCustomers.filter((c) => c._count.orders > 0)
+        : topCustomers;
+
+      return NextResponse.json({ topCustomers: filtered });
     } catch (error) {
       console.log(error);
     }

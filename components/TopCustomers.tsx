@@ -11,10 +11,12 @@ type Props = {
 const TopCustomers = (props: Props) => {
   const { t } = useLanguage();
   const { data = [], isLoading } = useQuery({
-    queryKey: ["topCustomers"],
+    queryKey: ["topCustomers", props.selectedMonth],
     queryFn: (): Promise<any> => {
+      const year  = props.selectedMonth?.year  ?? "";
+      const month = props.selectedMonth?.month ?? "";
       return customFetch
-        .get(`statistics/topCustomers`)
+        .get(`statistics/topCustomers?year=${year}&month=${month}`)
         .then((response) => response.data.topCustomers);
     },
     initialData: [],

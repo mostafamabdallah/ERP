@@ -10,6 +10,7 @@ export type Translations = {
     items: string;
     categories: string;
     dailyPrices: string;
+    dailyStats: string;
   };
   common: {
     addNew: string;
@@ -219,6 +220,7 @@ const ar: Translations = {
     items: "المنتجات",
     categories: "الأقسام",
     dailyPrices: "أسعار اليوم",
+    dailyStats: "إحصائيات يومية",
   },
   common: {
     addNew: "إضافة جديد",

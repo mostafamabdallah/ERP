@@ -167,6 +167,12 @@ const TopNav = () => {
                 >
                   <Link href={"/daily-prices"}>{t.nav.dailyPrices}</Link>
                 </li>
+                <li
+                  onClick={() => callBackAnimate()}
+                  className="px-5 py-2 text-white font-bold tracking-[0.2rem] hover:text-black text-lg"
+                >
+                  <Link href={"/daily-stats"}>{t.nav.dailyStats}</Link>
+                </li>
               </ul>
             </div>
           </motion.div>
