@@ -32,6 +32,7 @@ export type Employee = {
   nationalId?: string | null;
   latitude: number;
   longitude: number;
+  commission: number;
   orders: Order[];
 };
 

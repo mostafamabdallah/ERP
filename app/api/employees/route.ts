@@ -36,6 +36,7 @@ export async function POST(request: Request, { query }: any) {
         phone: data.phone,
         job: data.job,
         nationalId: data.nationalId ?? null,
+        commission: data.commission != null ? Number(data.commission) : 30,
       },
     });
 

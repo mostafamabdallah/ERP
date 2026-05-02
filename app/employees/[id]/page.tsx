@@ -18,11 +18,14 @@ import {
   faTrophy,
   faChartLine,
   faIdCard,
+  faPercent,
+  faCalendarDay,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLanguage } from "@/contexts/LanguageContext";
 import moment from "moment";
 import dayjs from "dayjs";
+import Link from "next/link";
 import OrderStatus from "@/app/orders/components/OrderStatus";
 
 const { MonthPicker } = DatePicker;
@@ -105,6 +108,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         avgDeliveryMoney: 0,
         avgOrdersPerDay: 0,
         successRate: 0,
+        commissionEarnings: 0,
       },
       orders: [],
     },
@@ -173,6 +177,14 @@ const Page = ({ params }: { params: { id: string } }) => {
       iconColor: "text-[#06b6d4]",
       iconBgColor: "bg-[#06b6d420]",
       decimals: 1,
+    },
+    {
+      title: t.employees.commissionEarnings,
+      value: stats.commissionEarnings,
+      icon: faPercent,
+      iconColor: "text-[#f97316]",
+      iconBgColor: "bg-[#f9731620]",
+      decimals: 2,
     },
   ];
 
@@ -252,10 +264,22 @@ const Page = ({ params }: { params: { id: string } }) => {
                 {employee.nationalId}
               </p>
             )}
+            {employee?.job === "delivery" && (
+              <p className="flex gap-2 items-center text-sm text-gray-500 dark:text-on-surface-variant">
+                <FontAwesomeIcon
+                  icon={faPercent}
+                  className="text-[#f97316] w-3"
+                />
+                <span className="font-semibold text-[#f97316]">
+                  {employee.commission ?? 30}%
+                </span>
+                <span>{t.employees.commission}</span>
+              </p>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <MonthPicker
             onChange={handleMonthChange}
             value={
@@ -276,6 +300,16 @@ const Page = ({ params }: { params: { id: string } }) => {
           >
             {t.employees.allTime}
           </Button>
+          {employee?.job === "delivery" && (
+            <Link href={`/employees/${params.id}/daily`}>
+              <Button
+                type="default"
+                icon={<FontAwesomeIcon icon={faCalendarDay} className="text-[#0f62fe]" />}
+              >
+                {t.employees.dailyDashboard}
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 

@@ -26,16 +26,20 @@ export async function PUT(request: Request, context: any) {
   let id = context.params.id;
   if (type == "update_location") {
     const updatedEmployee = await prisma.employees.update({
-      where: {
-        id: Number(id),
-      },
+      where: { id: Number(id) },
       data: {
         latitude: data.coords.latitude,
         longitude: data.coords.longitude,
       },
     });
-    return NextResponse.json({
-      employee: updatedEmployee,
+    return NextResponse.json({ employee: updatedEmployee });
+  }
+
+  if (type == "update_commission") {
+    const updatedEmployee = await prisma.employees.update({
+      where: { id: Number(id) },
+      data: { commission: Number(data.commission) },
     });
+    return NextResponse.json({ employee: updatedEmployee });
   }
 }

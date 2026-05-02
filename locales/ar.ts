@@ -140,6 +140,13 @@ export type Translations = {
     monthlyOrders: string;
     avgOrdersPerDay: string;
     allTime: string;
+    commission: string;
+    commissionEarnings: string;
+    dailyDashboard: string;
+    dailyOrders: string;
+    dailyStats: string;
+    selectDate: string;
+    myEarningsToday: string;
   };
   expenses: {
     expenseType: string;
@@ -350,6 +357,13 @@ const ar: Translations = {
     monthlyOrders: "طلبات الشهر",
     avgOrdersPerDay: "متوسط التسليم اليومي",
     allTime: "كل الوقت",
+    commission: "نسبة العمولة",
+    commissionEarnings: "أرباح العمولة",
+    dailyDashboard: "لوحة اليومية",
+    dailyOrders: "طلبات اليوم",
+    dailyStats: "إحصائيات يومية للمندوب",
+    selectDate: "اختر التاريخ",
+    myEarningsToday: "أرباحي اليوم",
   },
   expenses: {
     expenseType: "نوع المصروف",

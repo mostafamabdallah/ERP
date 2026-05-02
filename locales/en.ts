@@ -142,6 +142,13 @@ const en: Translations = {
     monthlyOrders: "Monthly Orders",
     avgOrdersPerDay: "Avg. Delivered / Day",
     allTime: "All Time",
+    commission: "Commission Rate",
+    commissionEarnings: "Commission Earnings",
+    dailyDashboard: "Daily Dashboard",
+    dailyOrders: "Today's Orders",
+    dailyStats: "Delivery Man Daily Stats",
+    selectDate: "Select Date",
+    myEarningsToday: "My Earnings Today",
   },
   expenses: {
     expenseType: "Expense Type",
