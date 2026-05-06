@@ -11,6 +11,35 @@ export type Translations = {
     categories: string;
     dailyPrices: string;
     dailyStats: string;
+    financial: string;
+  };
+  financial: {
+    pageTitle: string;
+    breakEvenChart: string;
+    cumulativeRevenue: string;
+    projectedRevenue: string;
+    cumulativeCosts: string;
+    dailyBreakdown: string;
+    costBreakdown: string;
+    employeeCosts: string;
+    totalRevenue: string;
+    totalCosts: string;
+    netProfit: string;
+    breakEvenDay: string;
+    projectedMonthRevenue: string;
+    profitMargin: string;
+    totalSalaries: string;
+    totalCommissions: string;
+    totalExpenses: string;
+    notReached: string;
+    dayUnit: string;
+    salaries: string;
+    commissions: string;
+    expenses: string;
+    earnedCommission: string;
+    profitZone: string;
+    lossZone: string;
+    basedOnAvg: string;
   };
   common: {
     addNew: string;
@@ -240,6 +269,7 @@ const ar: Translations = {
     categories: "الأقسام",
     dailyPrices: "أسعار اليوم",
     dailyStats: "إحصائيات يومية",
+    financial: "الربحية",
   },
   common: {
     addNew: "إضافة جديد",
@@ -453,6 +483,34 @@ const ar: Translations = {
     confirmDeleteContent: "هل تريد حذف هذا النوع؟",
     loading: "جاري التحميل...",
     empty: "لا توجد أنواع مضافة بعد",
+  },
+  financial: {
+    pageTitle: "لوحة الربحية",
+    breakEvenChart: "الإيرادات والتكاليف التراكمية",
+    cumulativeRevenue: "الإيرادات التراكمية",
+    projectedRevenue: "الإيرادات المتوقعة",
+    cumulativeCosts: "التكاليف التراكمية",
+    dailyBreakdown: "الإيرادات اليومية مقابل التكاليف",
+    costBreakdown: "تفصيل التكاليف",
+    employeeCosts: "ملخص تكاليف الموظفين",
+    totalRevenue: "إجمالي الإيرادات",
+    totalCosts: "إجمالي التكاليف",
+    netProfit: "صافي الربح / الخسارة",
+    breakEvenDay: "يوم التعادل",
+    projectedMonthRevenue: "الإيرادات المتوقعة للشهر",
+    profitMargin: "هامش الربح",
+    totalSalaries: "إجمالي الرواتب",
+    totalCommissions: "إجمالي العمولات",
+    totalExpenses: "إجمالي المصاريف",
+    notReached: "لم يُحقق بعد",
+    dayUnit: "يوم",
+    salaries: "رواتب",
+    commissions: "عمولات",
+    expenses: "مصاريف",
+    earnedCommission: "العمولة المكتسبة",
+    profitZone: "في منطقة الربح",
+    lossZone: "في منطقة الخسارة",
+    basedOnAvg: "بناءً على متوسط الأداء الحالي",
   },
 };
 
