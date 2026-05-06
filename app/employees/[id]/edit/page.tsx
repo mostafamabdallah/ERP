@@ -3,9 +3,10 @@ import { customFetch } from "@/utilities/fetch";
 import React from "react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd";
-import { Button, Form, Input, Select, Space, message } from "antd";
-import { useMutation } from "@tanstack/react-query";
+import { Button, Form, Input, Select, Space, Spin, message } from "antd";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Employee } from "@/types/global";
 
 const SubmitButton = ({ form }: { form: FormInstance }) => {
   const [submittable, setSubmittable] = React.useState(false);
@@ -30,10 +31,28 @@ const SubmitButton = ({ form }: { form: FormInstance }) => {
   );
 };
 
-const Page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
   const { t } = useLanguage();
   const [form] = Form.useForm();
   const { push } = useRouter();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["employee", params.id],
+    queryFn: (): Promise<{ employee: Employee }> =>
+      customFetch.get(`employees/${params.id}`).then((r) => r.data),
+  });
+
+  React.useEffect(() => {
+    if (data?.employee) {
+      form.setFieldsValue({
+        name: data.employee.name,
+        phone: data.employee.phone,
+        job: data.employee.job,
+        nationalId: data.employee.nationalId ?? "",
+        salary: data.employee.salary ?? 0,
+      });
+    }
+  }, [data, form]);
 
   const validatePhoneNumber = (_: any, value: any) => {
     const phoneRegex = /^[0-9]{11}$/;
@@ -44,34 +63,50 @@ const Page = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: (data) => customFetch.post("/employees", data),
+    mutationFn: (formData: any) =>
+      customFetch.put(`employees/${params.id}?type=update_employee`, formData),
     onSuccess: () => {
-      message.success(t.employees.addedSuccess).then(() => {
-        push(`/employees`);
+      message.success(t.employees.editedSuccess).then(() => {
+        push(`/employees/${params.id}`);
       });
+    },
+    onError: (error: any) => {
+      message.error(error?.response?.data?.message ?? "Error");
     },
   });
 
-  const onFinish = async (data: any) => {
-    try {
-      await mutation.mutateAsync(data);
-    } catch (error: any) {
-      message.error(error.response.data.message).then(() => {});
-    }
+  const onFinish = async (formData: any) => {
+    await mutation.mutateAsync(formData);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full gap-6 p-6 md:p-0">
+      <h2 className="text-xl font-bold text-tittle dark:text-on-surface">
+        {t.employees.editEmployee}
+      </h2>
       <Form
         form={form}
         onFinish={onFinish}
-        name="validateOnly"
+        name="editEmployee"
         layout="vertical"
         autoComplete="off"
       >
-        <Form.Item name="name" label={t.employees.fullName} rules={[{ required: true }]}>
+        <Form.Item
+          name="name"
+          label={t.employees.fullName}
+          rules={[{ required: true }]}
+        >
           <Input />
         </Form.Item>
+
         <div className="flex gap-8">
           <div className="w-full md:w-6/12">
             <Form.Item
@@ -87,29 +122,42 @@ const Page = () => {
             <Form.Item
               name="job"
               label={t.employees.position}
-              rules={[{ required: true, message: t.employees.selectPositionError }]}
+              rules={[
+                { required: true, message: t.employees.selectPositionError },
+              ]}
             >
               <Select placeholder={t.employees.selectPosition}>
-                <Select.Option value="delivery">{t.employees.deliveryMan}</Select.Option>
-                <Select.Option value="manger">{t.employees.manager}</Select.Option>
-                <Select.Option value="call center">{t.employees.callCenter}</Select.Option>
+                <Select.Option value="delivery">
+                  {t.employees.deliveryMan}
+                </Select.Option>
+                <Select.Option value="manger">
+                  {t.employees.manager}
+                </Select.Option>
+                <Select.Option value="call center">
+                  {t.employees.callCenter}
+                </Select.Option>
               </Select>
             </Form.Item>
           </div>
         </div>
 
         <Form.Item name="nationalId" label={t.employees.nationalId}>
-          <Input placeholder={t.employees.nationalIdPlaceholder} maxLength={20} />
+          <Input
+            placeholder={t.employees.nationalIdPlaceholder}
+            maxLength={20}
+          />
         </Form.Item>
 
-        <Form.Item name="salary" label={t.employees.salary} initialValue={0}>
+        <Form.Item name="salary" label={t.employees.salary}>
           <Input type="number" min={0} />
         </Form.Item>
 
         <Form.Item>
           <Space>
             <SubmitButton form={form} />
-            <Button htmlType="reset">{t.common.reset}</Button>
+            <Button onClick={() => push(`/employees/${params.id}`)}>
+              {t.common.cancel}
+            </Button>
           </Space>
         </Form.Item>
       </Form>

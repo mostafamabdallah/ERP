@@ -1,7 +1,7 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { customFetch } from "@/utilities/fetch";
-import { Button, DatePicker, Table, Progress } from "antd";
+import { Button, DatePicker, Table, Progress, Switch, message } from "antd";
 import { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
@@ -20,6 +20,8 @@ import {
   faIdCard,
   faPercent,
   faCalendarDay,
+  faPenToSquare,
+  faMoneyBill1Wave,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -115,6 +117,24 @@ const Page = ({ params }: { params: { id: string } }) => {
   });
 
   const { employee, stats, orders } = data;
+
+  const queryClient = useQueryClient();
+
+  const toggleMutation = useMutation({
+    mutationFn: () =>
+      customFetch.put(`employees/${params.id}?type=toggle_status`, {}),
+    onSuccess: () => {
+      const wasActive = employee?.isActive !== false;
+      message.success(
+        wasActive
+          ? t.employees.statusChangedInactive
+          : t.employees.statusChangedActive
+      );
+      queryClient.invalidateQueries({
+        queryKey: ["employee_stats", params.id],
+      });
+    },
+  });
 
   const getPerformanceGrade = (rate: number) => {
     if (rate >= 85)
@@ -276,10 +296,42 @@ const Page = ({ params }: { params: { id: string } }) => {
                 <span>{t.employees.commission}</span>
               </p>
             )}
+            <p className="flex gap-2 items-center text-sm text-gray-500 dark:text-on-surface-variant">
+              <FontAwesomeIcon
+                icon={faMoneyBill1Wave}
+                className="text-[#22c55e] w-3"
+              />
+              <span className="font-semibold text-[#22c55e]">
+                {(employee?.salary ?? 0).toLocaleString()}
+              </span>
+              <span>{t.employees.salary}</span>
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500 dark:text-on-surface-variant">
+              {employee?.isActive !== false
+                ? t.employees.active
+                : t.employees.inactive}
+            </span>
+            <Switch
+              checked={employee?.isActive !== false}
+              loading={toggleMutation.isPending}
+              onChange={() => toggleMutation.mutate()}
+              checkedChildren={t.employees.active}
+              unCheckedChildren={t.employees.inactive}
+            />
+          </div>
+          <Link href={`/employees/${params.id}/edit`}>
+            <Button
+              type="default"
+              icon={<FontAwesomeIcon icon={faPenToSquare} className="text-primary dark:text-primary-dark" />}
+            >
+              {t.employees.editEmployee}
+            </Button>
+          </Link>
           <MonthPicker
             onChange={handleMonthChange}
             value={

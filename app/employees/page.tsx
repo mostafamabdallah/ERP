@@ -4,13 +4,15 @@ import { customFetch } from "@/utilities/fetch";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Employee } from "../../types/global";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import EmployeesTable from "./components/EmployeesTable";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "antd";
 
 const Page = () => {
   const { t } = useLanguage();
+  const [showInactive, setShowInactive] = useState(false);
 
   const employees = useQuery({
     queryKey: ["employees"],
@@ -22,9 +24,19 @@ const Page = () => {
     initialData: [],
   });
 
+  const filtered = showInactive
+    ? employees.data
+    : employees.data.filter((e) => e.isActive !== false);
+
   return (
     <div className="flex flex-col w-full gap-6">
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-3">
+        <Button
+          type={showInactive ? "primary" : "default"}
+          onClick={() => setShowInactive((p) => !p)}
+        >
+          {showInactive ? t.employees.showAll : t.employees.showInactive}
+        </Button>
         <Link
           href="/employees/new"
           className="rounded-md px-5 py-2 flex gap-1 text-sm items-center justify-between text-white bg-primary hover:bg-[#0f62fe95]"
@@ -35,7 +47,10 @@ const Page = () => {
       </div>
       <div className="flex flex-row flex-wrap gap-6">
         <div className="w-full">
-          <EmployeesTable employees={employees.data} />
+          <EmployeesTable
+            employees={filtered}
+            onStatusToggled={() => employees.refetch()}
+          />
         </div>
         <div className="w-full lg:w-4/12 bg-white dark:bg-surface-mid rounded-md flex-1"></div>
       </div>

@@ -11,9 +11,11 @@ export async function GET(request: Request, context: any) {
   const year = searchParams.get("year");
 
   try {
-    const employee = await prisma.employees.findUnique({
-      where: { id: Number(id) },
-    });
+    const rows: any[] = await prisma.$queryRawUnsafe(
+      `SELECT * FROM "Employees" WHERE id=$1`,
+      Number(id)
+    );
+    const employee = rows[0] ?? null;
 
     if (!employee) {
       return NextResponse.json({ error: "Employee not found" }, { status: 404 });

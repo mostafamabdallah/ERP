@@ -33,6 +33,8 @@ export type Employee = {
   latitude: number;
   longitude: number;
   commission: number;
+  salary: number;
+  isActive: boolean;
   orders: Order[];
 };
 

@@ -2,22 +2,25 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Employee } from "../../../types/global";
 import type { InputRef } from "antd";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Space, Table, Tag, Switch, message } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef, useState } from "react";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { customFetch } from "@/utilities/fetch";
+import { useMutation } from "@tanstack/react-query";
 
 type Props = {
   employees: Employee[];
+  onStatusToggled?: () => void;
 };
 
 type DataIndex = keyof Employee;
 
-const EmployeesTable = ({ employees }: Props) => {
+const EmployeesTable = ({ employees, onStatusToggled }: Props) => {
   const { t } = useLanguage();
   const { push } = useRouter();
   const [searchText, setSearchText] = useState("");
@@ -28,6 +31,19 @@ const EmployeesTable = ({ employees }: Props) => {
     "call center": t.employees.jobCallCenter,
   };
   const searchInput = useRef<InputRef>(null);
+
+  const toggleMutation = useMutation({
+    mutationFn: (id: number) =>
+      customFetch.put(`employees/${id}?type=toggle_status`, {}),
+    onSuccess: (_, id) => {
+      const emp = employees.find((e) => e.id === id);
+      const wasActive = emp?.isActive !== false;
+      message.success(
+        wasActive ? t.employees.statusChangedInactive : t.employees.statusChangedActive
+      );
+      onStatusToggled?.();
+    },
+  });
 
   const handleSearch = (
     selectedKeys: string[],
@@ -124,14 +140,39 @@ const EmployeesTable = ({ employees }: Props) => {
       render: (job: string) => jobLabelMap[job] ?? job,
     },
     {
+      title: t.common.status,
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive: boolean) =>
+        isActive !== false ? (
+          <Tag color="green">{t.employees.active}</Tag>
+        ) : (
+          <Tag color="red">{t.employees.inactive}</Tag>
+        ),
+    },
+    {
       title: t.employees.viewProfile,
-      key: "profile",
+      key: "actions",
       render: (_: any, record: Employee) => (
-        <FontAwesomeIcon
-          onClick={() => push(`/employees/${record.id}`)}
-          className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md"
-          icon={faEye}
-        />
+        <div className="flex gap-2">
+          <FontAwesomeIcon
+            onClick={() => push(`/employees/${record.id}`)}
+            className="p-3 text-primary bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md"
+            icon={faEye}
+          />
+          <FontAwesomeIcon
+            onClick={() => push(`/employees/${record.id}/edit`)}
+            className="p-3 text-[#f97316] bg-gray-100 hover:bg-gray-200 cursor-pointer font-extrabold rounded-md"
+            icon={faPenToSquare}
+          />
+          <Switch
+            checked={record.isActive !== false}
+            loading={toggleMutation.isPending && toggleMutation.variables === record.id}
+            onChange={() => toggleMutation.mutate(record.id)}
+            checkedChildren={t.employees.active}
+            unCheckedChildren={t.employees.inactive}
+          />
+        </div>
       ),
     },
   ];
@@ -141,6 +182,10 @@ const EmployeesTable = ({ employees }: Props) => {
       columns={columns}
       dataSource={employees}
       pagination={{ pageSize: 100 }}
+      rowKey="id"
+      rowClassName={(record) =>
+        record.isActive === false ? "opacity-60" : ""
+      }
     />
   );
 };

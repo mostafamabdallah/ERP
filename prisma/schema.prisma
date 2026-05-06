@@ -68,6 +68,8 @@ model Employees {
   latitude   Float?
   longitude  Float?
   commission Float   @default(30)
+  salary     Float   @default(0)
+  isActive   Boolean @default(true)
   orders     Order[]
 }
 

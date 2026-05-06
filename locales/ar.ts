@@ -26,6 +26,7 @@ export type Translations = {
     vsLast: string;
     validNumber: string;
     phoneError: string;
+    cancel: string;
   };
   dashboard: {
     totalOrders: string;
@@ -147,6 +148,17 @@ export type Translations = {
     dailyStats: string;
     selectDate: string;
     myEarningsToday: string;
+    salary: string;
+    editEmployee: string;
+    editedSuccess: string;
+    active: string;
+    inactive: string;
+    setActive: string;
+    setInactive: string;
+    statusChangedActive: string;
+    statusChangedInactive: string;
+    showInactive: string;
+    showAll: string;
   };
   expenses: {
     expenseType: string;
@@ -243,6 +255,7 @@ const ar: Translations = {
     vsLast: "مقارنة بآخر",
     validNumber: "الرجاء إدخال رقم صحيح",
     phoneError: "الرجاء إدخال رقم هاتف صحيح (11 رقم).",
+    cancel: "إلغاء",
   },
   dashboard: {
     totalOrders: "إجمالي الطلبات",
@@ -364,6 +377,17 @@ const ar: Translations = {
     dailyStats: "إحصائيات يومية للمندوب",
     selectDate: "اختر التاريخ",
     myEarningsToday: "أرباحي اليوم",
+    salary: "الراتب",
+    editEmployee: "تعديل الموظف",
+    editedSuccess: "تم تعديل الموظف بنجاح",
+    active: "نشط",
+    inactive: "غير نشط",
+    setActive: "تفعيل الموظف",
+    setInactive: "إيقاف الموظف",
+    statusChangedActive: "تم تفعيل الموظف",
+    statusChangedInactive: "تم إيقاف الموظف",
+    showInactive: "عرض غير النشطين",
+    showAll: "عرض الكل",
   },
   expenses: {
     expenseType: "نوع المصروف",
