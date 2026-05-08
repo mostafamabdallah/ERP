@@ -9,7 +9,7 @@ export async function GET(request: Request, context: any) {
 
   if (type) {
     const employees: any[] = await prisma.$queryRawUnsafe(
-      `SELECT * FROM "Employees" WHERE job='delivery'`
+      `SELECT * FROM "Employees" WHERE job='delivery' AND "isActive"=true`
     );
     return NextResponse.json({ employees });
   } else {
