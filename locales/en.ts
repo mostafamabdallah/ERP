@@ -50,6 +50,9 @@ const en: Translations = {
     grossProfit: "Gross Profit",
     revenue: "Revenue",
     expensesByCategory: "Expenses by Category",
+    newestCustomers: "Newest Customers",
+    joinDate: "Join Date",
+    noOrders: "No orders yet",
   },
   customers: {
     totalCustomers: "Total Customers",

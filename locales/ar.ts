@@ -76,6 +76,9 @@ export type Translations = {
     grossProfit: string;
     revenue: string;
     expensesByCategory: string;
+    newestCustomers: string;
+    joinDate: string;
+    noOrders: string;
   };
   customers: {
     totalCustomers: string;
@@ -306,6 +309,9 @@ const ar: Translations = {
     grossProfit: "الربح الإجمالي",
     revenue: "الإيرادات",
     expensesByCategory: "تصنيف المصروفات",
+    newestCustomers: "أحدث العملاء",
+    joinDate: "تاريخ الانضمام",
+    noOrders: "لا توجد طلبات",
   },
   customers: {
     totalCustomers: "إجمالي العملاء",

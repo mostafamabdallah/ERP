@@ -6,6 +6,7 @@ import MoneyPerDay from "@/components/dashboard/MoneyPerDay";
 import MonthlyFinancials from "@/components/dashboard/MonthlyFinancials";
 import ExpensesBreakdown from "@/components/dashboard/ExpensesBreakdown";
 import TopCustomers from "@/components/TopCustomers";
+import NewestCustomers from "@/components/dashboard/NewestCustomers";
 import { DatePicker } from "antd";
 import { useState } from "react";
 
@@ -62,6 +63,9 @@ export default function Home() {
         <TopCustomers selectedMonth={selectedMonth} />
         <OrdersPerHour selectedMonth={selectedMonth} />
       </div>
+
+      {/* Newest customers */}
+      <NewestCustomers />
     </main>
   );
 }
